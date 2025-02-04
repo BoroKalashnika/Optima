@@ -56,7 +56,7 @@ public class Controller {
 	ResponseEntity<Object> registrar(@RequestBody Usuario nuevoUsuario)
 			throws NoSuchAlgorithmException, MessagingException {
 		if (usuarioRepository.comprobarRegistro(nuevoUsuario.getCorreo(), nuevoUsuario.getNombre()).isPresent()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USUARIO YA REGISTRADO");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ERROR USUARIO YA REGISTRADO");
 		} else {
 //			String contrasenyaGenerada = UUID.randomUUID().toString().substring(0, 8);			
 			nuevoUsuario.setContrasenya(nuevoUsuario.encriptacionContrasenya(nuevoUsuario.getContrasenya()));
