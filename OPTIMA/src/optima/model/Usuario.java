@@ -25,12 +25,7 @@ public class Usuario {
 	private String imc;
 	private String[] macros;
 	private String puntuacion;
-	private List<String> ejerciciosCreados;
 	private boolean verificado;
-
-	public Usuario() {
-
-	}
 
 	public String getId() {
 		return id;
@@ -86,10 +81,6 @@ public class Usuario {
 
 	public String getPuntuacion() {
 		return puntuacion;
-	}
-
-	public List<String> getEjerciciosCreados() {
-		return ejerciciosCreados;
 	}
 
 	public boolean getVerificado() {
@@ -150,10 +141,6 @@ public class Usuario {
 
 	public void setPuntuacion(String puntuacion) {
 		this.puntuacion = puntuacion;
-	}
-
-	public void setEjerciciosCreados(List<String> ejsCreados) {
-		this.ejerciciosCreados = ejsCreados;
 	}
 
 	public void setVerificado(boolean verificado) {

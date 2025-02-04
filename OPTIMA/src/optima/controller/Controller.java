@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +32,14 @@ public class Controller {
 
 	@Autowired
 	private RutinaRepository rutinaRepository;
-	
+
 	@Autowired
 	private EjercicioRepository ejercicioRepository;
 
 	@Autowired
 	private EmailService emailService;
 
+	// USUARIOS LOGIN / LOGOUT / VERIFICAR / REGISTRAR
 	@GetMapping("/optima/verificar")
 	public ResponseEntity<Object> verificarCorreo(@RequestParam String correo) {
 		Optional<Usuario> usuario = usuarioRepository.findByCorreo(correo);
@@ -50,6 +52,57 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
 	}
 
+	@PostMapping("/optima/registrar")
+	ResponseEntity<Object> registrar(@RequestBody Usuario nuevoUsuario)
+			throws NoSuchAlgorithmException, MessagingException {
+		if (usuarioRepository.comprobarRegistro(nuevoUsuario.getCorreo(), nuevoUsuario.getNombre()).isPresent()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USUARIO YA REGISTRADO");
+		} else {
+//			String contrasenyaGenerada = UUID.randomUUID().toString().substring(0, 8);			
+			nuevoUsuario.setContrasenya(nuevoUsuario.encriptacionContrasenya(nuevoUsuario.getContrasenya()));
+			usuarioRepository.save(nuevoUsuario);
+			String enlaceVerificacion = "http://localhost:8080/optima/verificar?correo=" + nuevoUsuario.getCorreo();
+//			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion, contrasenyaGenerada);
+			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion);
+
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body("Usuario registrado. Revisa tu correo para verificar tu cuenta.");
+		}
+	}
+
+	@PostMapping("/optima/login")
+	ResponseEntity<Object> login(@RequestBody Usuario usuarioAccede) throws NoSuchAlgorithmException {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.comprobarLogin(usuarioAccede.getCorreo(),
+				usuarioAccede.encriptacionContrasenya(usuarioAccede.getContrasenya()));
+		if (usuarioBaseDatos.isPresent()) {
+			Usuario usuario = usuarioBaseDatos.get();
+			if (usuario.getVerificado()) {
+				String token = UUID.randomUUID().toString();
+				usuario.setToken(token);
+				usuarioRepository.save(usuario);
+				return ResponseEntity.status(HttpStatus.OK).build();
+			}
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("CORREO NO VERIFICADO");
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
+	@PostMapping("/optima/logout")
+	ResponseEntity<Object> logout(@RequestBody String requestBody) {
+		JSONObject jsonObject = new JSONObject(requestBody);
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(jsonObject.getString("token"));
+		if (usuarioBaseDatos.isPresent()) {
+			Usuario usuario = usuarioBaseDatos.get();
+			usuario.setToken("");
+			usuarioRepository.save(usuario);
+			return ResponseEntity.status(HttpStatus.OK).build();
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
+	// ACCIONES RUITNAS
 	@GetMapping("/optima/obtenerRutina")
 	public ResponseEntity<Object> obtenerRutina(@RequestParam String nombreRutina) {
 		Optional<Rutina> rutina = rutinaRepository.findByNombreRutina(nombreRutina);
@@ -73,54 +126,6 @@ public class Controller {
 		}
 	}
 
-	@PostMapping("/optima/registrar")
-	ResponseEntity<Object> registrar(@RequestBody Usuario nuevoUsuario)
-			throws NoSuchAlgorithmException, MessagingException {
-		if (usuarioRepository.comprobarRegistro(nuevoUsuario.getCorreo(), nuevoUsuario.getNombre()).isPresent()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USUARIO YA REGISTRADO");
-		} else {
-			String contrasenyaGenerada = UUID.randomUUID().toString().substring(0, 8);
-			nuevoUsuario.setContrasenya(nuevoUsuario.encriptacionContrasenya(contrasenyaGenerada));
-
-			usuarioRepository.save(nuevoUsuario);
-
-			String enlaceVerificacion = "http://localhost:8080/optima/verificar?correo=" + nuevoUsuario.getCorreo();
-			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion, contrasenyaGenerada);
-
-			return ResponseEntity.status(HttpStatus.CREATED)
-					.body("Usuario registrado. Revisa tu correo para verificar tu cuenta.");
-		}
-	}
-
-	@PostMapping("/optima/login")
-	ResponseEntity<Object> login(@RequestBody Usuario usuarioAccede) throws NoSuchAlgorithmException {
-		Optional<Usuario> usuarioBaseDatos = usuarioRepository.comprobarLogin(usuarioAccede.getCorreo(),
-				usuarioAccede.encriptacionContrasenya(usuarioAccede.getContrasenya()));
-		if (usuarioBaseDatos.isPresent()) {
-			Usuario usuario = usuarioBaseDatos.get();
-			String token = UUID.randomUUID().toString();
-			usuario.setToken(token);
-			usuarioRepository.save(usuario);
-			return ResponseEntity.status(HttpStatus.OK).build();
-		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
-	}
-
-	@PostMapping("/optima/logout")
-	ResponseEntity<Object> logout(@RequestBody Usuario usuarioActivo) throws NoSuchAlgorithmException {
-		Optional<Usuario> usuarioBaseDatos = usuarioRepository.comprobarLogin(usuarioActivo.getCorreo(),
-				usuarioActivo.encriptacionContrasenya(usuarioActivo.getContrasenya()));
-		if (usuarioBaseDatos.isPresent()) {
-			Usuario usuario = usuarioBaseDatos.get();
-			usuario.setToken("");
-			usuarioRepository.save(usuario);
-			return ResponseEntity.status(HttpStatus.OK).build();
-		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
-	}
-
 	@PostMapping("/optima/crearRutina")
 	ResponseEntity<Object> crearRutina(@RequestBody Rutina nuevaRutina)
 			throws NoSuchAlgorithmException, MessagingException {
@@ -131,7 +136,7 @@ public class Controller {
 			return ResponseEntity.status(HttpStatus.CREATED).body("Rutina creada correctamente.");
 		}
 	}
-	
+
 	@PostMapping("/optima/crearEjercicio")
 	ResponseEntity<Object> crearRutina(@RequestBody Ejercicio nuevoEjercicio)
 			throws NoSuchAlgorithmException, MessagingException {
