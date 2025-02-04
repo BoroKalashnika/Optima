@@ -11,7 +11,6 @@ public class Ejercicio {
 	private String nombreEjercicio;
 	private String tipo;
 	private String dificultad;
-	private String ambito;
 	private String video;
 	private String explicacion;
 	private String idRutina;
@@ -32,10 +31,6 @@ public class Ejercicio {
 
 	public String getDificultad() {
 		return dificultad;
-	}
-
-	public String getAmbito() {
-		return ambito;
 	}
 
 	public String getVideo() {
@@ -72,10 +67,6 @@ public class Ejercicio {
 
 	public void setDificultad(String dificultad) {
 		this.dificultad = dificultad;
-	}
-
-	public void setAmbito(String ambito) {
-		this.ambito = ambito;
 	}
 
 	public void setVideo(String video) {

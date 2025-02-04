@@ -104,8 +104,8 @@ public class Controller {
 
 	// ACCIONES RUITNAS
 	@GetMapping("/optima/obtenerRutina")
-	public ResponseEntity<Object> obtenerRutina(@RequestParam String nombreRutina) {
-		Optional<Rutina> rutina = rutinaRepository.findByNombreRutina(nombreRutina);
+	public ResponseEntity<Object> obtenerRutina(@RequestParam String id) {
+		Optional<Rutina> rutina = rutinaRepository.findById(id);
 
 		if (rutina.isPresent()) {
 			return ResponseEntity.ok(rutina.get());
@@ -115,11 +115,11 @@ public class Controller {
 	}
 
 	@DeleteMapping("/optima/eliminarRutina")
-	public ResponseEntity<Object> eliminarRutina(@RequestParam String nombreRutina) {
-		Optional<Rutina> rutina = rutinaRepository.findByNombreRutina(nombreRutina);
+	public ResponseEntity<Object> eliminarRutina(@RequestParam String id) {
+		Optional<Rutina> rutina = rutinaRepository.findById(id);
 
 		if (rutina.isPresent()) {
-			rutinaRepository.deleteByNombreRutina(nombreRutina);
+			rutinaRepository.deleteById(id);
 			return ResponseEntity.ok("Rutina eliminada correctamente.");
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La rutina no existe.");
@@ -129,12 +129,8 @@ public class Controller {
 	@PostMapping("/optima/crearRutina")
 	ResponseEntity<Object> crearRutina(@RequestBody Rutina nuevaRutina)
 			throws NoSuchAlgorithmException, MessagingException {
-		if (rutinaRepository.findByNombreRutina(nuevaRutina.getNombreRutina()).isPresent()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("LA RUTINA YA EXISTE");
-		} else {
-			rutinaRepository.save(nuevaRutina);
-			return ResponseEntity.status(HttpStatus.CREATED).body("Rutina creada correctamente.");
-		}
+		rutinaRepository.save(nuevaRutina);
+		return ResponseEntity.status(HttpStatus.CREATED).body("Rutina creada correctamente.");
 	}
 
 	@PostMapping("/optima/crearEjercicio")
