@@ -49,24 +49,23 @@ public class Controller {
 			usuarioRepository.save(usuarioVerificado);
 			return ResponseEntity.ok("Correo verificado correctamente");
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
 
 	@PostMapping("/optima/registrar")
 	ResponseEntity<Object> registrar(@RequestBody Usuario nuevoUsuario)
 			throws NoSuchAlgorithmException, MessagingException {
 		if (usuarioRepository.comprobarRegistro(nuevoUsuario.getCorreo(), nuevoUsuario.getNombre()).isPresent()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ERROR USUARIO YA REGISTRADO");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		} else {
 //			String contrasenyaGenerada = UUID.randomUUID().toString().substring(0, 8);			
 			nuevoUsuario.setContrasenya(nuevoUsuario.encriptacionContrasenya(nuevoUsuario.getContrasenya()));
 			usuarioRepository.save(nuevoUsuario);
-			String enlaceVerificacion = "http://localhost:8080/optima/verificar?correo=" + nuevoUsuario.getCorreo();
+			String enlaceVerificacion = "http://192.168.241.205:8080/optima/verificar?correo="
+					+ nuevoUsuario.getCorreo();
 //			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion, contrasenyaGenerada);
 			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion);
-
-			return ResponseEntity.status(HttpStatus.CREATED)
-					.body("Usuario registrado. Revisa tu correo para verificar tu cuenta.");
+			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
 	}
 
@@ -82,7 +81,7 @@ public class Controller {
 				usuarioRepository.save(usuario);
 				return ResponseEntity.status(HttpStatus.OK).build();
 			}
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("CORREO NO VERIFICADO");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
@@ -110,7 +109,7 @@ public class Controller {
 		if (rutina.isPresent()) {
 			return ResponseEntity.ok(rutina.get());
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rutina no encontrada.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
 
@@ -122,7 +121,7 @@ public class Controller {
 			rutinaRepository.deleteById(id);
 			return ResponseEntity.ok("Rutina eliminada correctamente.");
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La rutina no existe.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
 
@@ -130,17 +129,17 @@ public class Controller {
 	ResponseEntity<Object> crearRutina(@RequestBody Rutina nuevaRutina)
 			throws NoSuchAlgorithmException, MessagingException {
 		rutinaRepository.save(nuevaRutina);
-		return ResponseEntity.status(HttpStatus.CREATED).body("Rutina creada correctamente.");
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@PostMapping("/optima/crearEjercicio")
 	ResponseEntity<Object> crearRutina(@RequestBody Ejercicio nuevoEjercicio)
 			throws NoSuchAlgorithmException, MessagingException {
 		if (ejercicioRepository.findByNombreEjercicio(nuevoEjercicio.getNombreEjercicio()).isPresent()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EL EJERCICIO YA EXISTE");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		} else {
 			ejercicioRepository.save(nuevoEjercicio);
-			return ResponseEntity.status(HttpStatus.CREATED).body("Ejercicio creado correctamente.");
+			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
 	}
 
