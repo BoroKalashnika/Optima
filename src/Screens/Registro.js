@@ -8,7 +8,9 @@ import {
     StyleSheet,
     Image,
 } from 'react-native';
+import { HelperText } from 'react-native-paper';
 import { SelectList } from 'react-native-dropdown-select-list';
+import postData from '../Utils/postData';
 const Registro = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,12 +18,67 @@ const Registro = (props) => {
     const [usuario, setUsuario] = useState('');
     const [peso, setPeso] = useState('');
     const [altura, setAltura] = useState('');
+    const [opcion, setOpcion] = useState('');
     const data = [
         { key: '1', value: 'principiante' },
         { key: '2', value: 'intermedio' },
         { key: '3', value: 'profesionl' },
     ];
-    const { opcion, setOpcion } = useState();
+
+    const emailHasErrors = () => {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return !regex.test(email)
+    }
+
+    const usuarioHasErrors = () => {
+        const regex = /^[a-zA-Z0-9_-]{3,20}$/;
+        return !regex.test(usuario)
+    }
+
+    const contrasenyaHasErrors = () => {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return !regex.test(email)
+    }
+    const alturaHasErrors = () => {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return !regex.test(email)
+    }
+    const pesoHasErrors = () => {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return !regex.test(email)
+    }
+
+    const registrarUsuario = async () => {
+        if (email === '' || password === '' || repetriContra === '' || usuario === '' || peso === '' || altura === '' || opcion === '') {
+            Alert.alert('Campos vacios porfavor completalos')
+        } else if (password !== repetriContra) {
+            Alert.alert('Contraseña no coincide')
+        } else {
+            const json = {
+                nomUsu: usuario,
+                contrasenya: password,
+                correo: email,
+                token: "",
+                fotoPerfil: "",
+                rutinasGuardadas: [],
+                rutinasCreadas: [],
+                nivel: opcion,
+                peso: peso,
+                altura: altura,
+                imc: "",
+                macros: [],
+                puntuacion: "",
+                verificado: false
+            };
+            const response = await postData('http://192.168.241.205:8080/optima/registrar', json);
+
+            if (response.status === 201) {
+                
+            } else {
+                
+            }
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -29,8 +86,10 @@ const Registro = (props) => {
                 <Image source={require('../Assets/img/logo.png')} style={styles.image} />
             </View>
             <View style={styles.formContainer}>
-                <Text style={styles.title}>Registro</Text>
                 <View style={styles.inputContainer}>
+                    <HelperText type="error" visible={emailHasErrors(email)}>
+                        Dirección de correo invalida
+                    </HelperText>
                     <TextInput
                         style={styles.input}
                         placeholder="Introduce el Email"
@@ -57,6 +116,9 @@ const Registro = (props) => {
                         secureTextEntry
                     />
                 </View>
+                <HelperText type="error" visible={usuarioHasErrors(usuario)}>
+                    Nombre usuario invalido longitud 3-20 carácteres
+                </HelperText>
                 <TextInput
                     style={styles.input}
                     placeholder="Nombre Usuario"
@@ -94,13 +156,13 @@ const Registro = (props) => {
                     dropdownTextStyles={styles.dropdownText}
                 />
                 <View style={styles.subContainer}>
-                    <Pressable style={styles.bottom}>
+                    <Pressable style={styles.bottom} onPress={() => registrarUsuario()}>
                         <Text style={styles.textLogin}>Registrarse</Text>
                     </Pressable>
-                    <Pressable>
-                        <Text style={styles.resetPasswordText}>Ya tengo cuenta</Text>
-                    </Pressable>
-                    <Pressable style={styles.bottom}>
+                </View>
+                <View style={styles.login}>
+                    <Text style={styles.resetPasswordText}>Ya tengo cuenta</Text>
+                    <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Login")}>
                         <Text style={styles.textLogin}>Login</Text>
                     </Pressable>
                 </View>
@@ -202,6 +264,11 @@ const styles = StyleSheet.create({
         color: '#C6C6C6', // Texto blanco
         fontSize: 14,
     },
+    login: {
+        alignItems: 'center',
+        marginTop: 30,
+        marginBottom: 25,
+    }
 });
 
 export default Registro;

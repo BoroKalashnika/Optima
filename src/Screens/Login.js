@@ -43,18 +43,18 @@ const Login = (props) => {
                         <Text style={styles.resetPasswordText}>He olvidado la contraseña</Text>
                     </Pressable>
                 </View>
-            <View style={styles.containerBotones}>
-                <View style={styles.subContainer}>
-                    <Pressable style={styles.bottom}>
-                        <Text style={styles.textLogin}>LOGIN</Text>
-                    </Pressable>
+                <View style={styles.containerBotones}>
+                    <View style={styles.subContainer}>
+                        <Pressable style={styles.bottom}>
+                            <Text style={styles.textLogin}>LOGIN</Text>
+                        </Pressable>
+                    </View>
+                    <View style={styles.subContainer}>
+                        <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Registro")}>
+                            <Text style={styles.textLogin}>REGISTRO</Text>
+                        </Pressable>
+                    </View>
                 </View>
-                <View style={styles.subContainer}>
-                    <Pressable style={styles.bottom}>
-                        <Text style={styles.textLogin}>REGISTRO</Text>
-                    </Pressable>
-                </View>
-            </View>
             </View>
         </View>
     );
@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
         width: 200,
         alignItems: 'center',
     },
-    containerBotones:{
-        marginTop:55,
+    containerBotones: {
+        marginTop: 55,
     }
 });
 
