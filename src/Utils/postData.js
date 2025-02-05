@@ -1,5 +1,6 @@
-const postData = async (url, json) => {
+const postData = async (url, json, setLoading) => {
     try {
+        setLoading(true);
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -16,6 +17,8 @@ const postData = async (url, json) => {
     } catch (error) {
         console.error('Error en la petición post:', error);
         return { status: null, data: 'Error en la conexión' };
+    }finally {
+        setLoading(false);
     }
 };
 

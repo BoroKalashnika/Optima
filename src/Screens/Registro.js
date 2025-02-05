@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import Context from '../Utils/Context';
 import {
     View,
     Text,
@@ -7,11 +8,14 @@ import {
     Alert,
     StyleSheet,
     Image,
+    ScrollView,
 } from 'react-native';
 import { HelperText } from 'react-native-paper';
 import { SelectList } from 'react-native-dropdown-select-list';
 import postData from '../Utils/postData';
+import Carga from '../Components/carga/Carga';
 const Registro = (props) => {
+    const { loading, setLoading } = useContext(Context);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repetriContra, setRepetirContras] = useState('');
@@ -27,25 +31,26 @@ const Registro = (props) => {
 
     const emailHasErrors = () => {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return !regex.test(email)
+        return email != '' && !regex.test(email)
     }
 
     const usuarioHasErrors = () => {
         const regex = /^[a-zA-Z0-9_-]{3,20}$/;
-        return !regex.test(usuario)
+        return usuario != '' && !regex.test(usuario)
     }
 
     const contrasenyaHasErrors = () => {
-        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return !regex.test(email)
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        return password != '' && !regex.test(password)
     }
+
     const alturaHasErrors = () => {
-        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return !regex.test(email)
+        const regex = /^(1[0-9]{2}|2[0-4][0-9]|250)\s?$/;
+        return altura != '' && !regex.test(altura)
     }
     const pesoHasErrors = () => {
-        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return !regex.test(email)
+        const regex = /^([3-9][0-9]|1[0-9]{2}|200)(\.\d{1,2})?\s?$/;
+        return peso != '' && !regex.test(peso)
     }
 
     const registrarUsuario = async () => {
@@ -70,7 +75,8 @@ const Registro = (props) => {
                 puntuacion: "",
                 verificado: false
             };
-            const response = await postData('http://13.216.205.228:8080/optima/registrar', json);
+
+            const response = await postData('http://13.216.205.228:8080/optima/registrar', json, setLoading);
 
             if (response.status === 201) {
                 Alert.alert("USUARIO REGISTRADO", response.data.message);
@@ -81,91 +87,125 @@ const Registro = (props) => {
         }
     }
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.subContainer}>
-                <Image source={require('../Assets/img/logo.png')} style={styles.image} />
-            </View>
-            <View style={styles.formContainer}>
-                <View style={styles.inputContainer}>
-                    <HelperText type="error" visible={emailHasErrors(email)}>
-                        Dirección de correo invalida
-                    </HelperText>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Introduce el Email"
-                        placeholderTextColor="#9CA3AF"
-                        value={email}
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Introduce la contraseña"
-                        placeholderTextColor="#9CA3AF"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Repetir Contraseña"
-                        placeholderTextColor="#9CA3AF"
-                        value={repetriContra}
-                        onChangeText={setRepetirContras}
-                        secureTextEntry
-                    />
-                </View>
-                <HelperText type="error" visible={usuarioHasErrors(usuario)}>
-                    Nombre usuario invalido longitud 3-20 carácteres
-                </HelperText>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Nombre Usuario"
-                    placeholderTextColor="#9CA3AF"
-                    value={usuario}
-                    onChangeText={setUsuario}
-                />
-                <View style={styles.containerDatos}>
-                    <TextInput
-                        style={[styles.input, { width: '49%' }]}
-                        placeholder="Altura"
-                        placeholderTextColor="#9CA3AF"
-                        value={altura}
-                        onChangeText={setAltura}
-                    />
+    if (loading) {
+        return (
+            <Carga />
+        );
+    }
 
-                    <TextInput
-                        style={[styles.input, { width: '49%' }]}
-                        placeholder="Peso"
-                        placeholderTextColor="#9CA3AF"
-                        value={peso}
-                        onChangeText={setPeso}
-                    />
-                </View>
-                <SelectList
-                    setSelected={(val) => setOpcion(val)}
-                    data={data}
-                    save="value"
-                    boxStyles={styles.selectBox}
-                    inputStyles={styles.selectInput}
-                    dropdownStyles={styles.dropdown}
-                    dropdownTextStyles={styles.dropdownText}
-                />
+    return (
+        <ScrollView>
+            <View style={styles.container}>
                 <View style={styles.subContainer}>
-                    <Pressable style={styles.bottom} onPress={() => registrarUsuario()}>
-                        <Text style={styles.textLogin}>Registrarse</Text>
-                    </Pressable>
+                    <Image source={require('../Assets/img/logo.png')} style={styles.image} />
                 </View>
-                <View style={styles.login}>
-                    <Text style={styles.resetPasswordText}>Ya tengo cuenta</Text>
-                    <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Login")}>
-                        <Text style={styles.textLogin}>Login</Text>
-                    </Pressable>
+                <View style={styles.formContainer}>
+                    <View style={styles.inputContainer}>
+                        {(email != '' && emailHasErrors(email)) && (
+                            <HelperText type="error">
+                                Dirección de correo invalida
+                            </HelperText>
+                        )}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Introduce el Email"
+                            placeholderTextColor="#9CA3AF"
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                        />
+                        {(password != '' && contrasenyaHasErrors(password)) && (
+                            <HelperText type="error">
+                                Contraseña con al menos una letra mayúscula, una minúscula y un número
+                            </HelperText>
+                        )}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Introduce la contraseña"
+                            placeholderTextColor="#9CA3AF"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Repetir Contraseña"
+                            placeholderTextColor="#9CA3AF"
+                            value={repetriContra}
+                            onChangeText={setRepetirContras}
+                            secureTextEntry
+                        />
+                    </View>
+                    {(usuario != '' && usuarioHasErrors(usuario)) && (
+                        <HelperText type="error">
+                            Nombre usuario invalido longitud 3-20 carácteres
+                        </HelperText>
+                    )}
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Nombre Usuario"
+                        placeholderTextColor="#9CA3AF"
+                        value={usuario}
+                        onChangeText={setUsuario}
+                    />
+                    <View style={styles.helpersDatos}>
+                        <View style={styles.containerHelper}>
+                            {(altura != '' && alturaHasErrors(altura)) && (
+                                <HelperText type="error">
+                                    Altura en centímetros
+                                </HelperText>
+                            )}
+                        </View>
+                        <View style={styles.containerHelper}>
+                            {(peso != '' && pesoHasErrors(peso)) && (
+                                <HelperText type="error">
+                                    Peso en kilogramos
+                                </HelperText>
+                            )}
+                        </View>
+                    </View>
+                    <View style={styles.containerDatos}>
+                        <TextInput
+                            style={[styles.input, { width: '49%' }]}
+                            placeholder="Altura (cm)"
+                            placeholderTextColor="#9CA3AF"
+                            value={altura}
+                            onChangeText={setAltura}
+                        />
+
+                        <TextInput
+                            style={[styles.input, { width: '49%' }]}
+                            placeholder="Peso (kg)"
+                            placeholderTextColor="#9CA3AF"
+                            value={peso}
+                            onChangeText={setPeso}
+                        />
+                    </View>
+                    <SelectList
+                        setSelected={(val) => setOpcion(val)}
+                        data={data}
+                        save="value"
+                        boxStyles={styles.selectBox}
+                        inputStyles={styles.selectInput}
+                        dropdownStyles={styles.dropdown}
+                        dropdownTextStyles={styles.dropdownText}
+                        placeholder='Selecciona una dificultad inicial'
+                    />
+                    <View style={styles.subContainer}>
+                        <Pressable style={styles.bottom} onPress={() => registrarUsuario()}>
+                            <Text style={styles.textLogin}>Registrarse</Text>
+                        </Pressable>
+                    </View>
+                    <View style={styles.login}>
+                        <Text style={styles.resetPasswordText}>Ya tengo cuenta</Text>
+                        <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Login")}>
+                            <Text style={styles.textLogin}>Login</Text>
+                        </Pressable>
+                    </View>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
@@ -176,6 +216,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#1F2937', // bg-gray-950
+    },
+    containerCarga: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    helpersDatos: {
+        width: '100%',
+        flexDirection: 'row',
+    },
+    containerHelper: {
+        width: '50%',
     },
     subContainer: {
         alignItems: 'center',
@@ -258,7 +311,7 @@ const styles = StyleSheet.create({
     },
     login: {
         alignItems: 'center',
-        marginTop: 30,
+        marginTop: 8,
         marginBottom: 25,
     }
 });
