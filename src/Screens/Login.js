@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState} from 'react';
 import {
     View,
     Text,
@@ -7,10 +7,25 @@ import {
     Alert,
     StyleSheet,
     Image,
+    BackHandler,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 const Login = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    useFocusEffect(() => {
+        const backAction = () => {
+            return true; // Bloquea el botón de retroceso
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+
+        return () => backHandler.remove(); // Se elimina al salir de la pantalla
+    });
 
     return (
         <View style={styles.container}>
@@ -78,12 +93,6 @@ const styles = StyleSheet.create({
         width: '100%',
         maxWidth: 384, // max-w-sm
         color: '#00008B',
-    },
-    title: {
-        fontSize: 48, // text-5xl
-        fontWeight: 'bold',
-        marginBottom: 24, // mb-6
-        color: 'white', // text-gray-50
     },
     textLogin: {
         fontSize: 20,

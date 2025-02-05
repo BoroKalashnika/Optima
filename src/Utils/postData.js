@@ -9,7 +9,9 @@ const postData = async (url, json) => {
         });
 
         const status = response.status;
-        return { status };
+        const data = await response.json();
+
+        return { status, message: data.message };
 
     } catch (error) {
         console.error('Error en la petición post:', error);

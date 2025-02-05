@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     View,
     Text,
@@ -70,12 +70,13 @@ const Registro = (props) => {
                 puntuacion: "",
                 verificado: false
             };
-            const response = await postData('http://192.168.241.205:8080/optima/registrar', json);
+            const response = await postData('http://13.216.205.228:8080/optima/registrar', json);
 
             if (response.status === 201) {
-                
+                Alert.alert("USUARIO REGISTRADO", response.message);
+                props.navigation.navigate('Login');
             } else {
-                
+                Alert.alert("ERROR", response.message);
             }
         }
     }
@@ -125,7 +126,6 @@ const Registro = (props) => {
                     placeholderTextColor="#9CA3AF"
                     value={usuario}
                     onChangeText={setUsuario}
-                    secureTextEntry
                 />
                 <View style={styles.containerDatos}>
                     <TextInput
@@ -134,7 +134,6 @@ const Registro = (props) => {
                         placeholderTextColor="#9CA3AF"
                         value={altura}
                         onChangeText={setAltura}
-                        secureTextEntry
                     />
 
                     <TextInput
@@ -143,7 +142,6 @@ const Registro = (props) => {
                         placeholderTextColor="#9CA3AF"
                         value={peso}
                         onChangeText={setPeso}
-                        secureTextEntry
                     />
                 </View>
                 <SelectList
@@ -194,12 +192,6 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-between',
-    },
-    title: {
-        fontSize: 48, // text-5xl
-        fontWeight: 'bold',
-        marginBottom: 24, // mb-6
-        color: 'white', // text-gray-50
     },
     textLogin: {
         fontSize: 20,
