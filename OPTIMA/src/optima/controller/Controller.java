@@ -125,17 +125,21 @@ public class Controller {
 	ResponseEntity<Object> login(@RequestBody Usuario usuarioAccede) throws NoSuchAlgorithmException {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.comprobarLogin(usuarioAccede.getCorreo(),
 				usuarioAccede.encriptacionContrasenya(usuarioAccede.getContrasenya()));
+		JSONObject response = new JSONObject();
 		if (usuarioBaseDatos.isPresent()) {
 			Usuario usuario = usuarioBaseDatos.get();
 			if (usuario.getVerificado()) {
 				String token = UUID.randomUUID().toString();
 				usuario.setToken(token);
 				usuarioRepository.save(usuario);
-				return ResponseEntity.status(HttpStatus.OK).build();
+				response.put("token", token);
+				return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 			}
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			response.put("message", "USUARIO NO VERIFICADO");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			response.put("message", "USUARIO NO SE ENCUENTRA REGISTRADO");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
 
@@ -227,7 +231,7 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
-	// Ejercicios
+	// ACCIONES EJERCICIOS
 	@GetMapping("/optima/obtenerEjercicios")
 	public ResponseEntity<Object> obtenerEjercicios(@RequestParam String idRutina, @RequestParam String token) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
