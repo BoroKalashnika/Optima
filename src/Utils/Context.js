@@ -1,9 +1,10 @@
-import { createContext , useState } from "react";
+import { createContext, useState } from "react";
 const Context = createContext();
-export const Provider = ({children})=>{
+export const Provider = ({ children }) => {
     const [loading, setLoading] = useState(false);
-    return(
-        <Context.Provider value={{loading,setLoading}}>
+    const [token, setToken] = useState('');
+    return (
+        <Context.Provider value={{ loading, setLoading, token, setToken }}>
             {children}
         </Context.Provider>
     );

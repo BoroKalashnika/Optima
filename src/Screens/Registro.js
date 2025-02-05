@@ -55,9 +55,9 @@ const Registro = (props) => {
 
     const registrarUsuario = async () => {
         if (email === '' || password === '' || repetriContra === '' || usuario === '' || peso === '' || altura === '' || opcion === '') {
-            Alert.alert('Campos vacios porfavor completalos')
+            Alert.alert("ERROR",'Campos vacios porfavor completalos')
         } else if (password !== repetriContra) {
-            Alert.alert('Contraseña no coincide')
+            Alert.alert("ERROR",'Contraseña no coincide')
         } else {
             const json = {
                 nomUsu: usuario,
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
     },
     login: {
         alignItems: 'center',
-        marginTop: 8,
+        marginTop: 20,
         marginBottom: 25,
     }
 });

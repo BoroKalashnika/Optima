@@ -1,4 +1,5 @@
-import { useState} from 'react';
+import { useState, useContext } from 'react';
+import Context from '../Utils/Context';
 import {
     View,
     Text,
@@ -10,7 +11,11 @@ import {
     BackHandler,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import postData from '../Utils/postData';
+import Carga from '../Components/carga/Carga';
 const Login = (props) => {
+    const { loading, setLoading } = useContext(Context);
+    const { token, setToken } = useContext(Context);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -26,6 +31,44 @@ const Login = (props) => {
 
         return () => backHandler.remove(); // Se elimina al salir de la pantalla
     });
+
+    const loginUsuario = async () => {
+        if (email === '' || password === '') {
+            Alert.alert("ERROR", 'Campos vacios porfavor completalos')
+        } else {
+            const json = {
+                nomUsu: "",
+                contrasenya: password,
+                correo: email,
+                token: "",
+                fotoPerfil: "",
+                rutinasGuardadas: [],
+                rutinasCreadas: [],
+                nivel: "",
+                peso: "",
+                altura: "",
+                imc: "",
+                macros: [],
+                puntuacion: "",
+                verificado: false
+            };
+
+            const response = await postData('http://13.216.205.228:8080/optima/login', json, setLoading);
+
+            if (response.status === 200) {
+                setToken(response.data.token);
+                props.navigation.navigate('Home');
+            } else {
+                Alert.alert("ERROR", response.data.message);
+            }
+        }
+    }
+
+    if (loading) {
+        return (
+            <Carga />
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -60,7 +103,7 @@ const Login = (props) => {
                 </View>
                 <View style={styles.containerBotones}>
                     <View style={styles.subContainer}>
-                        <Pressable style={styles.bottom}>
+                        <Pressable style={styles.bottom} onPress={() => loginUsuario()}>
                             <Text style={styles.textLogin}>LOGIN</Text>
                         </Pressable>
                     </View>
