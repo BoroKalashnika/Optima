@@ -27,10 +27,7 @@ public class Usuario {
 	private String puntuacion;
 	private boolean verificado;
 	private String codigo;
-
-	public String getCodigo() {
-		return codigo;
-	}
+	private List<String> historialImc;
 
 	public String getId() {
 		return id;
@@ -90,6 +87,14 @@ public class Usuario {
 
 	public boolean getVerificado() {
 		return verificado;
+	}
+
+	public List<String> getHistorialImc() {
+		return historialImc;
+	}
+
+	public String getCodigo() {
+		return codigo;
 	}
 
 	public void setId(String id) {
@@ -154,6 +159,10 @@ public class Usuario {
 
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
+	}
+
+	public void setHistorialImc(List<String> historialImc) {
+		this.historialImc = historialImc;
 	}
 
 	public String encriptacionContrasenya(String contrasenya) throws NoSuchAlgorithmException {
