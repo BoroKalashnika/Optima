@@ -150,6 +150,16 @@ public class Controller {
 		}
 	}
 
+	@GetMapping("/optima/tokenUsuario")
+	public ResponseEntity<Object> obtenerToken(@RequestParam String token) {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			return ResponseEntity.ok(usuarioBaseDatos.get());
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
 	// ACCIONES RUITNAS
 	@GetMapping("/optima/obtenerRutinas")
 	public ResponseEntity<List<Rutina>> obtenerRutinas(@RequestParam String token) {
