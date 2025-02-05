@@ -73,10 +73,10 @@ const Registro = (props) => {
             const response = await postData('http://13.216.205.228:8080/optima/registrar', json);
 
             if (response.status === 201) {
-                Alert.alert("USUARIO REGISTRADO", response.message);
+                Alert.alert("USUARIO REGISTRADO", response.data.message);
                 props.navigation.navigate('Login');
             } else {
-                Alert.alert("ERROR", response.message);
+                Alert.alert("ERROR", response.data.message);
             }
         }
     }

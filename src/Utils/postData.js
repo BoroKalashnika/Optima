@@ -11,11 +11,11 @@ const postData = async (url, json) => {
         const status = response.status;
         const data = await response.json();
 
-        return { status, message: data.message };
+        return { status, data: data };
 
     } catch (error) {
         console.error('Error en la petición post:', error);
-        return { status: null, message: 'Error en la conexión' };
+        return { status: null, data: 'Error en la conexión' };
     }
 };
 
