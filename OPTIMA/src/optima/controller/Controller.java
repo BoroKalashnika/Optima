@@ -1,5 +1,9 @@
 package optima.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,18 +58,22 @@ public class Controller {
 
 	@PostMapping("/optima/registrar")
 	ResponseEntity<Object> registrar(@RequestBody Usuario nuevoUsuario)
-			throws NoSuchAlgorithmException, MessagingException {
+			throws NoSuchAlgorithmException, MessagingException, IOException {
+		JSONObject response = new JSONObject();
 		if (usuarioRepository.comprobarRegistro(nuevoUsuario.getCorreo(), nuevoUsuario.getNombre()).isPresent()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			response.put("message", "USUARIO YA REGISTRADO");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
 		} else {
 //			String contrasenyaGenerada = UUID.randomUUID().toString().substring(0, 8);			
 			nuevoUsuario.setContrasenya(nuevoUsuario.encriptacionContrasenya(nuevoUsuario.getContrasenya()));
 			usuarioRepository.save(nuevoUsuario);
-			String enlaceVerificacion = "http://192.168.241.205:8080/optima/verificar?correo="
+			String enlaceVerificacion = "http://" + ipAPI() + ":8080/optima/verificar?correo="
 					+ nuevoUsuario.getCorreo();
 //			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion, contrasenyaGenerada);
 			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion);
-			return ResponseEntity.status(HttpStatus.CREATED).build();
+			response.put("message", "Accede al correo para verificar cuenta");
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(response.toString());
 		}
 	}
 
@@ -143,4 +151,12 @@ public class Controller {
 		}
 	}
 
+	public String ipAPI() throws IOException {
+		String api;
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("IP_API.txt");
+		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+		api = br.readLine();
+		br.close();
+		return api;
+	}
 }
