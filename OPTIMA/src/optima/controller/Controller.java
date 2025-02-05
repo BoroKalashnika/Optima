@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -150,6 +151,33 @@ public class Controller {
 	}
 
 	// ACCIONES RUITNAS
+	@GetMapping("/optima/obtenerRutinas")
+	public ResponseEntity<List<Rutina>> obtenerRutinas(@RequestParam String token) {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			List<Rutina> rutinas = rutinaRepository.findAll();
+			if (rutinas.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body(rutinas);
+			}
+			return ResponseEntity.ok(rutinas);
+		}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	}
+
+	@GetMapping("/optima/obtenerRutinasCreadas")
+	public ResponseEntity<List<Rutina>> obtenerRutinasCreadas(@RequestParam String idUsuario,
+			@RequestParam String token) {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			List<Rutina> rutinas = rutinaRepository.findByIdUsuario(idUsuario);
+			if (rutinas.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body(rutinas);
+			}
+			return ResponseEntity.ok(rutinas);
+		}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	}
+
 	@GetMapping("/optima/obtenerRutina")
 	public ResponseEntity<Object> obtenerRutina(@RequestParam String id, @RequestParam String token) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
@@ -185,6 +213,7 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
+	// Ejercicios
 	@PostMapping("/optima/crearEjercicio")
 	ResponseEntity<Object> crearRutina(@RequestBody Ejercicio nuevoEjercicio)
 			throws NoSuchAlgorithmException, MessagingException {

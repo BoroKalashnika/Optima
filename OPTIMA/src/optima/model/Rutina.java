@@ -19,6 +19,11 @@ public class Rutina {
 	private String dieta;
 	private String vistaPrevia;
 	private String ambito;
+	private String idUsuario;
+
+	public String getIdUsuario() {
+		return idUsuario;
+	}
 
 	public String getId() {
 		return id;
@@ -100,4 +105,7 @@ public class Rutina {
 		this.ambito = ambito;
 	}
 
+	public void setIdUsuario(String idUsuario) {
+		this.idUsuario = idUsuario;
+	}
 }
