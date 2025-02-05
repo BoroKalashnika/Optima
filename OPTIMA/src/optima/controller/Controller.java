@@ -78,8 +78,7 @@ public class Controller {
 	}
 
 	@PostMapping("/optima/cambiarContrasenya")
-	public ResponseEntity<Object> cambiarContrasenya(@RequestBody Usuario request)
-			throws NoSuchAlgorithmException {
+	public ResponseEntity<Object> cambiarContrasenya(@RequestBody Usuario request) throws NoSuchAlgorithmException {
 
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByCorreo(request.getCorreo());
 
@@ -152,14 +151,19 @@ public class Controller {
 
 	// ACCIONES RUITNAS
 	@GetMapping("/optima/obtenerRutina")
-	public ResponseEntity<Object> obtenerRutina(@RequestParam String id) {
-		Optional<Rutina> rutina = rutinaRepository.findById(id);
-
-		if (rutina.isPresent()) {
-			return ResponseEntity.ok(rutina.get());
+	public ResponseEntity<Object> obtenerRutina(@RequestParam String id, @RequestParam String token) {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			Optional<Rutina> rutina = rutinaRepository.findById(id);
+			if (rutina.isPresent()) {
+				return ResponseEntity.ok(rutina.get());
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
+
 	}
 
 	@DeleteMapping("/optima/eliminarRutina")

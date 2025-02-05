@@ -13,11 +13,12 @@ public class Rutina {
 	private String nombreRutina;
 	private String puntuacnion;
 	private String dificultad;
-	private String tipo;
+	private String grupoMuscular;
 	private String creador;
 	private List<String> ejercicios;
 	private String dieta;
 	private String vistaPrevia;
+	private String ambito;
 
 	public String getId() {
 		return id;
@@ -35,8 +36,8 @@ public class Rutina {
 		return dificultad;
 	}
 
-	public String getTipo() {
-		return tipo;
+	public String getGrupoMuscular() {
+		return grupoMuscular;
 	}
 
 	public String getCreador() {
@@ -71,8 +72,8 @@ public class Rutina {
 		this.dificultad = dificultad;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setGrupoMuscular(String tipo) {
+		this.grupoMuscular = tipo;
 	}
 
 	public void setCreador(String creador) {
@@ -89,6 +90,14 @@ public class Rutina {
 
 	public void setVistaPrevia(String vistaPrevia) {
 		this.vistaPrevia = vistaPrevia;
+	}
+
+	public String getAmbito() {
+		return ambito;
+	}
+
+	public void setAmbito(String ambito) {
+		this.ambito = ambito;
 	}
 
 }
