@@ -56,6 +56,50 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
 
+	@PostMapping("/optima/restablecerContrasenya")
+	public ResponseEntity<Object> restablecerContrasenya(@RequestBody Usuario usuarioRequest)
+			throws NoSuchAlgorithmException, MessagingException {
+		Optional<Usuario> usuarioOptional = usuarioRepository.findByCorreo(usuarioRequest.getCorreo());
+
+		if (usuarioOptional.isPresent()) {
+			Usuario usuario = usuarioOptional.get();
+
+			String codigo = UUID.randomUUID().toString().substring(0, 8);
+
+			usuario.setCodigo(codigo);
+			usuarioRepository.save(usuario);
+
+			emailService.enviarCorreoRestablecerContrasenya(usuario.getCorreo(), codigo);
+
+			return ResponseEntity.ok("Se ha enviado un código de recuperación a tu correo.");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("USUARIO NO REGISTRADO");
+		}
+	}
+
+	@PostMapping("/optima/cambiarContrasenya")
+	public ResponseEntity<Object> cambiarContrasenya(@RequestBody Usuario request)
+			throws NoSuchAlgorithmException {
+
+		Optional<Usuario> usuarioOptional = usuarioRepository.findByCorreo(request.getCorreo());
+
+		if (usuarioOptional.isPresent()) {
+			Usuario usuario = usuarioOptional.get();
+
+			if (!usuario.getCodigo().isEmpty() && usuario.getCodigo().equals(request.getCodigo())) {
+				usuario.setContrasenya(usuario.encriptacionContrasenya(request.getContrasenya()));
+				usuario.setCodigo("");
+				usuarioRepository.save(usuario);
+
+				return ResponseEntity.ok("Contraseña actualizada correctamente.");
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Código incorrecto o expirado.");
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+		}
+	}
+
 	@PostMapping("/optima/registrar")
 	ResponseEntity<Object> registrar(@RequestBody Usuario nuevoUsuario)
 			throws NoSuchAlgorithmException, MessagingException, IOException {
@@ -64,16 +108,13 @@ public class Controller {
 			response.put("message", "USUARIO YA REGISTRADO");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
 		} else {
-//			String contrasenyaGenerada = UUID.randomUUID().toString().substring(0, 8);			
 			nuevoUsuario.setContrasenya(nuevoUsuario.encriptacionContrasenya(nuevoUsuario.getContrasenya()));
 			usuarioRepository.save(nuevoUsuario);
 			String enlaceVerificacion = "http://" + ipAPI() + ":8080/optima/verificar?correo="
 					+ nuevoUsuario.getCorreo();
-//			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion, contrasenyaGenerada);
 			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion);
 			response.put("message", "Accede al correo para verificar cuenta");
-			return ResponseEntity.status(HttpStatus.CREATED)
-					.body(response.toString());
+			return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
 		}
 	}
 

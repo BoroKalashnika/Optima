@@ -26,6 +26,11 @@ public class Usuario {
 	private String[] macros;
 	private String puntuacion;
 	private boolean verificado;
+	private String codigo;
+
+	public String getCodigo() {
+		return codigo;
+	}
 
 	public String getId() {
 		return id;
@@ -145,6 +150,10 @@ public class Usuario {
 
 	public void setVerificado(boolean verificado) {
 		this.verificado = verificado;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	public String encriptacionContrasenya(String contrasenya) throws NoSuchAlgorithmException {
