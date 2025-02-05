@@ -9,7 +9,7 @@ public class Ejercicio {
 	@Id
 	private String id;
 	private String nombreEjercicio;
-	private String tipo;
+	private String grupoMuscular;
 	private String dificultad;
 	private String video;
 	private String explicacion;
@@ -26,7 +26,7 @@ public class Ejercicio {
 	}
 
 	public String getTipo() {
-		return tipo;
+		return grupoMuscular;
 	}
 
 	public String getDificultad() {
@@ -62,7 +62,7 @@ public class Ejercicio {
 	}
 
 	public void setTipo(String tipo) {
-		this.tipo = tipo;
+		this.grupoMuscular = tipo;
 	}
 
 	public void setDificultad(String dificultad) {
