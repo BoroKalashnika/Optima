@@ -30,7 +30,7 @@ import optima.repository.EjercicioRepository;
 import optima.repository.RutinaRepository;
 import optima.repository.UsuarioRepository;
 import optima.service.EmailService;
-import optima.service.S3Service;
+import optima.service.FirestoreService;
 
 @RestController
 public class Controller {
@@ -47,8 +47,11 @@ public class Controller {
 	@Autowired
 	private EmailService emailService;
 
+//	@Autowired
+//	private S3Service s3Service;
+
 	@Autowired
-	private S3Service s3Service;
+	private FirestoreService firestoreService;
 
 	// USUARIOS LOGIN / LOGOUT / VERIFICAR / REGISTRAR
 	@GetMapping("/optima/verificar")
@@ -249,30 +252,53 @@ public class Controller {
 		}
 	}
 
+//	@PostMapping("/optima/crearEjercicio")
+//	public ResponseEntity<Object> crearEjercicio(@RequestParam("nombreEjercicio") String nombreEjercicio,
+//			@RequestParam("grupoMuscular") String grupoMuscular, @RequestParam("dificultad") String dificultad,
+//			@RequestParam("explicacion") String explicacion, @RequestParam("idRutina") String idRutina,
+//			@RequestParam("usuario") String usuario, @RequestParam("archivo") MultipartFile archivo) {
+//		try {
+//			if (ejercicioRepository.findByNombreEjercicio(nombreEjercicio).isPresent()) {
+//				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El ejercicio ya existe.");
+//			}
+//
+//			String enlaceVideo = s3Service.subirVideo(archivo);
+//
+//			Ejercicio nuevoEjercicio = new Ejercicio();
+//			nuevoEjercicio.setNombreEjercicio(nombreEjercicio);
+//			nuevoEjercicio.setGrupoMuscular(grupoMuscular);
+//			nuevoEjercicio.setDificultad(dificultad);
+//			nuevoEjercicio.setExplicacion(explicacion);
+//			nuevoEjercicio.setIdRutina(idRutina);
+//			nuevoEjercicio.setUsuario(usuario);
+//			nuevoEjercicio.setVideo(enlaceVideo);
+//
+//			ejercicioRepository.save(nuevoEjercicio);
+//
+//			return ResponseEntity.status(HttpStatus.CREATED).body("Ejercicio creado correctamente.");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el ejercicio.");
+//		}
+//	}
+
 	@PostMapping("/optima/crearEjercicio")
 	public ResponseEntity<Object> crearEjercicio(@RequestParam("nombreEjercicio") String nombreEjercicio,
-			@RequestParam("grupoMuscular") String grupoMuscular, @RequestParam("dificultad") String dificultad,
-			@RequestParam("explicacion") String explicacion, @RequestParam("idRutina") String idRutina,
-			@RequestParam("usuario") String usuario, @RequestParam("archivo") MultipartFile archivo) {
+			@RequestParam("grupoMuscular") String grupoMuscular, @RequestParam("archivo") MultipartFile archivo) {
 		try {
-			if (ejercicioRepository.findByNombreEjercicio(nombreEjercicio).isPresent()) {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El ejercicio ya existe.");
-			}
+			// 1️⃣ Subir video a Firebase Storage
+			String enlaceVideo = firestoreService.subirVideo(archivo);
 
-			String enlaceVideo = s3Service.subirVideo(archivo);
-
+			// 2️⃣ Guardar el enlace del video en MongoDB
 			Ejercicio nuevoEjercicio = new Ejercicio();
 			nuevoEjercicio.setNombreEjercicio(nombreEjercicio);
 			nuevoEjercicio.setGrupoMuscular(grupoMuscular);
-			nuevoEjercicio.setDificultad(dificultad);
-			nuevoEjercicio.setExplicacion(explicacion);
-			nuevoEjercicio.setIdRutina(idRutina);
-			nuevoEjercicio.setUsuario(usuario);
 			nuevoEjercicio.setVideo(enlaceVideo);
 
 			ejercicioRepository.save(nuevoEjercicio);
 
-			return ResponseEntity.status(HttpStatus.CREATED).body("Ejercicio creado correctamente.");
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body("Ejercicio creado correctamente con ID: " + nuevoEjercicio.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el ejercicio.");
