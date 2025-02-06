@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.mail.MessagingException;
 import optima.model.Ejercicio;
@@ -31,6 +30,7 @@ import optima.repository.EjercicioRepository;
 import optima.repository.RutinaRepository;
 import optima.repository.UsuarioRepository;
 import optima.service.EmailService;
+import optima.service.S3Service;
 
 @RestController
 public class Controller {
@@ -46,6 +46,9 @@ public class Controller {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private S3Service s3Service;
 
 	// USUARIOS LOGIN / LOGOUT / VERIFICAR / REGISTRAR
 	@GetMapping("/optima/verificar")
@@ -247,13 +250,32 @@ public class Controller {
 	}
 
 	@PostMapping("/optima/crearEjercicio")
-	ResponseEntity<Object> crearEjercicio(@RequestBody Ejercicio nuevoEjercicio)
-			throws NoSuchAlgorithmException, MessagingException {
-		if (ejercicioRepository.findByNombreEjercicio(nuevoEjercicio.getNombreEjercicio()).isPresent()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		} else {
+	public ResponseEntity<Object> crearEjercicio(@RequestParam("nombreEjercicio") String nombreEjercicio,
+			@RequestParam("grupoMuscular") String grupoMuscular, @RequestParam("dificultad") String dificultad,
+			@RequestParam("explicacion") String explicacion, @RequestParam("idRutina") String idRutina,
+			@RequestParam("usuario") String usuario, @RequestParam("archivo") MultipartFile archivo) {
+		try {
+			if (ejercicioRepository.findByNombreEjercicio(nombreEjercicio).isPresent()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El ejercicio ya existe.");
+			}
+
+			String enlaceVideo = s3Service.subirVideo(archivo);
+
+			Ejercicio nuevoEjercicio = new Ejercicio();
+			nuevoEjercicio.setNombreEjercicio(nombreEjercicio);
+			nuevoEjercicio.setGrupoMuscular(grupoMuscular);
+			nuevoEjercicio.setDificultad(dificultad);
+			nuevoEjercicio.setExplicacion(explicacion);
+			nuevoEjercicio.setIdRutina(idRutina);
+			nuevoEjercicio.setUsuario(usuario);
+			nuevoEjercicio.setVideo(enlaceVideo);
+
 			ejercicioRepository.save(nuevoEjercicio);
-			return ResponseEntity.status(HttpStatus.CREATED).build();
+
+			return ResponseEntity.status(HttpStatus.CREATED).body("Ejercicio creado correctamente.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el ejercicio.");
 		}
 	}
 

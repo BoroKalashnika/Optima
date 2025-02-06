@@ -25,7 +25,7 @@ public class Ejercicio {
 		return nombreEjercicio;
 	}
 
-	public String getTipo() {
+	public String getGrupoMuscular() {
 		return grupoMuscular;
 	}
 
@@ -61,7 +61,7 @@ public class Ejercicio {
 		this.nombreEjercicio = nombreEjercicio;
 	}
 
-	public void setTipo(String tipo) {
+	public void setGrupoMuscular(String tipo) {
 		this.grupoMuscular = tipo;
 	}
 
