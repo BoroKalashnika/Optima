@@ -149,19 +149,22 @@ public class Controller {
 	@PostMapping("/optima/logout")
 	ResponseEntity<Object> logout(@RequestBody String requestBody) {
 		JSONObject jsonObject = new JSONObject(requestBody);
+		JSONObject response = new JSONObject();
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(jsonObject.getString("token"));
 		if (usuarioBaseDatos.isPresent()) {
 			Usuario usuario = usuarioBaseDatos.get();
 			usuario.setToken("");
 			usuarioRepository.save(usuario);
-			return ResponseEntity.status(HttpStatus.OK).build();
+			response.put("message", "");
+			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			response.put("message", "");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
 
 	@GetMapping("/optima/tokenUsuario")
-	public ResponseEntity<Object> obtenerToken(@RequestParam String token) {
+	public ResponseEntity<Object> obtenerToken(@RequestParam(value = "token") String token) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(usuarioBaseDatos.get());
