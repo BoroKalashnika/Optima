@@ -164,7 +164,7 @@ public class Controller {
 	public ResponseEntity<Object> obtenerToken(@RequestParam String token) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
-			return ResponseEntity.ok(usuarioBaseDatos.get());
+			return ResponseEntity.status(HttpStatus.OK).body(usuarioBaseDatos.get());
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
