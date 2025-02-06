@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { HelperText } from 'react-native-paper';
 import { SelectList } from 'react-native-dropdown-select-list';
-import postData from '../Utils/postData';
+import postData from '../Utils/services/postData';
 import Carga from '../Components/carga/Carga';
 const Registro = (props) => {
     const { loading, setLoading } = useContext(Context);
@@ -58,6 +58,8 @@ const Registro = (props) => {
             Alert.alert("ERROR",'Campos vacios porfavor completalos')
         } else if (password !== repetriContra) {
             Alert.alert("ERROR",'Contraseña no coincide')
+        }else if(emailHasErrors()||usuarioHasErrors()||contrasenyaHasErrors()||alturaHasErrors()||pesoHasErrors()){
+            Alert.alert("ERROR",'Algunos de los campos es invalido')
         } else {
             const json = {
                 nomUsu: usuario,
@@ -94,14 +96,13 @@ const Registro = (props) => {
     }
 
     return (
-        <ScrollView>
-            <View style={styles.container}>
+        <ScrollView scrollEnabled={false} contentContainerStyle={styles.container}>
                 <View style={styles.subContainer}>
                     <Image source={require('../Assets/img/logo.png')} style={styles.image} />
                 </View>
                 <View style={styles.formContainer}>
                     <View style={styles.inputContainer}>
-                        {(email != '' && emailHasErrors(email)) && (
+                        {(email != '' && emailHasErrors()) && (
                             <HelperText type="error">
                                 Dirección de correo invalida
                             </HelperText>
@@ -115,7 +116,7 @@ const Registro = (props) => {
                             keyboardType="email-address"
                             autoCapitalize="none"
                         />
-                        {(password != '' && contrasenyaHasErrors(password)) && (
+                        {(password != '' && contrasenyaHasErrors()) && (
                             <HelperText type="error">
                                 Contraseña con al menos una letra mayúscula, una minúscula y un número
                             </HelperText>
@@ -137,7 +138,7 @@ const Registro = (props) => {
                             secureTextEntry
                         />
                     </View>
-                    {(usuario != '' && usuarioHasErrors(usuario)) && (
+                    {(usuario != '' && usuarioHasErrors()) && (
                         <HelperText type="error">
                             Nombre usuario invalido longitud 3-20 carácteres
                         </HelperText>
@@ -151,14 +152,14 @@ const Registro = (props) => {
                     />
                     <View style={styles.helpersDatos}>
                         <View style={styles.containerHelper}>
-                            {(altura != '' && alturaHasErrors(altura)) && (
+                            {(altura != '' && alturaHasErrors()) && (
                                 <HelperText type="error">
                                     Altura en centímetros
                                 </HelperText>
                             )}
                         </View>
                         <View style={styles.containerHelper}>
-                            {(peso != '' && pesoHasErrors(peso)) && (
+                            {(peso != '' && pesoHasErrors()) && (
                                 <HelperText type="error">
                                     Peso en kilogramos
                                 </HelperText>
@@ -204,14 +205,12 @@ const Registro = (props) => {
                         </Pressable>
                     </View>
                 </View>
-            </View>
         </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
