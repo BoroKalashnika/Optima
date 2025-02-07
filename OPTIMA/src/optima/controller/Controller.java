@@ -68,10 +68,23 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
 
+	@GetMapping("/optima/codigo")
+	public ResponseEntity<Object> verificarCodigo(@RequestParam(value = "codigo") String codigo) {
+		Optional<Usuario> usuarioRequest = usuarioRepository.findByCodigo(codigo);
+		JSONObject response = new JSONObject();
+		if (usuarioRequest.isPresent()) {
+			response.put("message", "");
+			return ResponseEntity.ok(response.toString());
+		}
+		response.put("message", "No se ha encrontrado ningun usuario con este codigo.");
+		return ResponseEntity.ok(response.toString());
+	}
+
 	@PostMapping("/optima/restablecerContrasenya")
 	public ResponseEntity<Object> restablecerContrasenya(@RequestBody Usuario usuarioRequest)
 			throws NoSuchAlgorithmException, MessagingException {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByCorreo(usuarioRequest.getCorreo());
+		JSONObject response = new JSONObject();
 
 		if (usuarioOptional.isPresent()) {
 			Usuario usuario = usuarioOptional.get();
@@ -83,15 +96,17 @@ public class Controller {
 
 			emailService.enviarCorreoRestablecerContrasenya(usuario.getCorreo(), codigo);
 
-			return ResponseEntity.ok("Se ha enviado un código de recuperación a tu correo.");
+			response.put("message", "Se ha enviado un código de recuperación a tu correo");
+			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("USUARIO NO REGISTRADO");
+			response.put("message", "USUARIO NO REGISTRADO");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.toString());
 		}
 	}
 
 	@PostMapping("/optima/cambiarContrasenya")
 	public ResponseEntity<Object> cambiarContrasenya(@RequestBody Usuario request) throws NoSuchAlgorithmException {
-
+		JSONObject response = new JSONObject();
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByCorreo(request.getCorreo());
 
 		if (usuarioOptional.isPresent()) {
@@ -101,13 +116,15 @@ public class Controller {
 				usuario.setContrasenya(usuario.encriptacionContrasenya(request.getContrasenya()));
 				usuario.setCodigo("");
 				usuarioRepository.save(usuario);
-
-				return ResponseEntity.ok("Contraseña actualizada correctamente.");
+				response.put("message", "Contraseña actualizada correctamente.");
+				return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Código incorrecto o expirado.");
+				response.put("message", "Código incorrecto o expirado.");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
 			}
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+			response.put("message", "Usuario no encontrado.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.toString());
 		}
 	}
 
