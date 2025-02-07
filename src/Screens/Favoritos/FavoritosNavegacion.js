@@ -3,7 +3,7 @@ import {
     StyleSheet,
 } from 'react-native';
 
-const Home = (props) => {
+const FavoritosNavegacion= (props) => {
     return (
         <View style={styles.container}>
         </View>
@@ -14,4 +14,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Home;
+export default FavoritosNavegacion;
