@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import Context from '../Utils/Context';
+import Context from '../../Utils/Context';
 import {
     View,
     Text,
@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import { HelperText } from 'react-native-paper';
 import { SelectList } from 'react-native-dropdown-select-list';
-import postData from '../Utils/services/postData';
-import Carga from '../Components/carga/Carga';
+import postData from '../../Utils/services/postData';
+import Carga from '../../Components/carga/Carga';
 const Registro = (props) => {
     const { loading, setLoading } = useContext(Context);
     const [email, setEmail] = useState('');
@@ -98,7 +98,7 @@ const Registro = (props) => {
     return (
         <ScrollView scrollEnabled={false} contentContainerStyle={styles.container}>
                 <View style={styles.subContainer}>
-                    <Image source={require('../Assets/img/logo.png')} style={styles.image} />
+                    <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
                 </View>
                 <View style={styles.formContainer}>
                     <View style={styles.inputContainer}>
