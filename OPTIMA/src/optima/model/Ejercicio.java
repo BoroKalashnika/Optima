@@ -16,6 +16,7 @@ public class Ejercicio {
 	private String idRutina;
 	private String usuario;
 	private String vistaPrevia;
+	private String token;
 
 	public String getId() {
 		return id;
@@ -51,6 +52,10 @@ public class Ejercicio {
 
 	public String getVistaPrevia() {
 		return vistaPrevia;
+	}
+
+	public String getToken() {
+		return token;
 	}
 
 	public void setId(String id) {
@@ -89,4 +94,7 @@ public class Ejercicio {
 		this.vistaPrevia = vistaPrevia;
 	}
 
+	public void setToken(String token) {
+		this.token = token;
+	}
 }

@@ -233,15 +233,18 @@ public class Controller {
 	}
 
 	@DeleteMapping("/optima/eliminarRutina")
-	public ResponseEntity<Object> eliminarRutina(@RequestParam(value = "id") String id) {
+	public ResponseEntity<Object> eliminarRutina(@RequestParam(value = "token") String token,
+			@RequestParam(value = "id") String id) {
 		Optional<Rutina> rutina = rutinaRepository.findById(id);
-
-		if (rutina.isPresent()) {
-			rutinaRepository.deleteById(id);
-			return ResponseEntity.ok("Rutina eliminada correctamente.");
-		} else {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			if (rutina.isPresent()) {
+				rutinaRepository.deleteById(id);
+				return ResponseEntity.ok("Rutina eliminada correctamente.");
+			}
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 
 	@PostMapping("/optima/valorarRutina")
@@ -280,8 +283,13 @@ public class Controller {
 	@PostMapping("/optima/crearRutina")
 	ResponseEntity<Object> crearRutina(@RequestBody Rutina nuevaRutina)
 			throws NoSuchAlgorithmException, MessagingException {
-		rutinaRepository.save(nuevaRutina);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(nuevaRutina.getToken());
+		if (usuarioBaseDatos.isPresent()) {
+			nuevaRutina.setToken("");
+			rutinaRepository.save(nuevaRutina);
+			return ResponseEntity.status(HttpStatus.CREATED).build();
+		}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 
 	// ACCIONES EJERCICIOS
@@ -303,13 +311,19 @@ public class Controller {
 	@PostMapping("/optima/crearEjercicio")
 	public ResponseEntity<Object> crearEjercicio(@RequestBody Ejercicio nuevoEjercicio)
 			throws NoSuchAlgorithmException, MessagingException {
-
 		JSONObject response = new JSONObject();
-		ejercicioRepository.save(nuevoEjercicio);
 
-		response.put("message", "Ejercicio creado");
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(nuevoEjercicio.getToken());
+		if (usuarioBaseDatos.isPresent()) {
+			nuevoEjercicio.setToken("");
+			ejercicioRepository.save(nuevoEjercicio);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
+			response.put("message", "Ejercicio creado");
+
+			return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
+		}
+		response.put("message", "");
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 	}
 
 	public String ipAPI() throws IOException {

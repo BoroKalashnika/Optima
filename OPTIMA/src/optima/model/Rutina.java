@@ -20,6 +20,7 @@ public class Rutina {
 	private String vistaPrevia;
 	private String ambito;
 	private String idUsuario;
+	private String token;
 
 	public String getIdUsuario() {
 		return idUsuario;
@@ -59,6 +60,10 @@ public class Rutina {
 
 	public String getVistaPrevia() {
 		return vistaPrevia;
+	}
+
+	public String getToken() {
+		return token;
 	}
 
 	public void setId(String id) {
@@ -107,5 +112,9 @@ public class Rutina {
 
 	public void setIdUsuario(String idUsuario) {
 		this.idUsuario = idUsuario;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }
