@@ -46,8 +46,18 @@ public class Controller {
 	private EmailService emailService;
 
 	// USUARIOS LOGIN / LOGOUT / VERIFICAR / REGISTRAR
+	@GetMapping("/optima/tokenUsuario")
+	public ResponseEntity<Object> obtenerToken(@RequestParam(value = "token") String token) {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			return ResponseEntity.status(HttpStatus.OK).body(usuarioBaseDatos.get());
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
 	@GetMapping("/optima/verificar")
-	public ResponseEntity<Object> verificarCorreo(@RequestParam String correo) {
+	public ResponseEntity<Object> verificarCorreo(@RequestParam(value = "correo") String correo) {
 		Optional<Usuario> usuario = usuarioRepository.findByCorreo(correo);
 		if (usuario.isPresent()) {
 			Usuario usuarioVerificado = usuario.get();
@@ -158,19 +168,9 @@ public class Controller {
 		}
 	}
 
-	@GetMapping("/optima/tokenUsuario")
-	public ResponseEntity<Object> obtenerToken(@RequestParam(value = "token") String token) {
-		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
-		if (usuarioBaseDatos.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(usuarioBaseDatos.get());
-		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
-	}
-
 	// ACCIONES RUITNAS
 	@GetMapping("/optima/obtenerRutinas")
-	public ResponseEntity<Object> obtenerRutinas(@RequestParam String token) {
+	public ResponseEntity<Object> obtenerRutinas(@RequestParam(value = "token") String token) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		JSONObject response = new JSONObject();
 		if (usuarioBaseDatos.isEmpty()) {
@@ -185,7 +185,8 @@ public class Controller {
 	}
 
 	@GetMapping("/optima/obtenerRutinasCreadas")
-	public ResponseEntity<Object> obtenerRutinasCreadas(@RequestParam String idUsuario, @RequestParam String token) {
+	public ResponseEntity<Object> obtenerRutinasCreadas(@RequestParam(value = "token") String token,
+			@RequestParam(value = "idUsuario") String idUsuario) {
 		JSONObject response = new JSONObject();
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
@@ -199,7 +200,8 @@ public class Controller {
 	}
 
 	@GetMapping("/optima/obtenerRutina")
-	public ResponseEntity<Object> obtenerRutina(@RequestParam String id, @RequestParam String token) {
+	public ResponseEntity<Object> obtenerRutina(@RequestParam(value = "token") String token,
+			@RequestParam(value = "id") String id) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
 			Optional<Rutina> rutina = rutinaRepository.findById(id);
@@ -214,7 +216,7 @@ public class Controller {
 	}
 
 	@DeleteMapping("/optima/eliminarRutina")
-	public ResponseEntity<Object> eliminarRutina(@RequestParam String id) {
+	public ResponseEntity<Object> eliminarRutina(@RequestParam(value = "id") String id) {
 		Optional<Rutina> rutina = rutinaRepository.findById(id);
 
 		if (rutina.isPresent()) {
@@ -223,6 +225,39 @@ public class Controller {
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
+	}
+
+	@PostMapping("/optima/valorarRutina")
+	ResponseEntity<Object> valorarRutina(@RequestBody String requestBody)
+			throws NoSuchAlgorithmException, MessagingException {
+		JSONObject jsonObject = new JSONObject(requestBody);
+		String idRutina = jsonObject.getString("idRutina");
+		String token = jsonObject.getString("token");
+		JSONObject response = new JSONObject();
+		Optional<Rutina> rutinaBd = rutinaRepository.findById(idRutina);
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			if (rutinaBd.isPresent()) {
+				Rutina rutina = rutinaBd.get();
+
+				int puntuacionActual = Integer.parseInt(rutina.getValoracion());
+				int valoracion = jsonObject.getInt("valoracion");
+
+				if (puntuacionActual != 0) {
+					int nuevaPuntuacion = Math.round((puntuacionActual + valoracion) / 2.0f);
+					rutina.setValoracion(String.valueOf(nuevaPuntuacion));
+				} else {
+					rutina.setValoracion(String.valueOf(valoracion));
+				}
+
+				rutinaRepository.save(rutina);
+				return ResponseEntity.ok(response.toString());
+			}
+			response.put("message", "La rutina no existe!");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.toString());
+		}
+		response.put("message", "Token expirado!");
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 	}
 
 	@PostMapping("/optima/crearRutina")
@@ -234,7 +269,8 @@ public class Controller {
 
 	// ACCIONES EJERCICIOS
 	@GetMapping("/optima/obtenerEjercicios")
-	public ResponseEntity<Object> obtenerEjercicios(@RequestParam String idRutina, @RequestParam String token) {
+	public ResponseEntity<Object> obtenerEjercicios(@RequestParam(value = "token") String token,
+			@RequestParam(value = "idRutina") String idRutina) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
 			JSONObject ejerciciosJson = new JSONObject();
@@ -248,17 +284,16 @@ public class Controller {
 	}
 
 	@PostMapping("/optima/crearEjercicio")
-	public ResponseEntity<Object> crearEjercicio(@RequestBody Ejercicio nuevoEjercicio) 
-	        throws NoSuchAlgorithmException, MessagingException {
-	    
-	    JSONObject response = new JSONObject();
-	    ejercicioRepository.save(nuevoEjercicio);
-	    
-	    response.put("message", "Ejercicio creado");
+	public ResponseEntity<Object> crearEjercicio(@RequestBody Ejercicio nuevoEjercicio)
+			throws NoSuchAlgorithmException, MessagingException {
 
-	    return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
+		JSONObject response = new JSONObject();
+		ejercicioRepository.save(nuevoEjercicio);
+
+		response.put("message", "Ejercicio creado");
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
 	}
-
 
 	public String ipAPI() throws IOException {
 		String api;

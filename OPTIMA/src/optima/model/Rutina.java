@@ -11,7 +11,7 @@ public class Rutina {
 	@Id
 	private String id;
 	private String nombreRutina;
-	private String puntuacnion;
+	private String valoracion;
 	private String dificultad;
 	private String grupoMuscular;
 	private String creador;
@@ -33,8 +33,8 @@ public class Rutina {
 		return nombreRutina;
 	}
 
-	public String getPuntuacnion() {
-		return puntuacnion;
+	public String getValoracion() {
+		return valoracion;
 	}
 
 	public String getDificultad() {
@@ -69,8 +69,8 @@ public class Rutina {
 		this.nombreRutina = nombreRutina;
 	}
 
-	public void setPuntuacnion(String puntuacnion) {
-		this.puntuacnion = puntuacnion;
+	public void setValoracion(String valoracion) {
+		this.valoracion = valoracion;
 	}
 
 	public void setDificultad(String dificultad) {
