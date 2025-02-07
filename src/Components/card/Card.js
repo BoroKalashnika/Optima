@@ -18,18 +18,18 @@ const Card = (props) => {
     return (
         <Pressable onPress={props.onRutina}>
             <View style={styles.container}>
-                <Image source={require('../Assets/logo.png')} style={styles.image} />
+                <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
                 <View style={styles.subContainer}>
                     <View style={styles.containerDescripcion}>
                         <Text style={styles.title}>Titulo</Text>
                     </View>
                     <View style={styles.containerRow}>
                         <Image
-                            source={require('../Assets/casa.png')}
+                            source={require('../../Assets/img/casa.png')}
                             style={styles.icono}
                         />
                         <Image
-                            source={require('../Assets/biceps.png')}
+                            source={require('../../Assets/img/biceps.png')}
                             style={styles.icono}
                         />
                         <Icon name="dashboard" size={40} color={color} />
