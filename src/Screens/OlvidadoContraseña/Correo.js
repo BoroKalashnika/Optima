@@ -25,7 +25,7 @@ const Correo = (props) => {
     }
 
     const handleOnPress = async () => {
-        if (email === '') {
+        if (correo === '') {
             Alert.alert("ERROR", 'Correo Vacio')
         } else if (emailHasErrors()) {
             Alert.alert("ERROR", 'Correo invalido')
@@ -33,7 +33,7 @@ const Correo = (props) => {
             const json = {
                 nomUsu: "",
                 contrasenya: "",
-                correo: email,
+                correo: correo,
                 token: "",
                 fotoPerfil: "",
                 rutinasGuardadas: [],
@@ -51,7 +51,7 @@ const Correo = (props) => {
 
             if (response.status === 200) {
                 setEmail(correo);
-                props.navigation.navigate("Codigo")
+                props.navigation.navigate('Codigo')
             } else {
                 Alert.alert("ERROR", response.data.message);
             }

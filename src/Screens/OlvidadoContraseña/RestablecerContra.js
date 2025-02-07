@@ -18,6 +18,7 @@ import Carga from '../../Components/carga/Carga';
 const RestablecerContra = (props) => {
     const { loading, setLoading } = useContext(Context);
     const { email, setEmail } = useContext(Context);
+    const { codigo, setCodigo } = useContext(Context);
     const [repetirContra, setRepetirContra] = useState('');
     const [contra, setContra] = useState('');
 
@@ -62,13 +63,15 @@ const RestablecerContra = (props) => {
                 macros: [],
                 puntuacion: "",
                 verificado: false,
-                codigo: ""
+                codigo: codigo
             };
 
             const response = await postData('http://13.216.205.228:8080/optima/cambiarContrasenya', json, setLoading);
 
             if (response.status === 200) {
                 Alert.alert("CONTRASEÑA CAMBIADA", response.data.message);
+                setCodigo('');
+                setEmail('');
                 props.navigation.navigate('Login');
             } else {
                 Alert.alert("ERROR", response.data.message);
