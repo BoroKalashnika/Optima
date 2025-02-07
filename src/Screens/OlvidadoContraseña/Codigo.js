@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import {useContext } from 'react';
 import Context from '../../Utils/Context';
 import {
     View,
@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import getData from "../../Utils/services/getData";
 const Codigo = (props) => {
-    const { codigo, setCodigo } = useState(Context);
+    const { codigo, setCodigo } = useContext(Context);
 
     const handleOnPress = () => {
         if (codigo === '') {

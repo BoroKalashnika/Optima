@@ -16,7 +16,7 @@ import postData from '../../Utils/services/postData';
 import Carga from '../../Components/carga/Carga';
 const Correo = (props) => {
     const { loading, setLoading } = useContext(Context);
-    const { email, setEmail } = useState(Context);
+    const { email, setEmail } = useContext(Context);
     const [correo, setCorreo] = useState('');
 
     const emailHasErrors = () => {
