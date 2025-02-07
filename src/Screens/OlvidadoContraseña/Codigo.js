@@ -1,4 +1,4 @@
-import {useContext } from 'react';
+import {useContext, useState } from 'react';
 import Context from '../../Utils/Context';
 import {
     View,
@@ -13,15 +13,16 @@ import {
 } from 'react-native';
 import getData from "../../Utils/services/getData";
 const Codigo = (props) => {
+    const [codigoEscrito,setCodigoEscrito] = useState('');
     const { codigo, setCodigo } = useContext(Context);
 
     const handleOnPress = () => {
-        if (codigo === '') {
+        if (codigoEscrito === '') {
             Alert.alert("ERROR", 'Codigo vacio')
         } else {
-            getData('http://13.216.205.228:8080/optima/codigo?codigo=' + codigo).then((response) => {
-                console.log(response);
+            getData('http://13.216.205.228:8080/optima/codigo?codigo=' + codigoEscrito).then((response) => {
                 if (response.message === "") {
+                    setCodigo(codigoEscrito);
                     props.navigation.navigate('RestablecerContra');
                 } else {
                     Alert.alert("CODIGO NO VALIDO", response.message)
@@ -42,8 +43,8 @@ const Codigo = (props) => {
                         style={styles.input}
                         placeholder="Introduce el codigo de verificacion"
                         placeholderTextColor="#9CA3AF"
-                        value={codigo}
-                        onChangeText={(newCodigo) => setCodigo(newCodigo)}
+                        value={codigoEscrito}
+                        onChangeText={(newCodigo) => setCodigoEscrito(newCodigo)}
                     />
                 </View>
 
