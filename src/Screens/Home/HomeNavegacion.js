@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Home from './Home';
 import Buscar from './Buscar';
 import CrearRutinaNavegacion from '../CrearRutina/CrearRutinaNavegacion';
@@ -26,7 +26,7 @@ const HomeNavegacion = (props) => {
                 }}
             />
             <Tab.Screen
-                name="CrearRutinaNavegacion" component={CrearRutinaNavegacion} options={{
+                name="Crear" component={CrearRutinaNavegacion} options={{
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="add" size={size} color={color} />
                     ),
@@ -35,7 +35,7 @@ const HomeNavegacion = (props) => {
 
             />
             <Tab.Screen
-                name="FavoritosNavegacion" component={FavoritosNavegacion} options={{
+                name="Favoritos" component={FavoritosNavegacion} options={{
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="heart" size={size} color={color} />
                     ),

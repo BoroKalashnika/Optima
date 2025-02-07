@@ -105,6 +105,9 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    project.ext.vectoricons = [
+    iconFontNames: ['Ionicons.ttf']
+    ]
 }
 
 dependencies {
