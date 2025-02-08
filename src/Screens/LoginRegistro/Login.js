@@ -24,7 +24,7 @@ const Login = (props) => {
 
     useFocusEffect(() => {
         const backAction = () => {
-            return true; // Bloquea el botón de retroceso
+            return true;
         };
 
         const backHandler = BackHandler.addEventListener(
@@ -32,7 +32,7 @@ const Login = (props) => {
             backAction
         );
 
-        return () => backHandler.remove(); // Se elimina al salir de la pantalla
+        return () => backHandler.remove();
     });
 
     // useEffect(() => {

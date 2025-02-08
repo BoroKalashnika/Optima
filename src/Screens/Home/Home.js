@@ -1,4 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import { BackHandler } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import Usuario from './Usuario';
 import CalcularIMC from "./CalcularIMC";
 import CalcularMacros from "./CalcularMacros"
