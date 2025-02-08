@@ -30,7 +30,7 @@ const HeaderRutina = (props) => {
             <View style={estilos.containerRowAjustes}>
                 <Image source={require('../../Assets/img/logo.png')} style={estilos.image} />
                 <Text style={estilos.title}>{props.titulo}</Text>
-                <Icon name="setting" size={50} color="#607cff" style={{ marginRight: 10 }} />
+                <Icon name="setting" size={50} color="#607cff" style={{ marginRight: 10 }} onPress={props.pasarPagina}/>
             </View>
         );
     }

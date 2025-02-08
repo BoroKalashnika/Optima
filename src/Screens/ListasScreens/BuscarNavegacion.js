@@ -7,7 +7,7 @@ import VerEjercicio from '../VerEjercicio';
 const Stack = createStackNavigator();
 
 const BuscarNavegacion = () => (
-    <Stack.Navigator options="headerShown=false">
+    <Stack.Navigator options="false">
         <Stack.Screen name="Buscar" component={Buscar} options={{ headerShown: false }} />
         <Stack.Screen name="VerRutina" component={VerRutina} options={{ headerShown: false }} />
         <Stack.Screen name="VerEjercicio" component={VerEjercicio} options={{ headerShown: false }} />
