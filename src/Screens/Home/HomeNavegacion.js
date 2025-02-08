@@ -37,7 +37,7 @@ const HomeNavegacion = (props) => {
                 <Tab.Screen
                     name="Crear" component={CrearRutinaNavegacion} options={{
                         tabBarIcon: ({ color, size }) => (
-                            <Ionicons name="add" size={size} color={color} />
+                            <Ionicons name="add-circle-outline" size={size} color={color} />
                         ),
                         headerShown: false
                     }}

@@ -18,6 +18,9 @@ import postData from '../../Utils/services/postData';
 import getData from '../../Utils/services/getData';
 import Context from '../../Utils/Context';
 import Carga from '../../Components/carga/Carga';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 
 const CrearEjercicio = (props) => {
     const [nombre, setNombre] = useState('');
@@ -199,13 +202,15 @@ const CrearEjercicio = (props) => {
                     onChangeText={setDescripcion}
                 />
                 <View style={styles.subContainer}>
-                    <Pressable style={styles.bottom} onPress={handleOnPress}>
+                    <Pressable style={[styles.bottom,{marginRight:5}]} onPress={handleOnPress}>
+                        <MaterialIcons name="cancel" color="#fe876d" size={35} />
                         <Text style={styles.resetPasswordText}>Cancelar</Text>
                     </Pressable>
                     <Pressable
-                        style={styles.bottom}
+                        style={[styles.bottom,{marginLeft:5}]}
                         onPress={crearEjercicio}>
-                        <Text style={styles.textLogin}>Crear Ejercicio</Text>
+                        <Ionicons name="add-circle-outline" color="lightgreen" size={35}  />
+                        <Text style={styles.resetPasswordText}>Crear Ejercicio</Text>
                     </Pressable>
                 </View>
             </View>
@@ -224,7 +229,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 10,
+        marginTop: 10,             
     },
     formContainer: {
         paddingHorizontal: 16,
@@ -268,7 +273,7 @@ const styles = StyleSheet.create({
     resetPasswordText: {
         color: 'white',
         fontWeight: 'bold',
-        fontSize: 17,
+        fontSize: 18,
     },
     bottom: {
         backgroundColor: '#607cff',
@@ -277,9 +282,11 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: 'black',
         height: 55,
-        width: 140,
+        width: 'auto',
         alignItems: 'center',
         marginTop: 5,
+        flexDirection: 'row',
+        flex:1
     },
     selectBox: {
         backgroundColor: '#374151',

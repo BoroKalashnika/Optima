@@ -1,7 +1,8 @@
 import { FlatList, View, Image, StyleSheet, Text, Pressable } from 'react-native';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 const data = [
     {
         id: '1',
@@ -46,16 +47,14 @@ const data = [
         imagen: require('../../Assets/img/logo.png'),
     },
 ];
-
-const RutinasCreadas = (props) => {
+const Buscar = (props) => {
     return (
         <View style={styles.container}>
-            <View style={styles.containerRow}>
-                <HeaderRutina tipo={'ajustes'} titulo={'Crear Rutinas'} />
-                {/* onPress={()=>{props.navigation.navigate('VerEjercicio')}} */}
-            </View>
-            <View style={styles.containerFlatList}>
-                <Text style={styles.textRutinas}>───── Rutinas ─────</Text>
+            <HeaderRutina tipo={'ajustes'} titulo={'Rutinas Creadas'} />
+            {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
+
+            <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
+                <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
                 <FlatList
                     data={data}
                     keyExtractor={(item) => item.id}
@@ -72,45 +71,42 @@ const RutinasCreadas = (props) => {
                 />
             </View>
             <Pressable style={styles.containerCrear} onPress={() => props.navigation.navigate('CrearRutina')}>
-                <Icon name="plus" color="#607cff" size={50} />
+                <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "7%" }} /><Text style={styles.text}>Crear Rutina</Text>
             </Pressable>
         </View>
     );
-};
+}
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#1F2937', // bg-gray-950
-        padding: 20,
         alignItems: "center"
     },
     containerRow: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         alignItems: 'center',
+        marginTop: 30,
         width: '100%',
     },
     containerCrear: {
-        width: '100%',
+        width: '90%',
+        flexDirection: 'row',
         borderColor: '#607cff',
         borderRadius: 30,
         borderWidth: 2,
         marginBottom: 20,
         alignItems: "center",
-        justifyContent: "center"
-    },
-    containerFlatList: {
-        flex: 7,
-        marginBottom: 20,
-        width: "100%"
     },
     image: {
         width: 100,
         height: 100,
     },
     title: {
-        fontSize: 37,
+        fontSize: 30,
+        textAlign: 'center',
         color: 'white',
     },
     textRutinas: {
@@ -123,6 +119,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
         textAlign: "center"
     },
+    text: {
+        fontSize: 30,
+        color: 'white',
+        textAlign: 'center'
+    }
 });
 
-export default RutinasCreadas;
+export default Buscar;

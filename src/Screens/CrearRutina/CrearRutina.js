@@ -1,10 +1,10 @@
 import { useState, useContext } from 'react';
-import { View, Text, TextInput, Image, ScrollView, StyleSheet, Modal, Alert } from 'react-native';
+import { View, Text, TextInput, Image, ScrollView, StyleSheet, Modal, Alert, Pressable } from 'react-native';
 import { Button } from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import postData from '../../Utils/services/postData';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Context from '../../Utils/Context';
 
 const CrearRutina = (props) => {
@@ -104,7 +104,10 @@ const CrearRutina = (props) => {
                 value={ambito}
                 onChangeText={setAmbito}
             />
-            <Icon name="plus" color="#607cff" size={50} onPress={() => { props.navigation.navigate('CrearEjercicio') }} />
+            <Pressable style={styles.containerCrear} onPress={() => props.navigation.navigate('CrearEjercicio')}>
+                <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "5%" }} />
+                <Text style={styles.text}>Crear Ejercicio</Text>
+            </Pressable>
 
             <TextInput
                 style={styles.input}
@@ -282,6 +285,19 @@ const styles = StyleSheet.create({
     modalButton: {
         backgroundColor: '#607cff',
     },
+    containerCrear: {
+        width: '90%',
+        flexDirection: 'row',
+        borderColor: '#607cff',
+        borderRadius: 30,
+        borderWidth: 2,
+        marginBottom: 10,
+        alignItems: "center",
+    },
+    text: {
+        fontSize: 30,
+        color: 'white',
+    }
 });
 
 export default CrearRutina;
