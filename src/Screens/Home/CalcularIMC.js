@@ -11,7 +11,7 @@ const CalcularIMC = (props) => {
     const [historial, setHistorial] = useState([]);
 
     const alturaHasErrors = () => {
-        const regex = /^([0-2](\.\d{1,2})?)$/;
+        const regex = /^(0\.[5-9]\d?|[1-2]\.\d{1,2})$/;
         return altura != '' && !regex.test(altura)
     }
     const pesoHasErrors = () => {
@@ -27,7 +27,7 @@ const CalcularIMC = (props) => {
             setMensaje('Por favor, ingrese valores válidos.');
             setModalVisible(true);
             return;
-        }else if (alturaHasErrors()&&pesoHasErrors()){
+        } else if (alturaHasErrors() && pesoHasErrors()) {
             setMensaje('Por favor, ingrese valores válidos.');
             setModalVisible(true);
             return;
