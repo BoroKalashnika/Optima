@@ -1,14 +1,16 @@
-import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Modal, Button, ScrollView } from 'react-native';
+import { useState , useContext } from 'react';
+import Context from '../../Utils/Context';
+import { View, Text, TextInput, StyleSheet, Button, ScrollView } from 'react-native';
 import { HelperText } from 'react-native-paper';
+import MensajeAlert from '../../Components/mensajeAlert/MensajeAlert';
 
 const CalcularIMC = (props) => {
     const [peso, setPeso] = useState('');
     const [altura, setAltura] = useState('');
     const [imc, setImc] = useState(null);
     const [mensaje, setMensaje] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
     const [historial, setHistorial] = useState([]);
+    const {modalVisible, setModalVisible} = useContext(Context);
 
     const alturaHasErrors = () => {
         const regex = /^(0\.[5-9]\d?|[1-2]\.\d{1,2})$/;
@@ -18,6 +20,10 @@ const CalcularIMC = (props) => {
         const regex = /^([3-9][0-9]|1[0-9]{2}|200)(\.\d{1,2})?\s?$/;
         return peso != '' && !regex.test(peso)
     }
+
+    const cerrarModal = () => {
+        setModalVisible(false);
+    };
 
     const calcularIMC = () => {
         const pesoNum = parseFloat(peso);
@@ -108,20 +114,6 @@ const CalcularIMC = (props) => {
                 </Text>
             )}
 
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}>
-                <View style={styles.modalOverlay}>
-                    <View style={styles.modalContainer}>
-                        <Text style={styles.modalTitle}>Resultado</Text>
-                        <Text style={styles.modalMessage}>{mensaje}</Text>
-                        <Button title="Cerrar" onPress={() => setModalVisible(false)} color="#607cff" />
-                    </View>
-                </View>
-            </Modal>
-
             <View style={styles.historialContainer}>
                 <Text style={styles.historialTitle}>Historial</Text>
                 <ScrollView style={styles.historial}>
@@ -134,6 +126,7 @@ const CalcularIMC = (props) => {
                     ))}
                 </ScrollView>
             </View>
+            <MensajeAlert visible={modalVisible} mensaje={mensaje} cerrarModal={cerrarModal}/>
         </View>
     );
 }
@@ -175,31 +168,6 @@ const styles = StyleSheet.create({
         color: '#bbdefb',
         marginTop: 15,
         fontWeight: 'bold',
-    },
-    modalOverlay: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContainer: {
-        backgroundColor: '#ffffff',
-        padding: 20,
-        borderRadius: 10,
-        width: '80%',
-        alignItems: 'center',
-    },
-    modalTitle: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: '#0d47a1',
-        marginBottom: 10,
-    },
-    modalMessage: {
-        fontSize: 16,
-        color: '#333333',
-        marginBottom: 20,
-        textAlign: 'center',
     },
     historialContainer: {
         marginTop: 30,

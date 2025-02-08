@@ -5,8 +5,20 @@ export const Provider = ({ children }) => {
     const [token, setToken] = useState('');
     const [email, setEmail] = useState('');
     const [codigo, setCodigo] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
     return (
-        <Context.Provider value={{ loading, setLoading, token, setToken, email, setEmail , codigo,setCodigo }}>
+        <Context.Provider value={{
+            loading,
+            setLoading,
+            token,
+            setToken,
+            email,
+            setEmail,
+            codigo,
+            setCodigo, 
+            modalVisible, 
+            setModalVisible
+        }}>
             {children}
         </Context.Provider>
     );
