@@ -1,10 +1,11 @@
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Card from '../../Components/card/Card';
+import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 
 const Usuario = (props) => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Image source={require('../../Assets/img/logo.png')} style={styles.topImage} />
+            <HeaderRutina tipo={'user'} />
             <Image source={require('../../Assets/img/perfil.png')} style={styles.profileImage} />
             <Text style={styles.name}>Nombre de Usuario</Text>
             <View style={styles.containerCard}>
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
         width: 185,
         height: 185,
         borderRadius: 50,
-        marginTop: 60,
+        marginTop: 10,
     },
     name: {
         fontSize: 22,

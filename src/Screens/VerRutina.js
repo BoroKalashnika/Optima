@@ -107,7 +107,7 @@ const VerRutina = (props) => {
     console.log(props.navigation)
     return (
         <View style={styles.container}>
-            <HeaderRutina nombre={nombre} />
+            <HeaderRutina nombre={nombre} tipo={'rutina'}/>
             <View style={styles.containerRow}>
                 <Text style={styles.title}> Creador: </Text>
                 <Icon name={icono} color="red" size={50} onPress={PressHeart} />

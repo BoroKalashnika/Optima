@@ -27,10 +27,19 @@ const HeaderRutina = (props) => {
 
     if (props.tipo === 'ajustes') {
         return (
-            <View style={estilos.containerRow}>
+            <View style={estilos.containerRowAjustes}>
                 <Image source={require('../../Assets/img/logo.png')} style={estilos.image} />
                 <Text style={estilos.title}>{props.titulo}</Text>
                 <Icon name="setting" size={50} color="#607cff" style={{ marginRight: 10 }} />
+            </View>
+        );
+    }
+
+    if (props.tipo === 'user') {
+        return (
+            <View style={estilos.containerRowUser}>
+                <Image source={require('../../Assets/img/logo.png')} style={estilos.image} />
+                <Icon name="setting" size={45} color="#607cff" style={{ marginRight: 10 }} />
             </View>
         );
     }
@@ -46,8 +55,20 @@ const estilos = StyleSheet.create({
         paddingTop: 25,
         backgroundColor: '#1F2937',
     },
-    containerHR: {
-        flexDirection: 'column',
+    containerRowAjustes: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginTop: 30,
+        width: '100%',
+    },
+    containerRowUser: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: '#1F2937',
     },
     nombre: {
         fontSize: 30,
@@ -60,12 +81,12 @@ const estilos = StyleSheet.create({
         marginTop: 10,
     },
     image: {
-        width: 100,
-        height: 100,
+        width: 80,
+        height: 80,
     },
     title: {
         fontSize: 30,
-        textAlign:'center',
+        textAlign: 'center',
         color: 'white',
     },
 });

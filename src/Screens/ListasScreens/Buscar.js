@@ -49,7 +49,7 @@ const data = [
 const Buscar = (props) => {
     return (
         <View style={styles.container}>
-            <HeaderRutina tipo={'ajustes'}/>
+            <HeaderRutina tipo={'ajustes'} titulo={'Buscar Rutinas'}/>
                 {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
             
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
