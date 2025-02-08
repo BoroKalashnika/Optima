@@ -34,7 +34,7 @@ const CalcularIMC = (props) => {
             setMensaje('Por favor, ingrese valores válidos.');
             setModalVisible(true);
             return;
-        } else if (alturaHasErrors() && pesoHasErrors()) {
+        } else if (alturaHasErrors() || pesoHasErrors()) {
             setTitulo('Error')
             setMensaje('Por favor, ingrese valores válidos.');
             setModalVisible(true);

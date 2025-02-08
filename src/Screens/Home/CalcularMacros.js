@@ -1,17 +1,290 @@
-import {
-    View,
-    StyleSheet,
-} from 'react-native';
+import { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, Button, Dimensions } from 'react-native';
+import { HelperText } from 'react-native-paper';
+import { Picker } from '@react-native-picker/picker';
+import { PieChart } from 'react-native-chart-kit';
+import MensajeAlert from '../../Components/mensajeAlert/MensajeAlert';
 
-const CalcularMacros= (props) => {
+const CalcularMacros = (props) => {
+    const [peso, setPeso] = useState('');
+    const [edad, setEdad] = useState('');
+    const [altura, setAltura] = useState('');
+    const [sexo, setSexo] = useState('masculino');
+    const [actividad, setActividad] = useState('pocoActivo');
+    const [macros, setMacros] = useState(null);
+    const [mensaje, setMensaje] = useState('');
+    const [titulo, setTitulo] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const screenWidth = Dimensions.get('window').width;
+
+    const alturaHasErrors = () => {
+        const regex = /^(1[0-9]{2}|2[0-4][0-9]|250)\s?$/;
+        return altura != '' && !regex.test(altura)
+    }
+
+    const pesoHasErrors = () => {
+        const regex = /^([3-9][0-9]|1[0-9]{2}|200)(\.\d{1,2})?\s?$/;
+        return peso != '' && !regex.test(peso)
+    }
+
+    const edadHasErrors = () => {
+        const regex = /^([1-9]|[1-8][0-9]|90)$/;
+        return edad != '' && !regex.test(edad)
+    }
+
+    const cerrarModal = () => {
+        setModalVisible(false);
+    };
+
+    const calcularMacros = () => {
+        const pesoNum = parseFloat(peso);
+        const edadNum = parseInt(edad);
+        const alturaNum = parseFloat(altura);
+
+        if (!pesoNum || !edadNum || !alturaNum || pesoNum <= 0 || edadNum <= 0 || alturaNum <= 0) {
+            setTitulo('Error');
+            setMensaje('Por favor, ingrese valores válidos.');
+            setModalVisible(true);
+            return;
+        } else if (alturaHasErrors() || pesoHasErrors() || edadHasErrors()) {
+            setTitulo('Error');
+            setMensaje('Valores inválidos.');
+            setModalVisible(true);
+            return;
+        }
+
+        let tmb;
+
+        if (sexo === 'masculino') {
+            tmb = 66.5 + (13.75 * pesoNum) + (5.003 * alturaNum) - (6.755 * edadNum);
+        } else {
+            tmb = 655.1 + (9.563 * pesoNum) + (1.850 * alturaNum) - (4.676 * edadNum);
+        }
+
+        let factorActividad;
+        if (actividad === 'pocoActivo') factorActividad = 1.2;
+        if (actividad === 'medioActivo') factorActividad = 1.55;
+        if (actividad === 'muyActivo') factorActividad = 1.9;
+
+        const caloriasTotales = tmb * factorActividad;
+
+        const carbos = (caloriasTotales * 0.4) / 4;
+        const proteinas = (caloriasTotales * 0.3) / 4;
+        const grasas = (caloriasTotales * 0.3) / 9;
+
+        setMacros({
+            caloriasTotales: caloriasTotales.toFixed(0),
+            carbos: carbos.toFixed(0),
+            proteinas: proteinas.toFixed(0),
+            grasas: grasas.toFixed(0)
+        });
+
+        setTitulo('Calculado');
+        setMensaje('Cálculo realizado con exito');
+        setModalVisible(true);
+    };
+
+    const limpiarCampos = () => {
+        setPeso('');
+        setEdad('');
+        setAltura('');
+        setSexo('masculino');
+        setActividad('pocoActivo');
+        setMacros(null);
+        setMensaje('');
+        setTitulo('');
+    };
+
     return (
         <View style={styles.container}>
+            <Text style={styles.title}>Calculadora de Macros</Text>
+            {(peso != '' && pesoHasErrors()) && (
+                <HelperText type="error">
+                    Peso en kilogramos
+                </HelperText>
+            )}
+            <TextInput
+                style={styles.input}
+                placeholder="Peso (kg)"
+                placeholderTextColor="#90caf9"
+                keyboardType="numeric"
+                value={peso}
+                onChangeText={setPeso}
+            />
+            {(edad != '' && edadHasErrors()) && (
+                <HelperText type="error">
+                    Edad de 1-90 años
+                </HelperText>
+            )}
+            <TextInput
+                style={styles.input}
+                placeholder="Edad (años)"
+                placeholderTextColor="#90caf9"
+                keyboardType="numeric"
+                value={edad}
+                onChangeText={setEdad}
+            />
+            {(altura != '' && alturaHasErrors()) && (
+                <HelperText type="error">
+                    Altura en centímetros
+                </HelperText>
+            )}
+            <TextInput
+                style={styles.input}
+                placeholder="Altura (cm)"
+                placeholderTextColor="#90caf9"
+                keyboardType="numeric"
+                value={altura}
+                onChangeText={setAltura}
+            />
+
+            <View style={styles.pickerContainer}>
+                <Text style={styles.label}>Sexo</Text>
+                <Picker
+                    selectedValue={sexo}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setSexo(itemValue)}
+                >
+                    <Picker.Item label="Masculino" value="masculino" />
+                    <Picker.Item label="Femenino" value="femenino" />
+                </Picker>
+            </View>
+
+            <View style={styles.pickerContainer}>
+                <Text style={styles.label}>Nivel de Actividad</Text>
+                <Picker
+                    selectedValue={actividad}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setActividad(itemValue)}
+                >
+                    <Picker.Item label="Poco Activo" value="pocoActivo" />
+                    <Picker.Item label="Medio Activo" value="medioActivo" />
+                    <Picker.Item label="Muy Activo" value="muyActivo" />
+                </Picker>
+            </View>
+
+            <View style={styles.buttonContainer}>
+                <Button title="Calcular" onPress={calcularMacros} color="#607cff" />
+                <Button title="Limpiar" onPress={limpiarCampos} color="#607cff" />
+                <Button title="Volver" onPress={() => { props.navigation.goBack() }} color="#607cff" />
+            </View>
+
+            {macros && (
+                <View style={styles.resultContainer}>
+                    <Text style={styles.result}>Calorías Totales: {macros.caloriasTotales} kcal</Text>
+                    <Text style={styles.result}>Carbohidratos: {macros.carbos} g</Text>
+                    <Text style={styles.result}>Proteínas: {macros.proteinas} g</Text>
+                    <Text style={styles.result}>Grasas: {macros.grasas} g</Text>
+
+                    <PieChart
+                        data={[
+                            {
+                                name: 'Carbos',
+                                population: parseFloat(macros.carbos),
+                                color: '#FF6347',
+                                legendFontColor: '#7F7F7F',
+                                legendFontSize: 15
+                            },
+                            {
+                                name: 'Proteínas',
+                                population: parseFloat(macros.proteinas),
+                                color: '#4CAF50',
+                                legendFontColor: '#7F7F7F',
+                                legendFontSize: 15
+                            },
+                            {
+                                name: 'Grasas',
+                                population: parseFloat(macros.grasas),
+                                color: '#FFD700',
+                                legendFontColor: '#7F7F7F',
+                                legendFontSize: 15
+                            }
+                        ]}
+                        width={screenWidth - 60}
+                        height={100}
+                        chartConfig={{
+                            backgroundColor: '#ffffff',
+                            backgroundGradientFrom: '#ffffff',
+                            backgroundGradientTo: '#ffffff',
+                            decimalPlaces: 0,
+                            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                        }}
+                        accessor="population"
+                        style={{
+                            marginVertical: 8,
+                            borderRadius: 16,
+                        }}
+                    />
+                </View>
+            )}
+            <MensajeAlert visible={modalVisible} mensaje={mensaje} titulo={titulo} cerrarModal={cerrarModal} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        backgroundColor: '#1F2937',
+    },
+    title: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        color: '#bbdefb',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    input: {
+        width: '90%',
+        height: 50,
+        backgroundColor: '#374151',
+        color: '#bbdefb',
+        paddingLeft: 10,
+        marginBottom: 15,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#607cff',
+    },
+    label: {
+        fontSize: 16,
+        color: '#bbdefb',
+        marginBottom: 10,
+    },
+    pickerContainer: {
+        width: '90%',
+        marginBottom: 15,
+    },
+    picker: {
+        height: 50,
+        backgroundColor: '#374151',
+        color: '#bbdefb',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#607cff',
+    },
+    resultContainer: {
+        marginTop: 20,
+        width: '90%',
+    },
+    result: {
+        fontSize: 15,
+        color: '#bbdefb',
+        fontWeight: 'bold',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '90%',
+        marginTop: 20,
+    },
+    backButton: {
+        marginBottom: 20,
+    },
 });
 
 export default CalcularMacros;
