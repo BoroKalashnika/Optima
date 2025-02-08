@@ -1,17 +1,284 @@
-import {
-    View,
-    StyleSheet,
-} from 'react-native';
+import { useState } from 'react';
+import { View, Text, TextInput, Image, ScrollView, StyleSheet, Modal , Alert} from 'react-native';
+import { Button } from 'react-native-paper';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { Picker } from '@react-native-picker/picker';
+import postData from '../../Utils/services/postData';
+import Icon from 'react-native-vector-icons/AntDesign';
 
-const CrearRutina= (props) => {
+const CrearRutina = (props) => {
+    const [nomRutina, setNomRutina] = useState('');
+    const [dificultad, setDificultad] = useState('Principiante');
+    const [tipo, setTipo] = useState('Gimnasio');
+    const [ambito, setAmbito] = useState('');
+    const [ejercicios, setEjercicios] = useState('');
+    const [dieta, setDieta] = useState('');
+    const [vistaPrevia, setVistaPrevia] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertTitle, setAlertTitle] = useState('');
+
+    const registrarRutina = async () => {
+        const json = {
+            nombreRutina: nomRutina,
+            puntuacnion: '',
+            dificultad: dificultad,
+            tipo: tipo,
+            ambito: ambito,
+            creador: '',
+            ejercicios: [],
+            dieta: dieta,
+            vistaPrevia: vistaPrevia,
+        };
+        const response = await postData(
+            'http://13.216.205.228:8080/optima/crearRutina',
+            json
+        );
+        if (response.status === 201) {
+            Alert.alert('RUTINA CREADA', response.message);
+            //props.navigation.navigate('');
+        } else {
+            Alert.alert('ERROR', response.message);
+        }
+    };
+
+    const pickImage = () => {
+        const options = {
+            mediaType: 'photo', // solo imágenes
+            includeBase64: false,
+            maxWidth: 800, // tamaño máximo de la imagen
+            maxHeight: 600,
+        };
+
+        launchImageLibrary(options, (response) => {
+            if (response.didCancel) {
+                Alert.alert('Cancelado', 'Seleccionaste cancelar la imagen');
+            } else if (response.errorCode) {
+                Alert.alert('Error', 'Ocurrió un error al seleccionar la imagen');
+            } else {
+                setVistaPrevia(response.assets[0].uri); // Accede al URI de la imagen seleccionada
+            }
+        });
+    };
+
+    const limpiarCampos = () => {
+        setNomRutina('');
+        setDificultad('Principiante');
+        setTipo('Gimnasio');
+        setAmbito('');
+        setEjercicios('');
+        setDieta('');
+        setVistaPrevia(null);
+    };
+
+    const validarCampos = () => {
+        if (!nomRutina || !ambito || !ejercicios || !dieta || !vistaPrevia) {
+            setAlertMessage('Todos los campos deben estar completos antes de guardar.');
+            setAlertTitle('Error');
+            setModalVisible(true);
+            return;
+        }
+        registrarRutina();
+        setAlertMessage('Rutina creada correctamente.');
+        setAlertTitle('Éxito');
+        setModalVisible(true);
+    };
+
     return (
-        <View style={styles.container}>
-        </View>
+        <ScrollView contentContainerStyle={styles.container}>
+            <Text style={styles.title}>Crear Nueva Rutina</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Nombre de la rutina"
+                placeholderTextColor="#90caf9"
+                value={nomRutina}
+                onChangeText={setNomRutina}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Ámbito"
+                placeholderTextColor="#90caf9"
+                value={ambito}
+                onChangeText={setAmbito}
+            />
+            <Icon name="plus" color="#607cff" size={50} onPress={() => { props.navigation.navigate('CrearEjercicio') }} />
+
+            <TextInput
+                style={styles.input}
+                placeholder="Dieta"
+                placeholderTextColor="#90caf9"
+                value={dieta}
+                onChangeText={setDieta}
+            />
+            <View style={styles.pickerContainer}>
+                <Picker
+                    selectedValue={dificultad}
+                    onValueChange={(itemValue) => setDificultad(itemValue)}
+                    style={styles.picker}>
+                    <Picker.Item label="Principiante" value="Principiante" style={styles.pickerItem} />
+                    <Picker.Item label="Intermedio" value="Intermedio" style={styles.pickerItem} />
+                    <Picker.Item label="Experto" value="Experto" style={styles.pickerItem} />
+                </Picker>
+            </View>
+            <View style={styles.pickerContainer}>
+                <Picker
+                    selectedValue={tipo}
+                    onValueChange={(itemValue) => setTipo(itemValue)}
+                    style={styles.picker}>
+                    <Picker.Item label="Gimnasio" value="Gimnasio" style={styles.pickerItem} />
+                    <Picker.Item label="Calistenia" value="Calistenia" style={styles.pickerItem} />
+                    <Picker.Item label="Casa" value="Casa" style={styles.pickerItem} />
+                </Picker>
+            </View>
+            <Button mode="contained" style={styles.imagePickerButton} onPress={pickImage}>
+                Seleccionar Imagen
+            </Button>
+            {vistaPrevia && (
+                <Image source={{ uri: vistaPrevia }} style={styles.image} />
+            )}
+            <View style={styles.buttonContainer}>
+                <Button mode="contained" style={styles.button} onPress={validarCampos}>
+                    Guardar
+                </Button>
+                <Button mode="contained" style={styles.buttonClear} onPress={limpiarCampos}>
+                    Limpiar
+                </Button>
+            </View>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalTitle}>{alertTitle}</Text>
+                        <Text style={styles.modalMessage}>{alertMessage}</Text>
+                        <Button mode="contained" onPress={() => setModalVisible(false)} style={styles.modalButton}>
+                            Cerrar
+                        </Button>
+                    </View>
+                </View>
+            </Modal>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        padding: 20,
+        backgroundColor: '#1F2937',
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        color: '#bbdefb',
+        marginBottom: 20,
+        textAlign: 'center',
+        marginTop: 40,
+    },
+    input: {
+        borderRadius: 10,
+        marginBottom: 10,
+        width: '90%',
+        backgroundColor: '#374151',
+        color: '#bbdefb',
+        padding: 12,
+        borderColor: '#607cff',
+        borderWidth: 1,
+    },
+    pickerContainer: {
+        marginBottom: 10,
+        width: '90%',
+        backgroundColor: '#374151',
+        color: '#F9FAFB',
+        borderRadius: 8,
+        borderColor: '#607cff',
+        borderWidth: 1,
+    },
+    picker: {
+        color: '#bbdefb',
+    },
+    pickerItem: {
+        color: '#607cff',
+        fontSize: 16,
+    },
+    imagePickerButton: {
+        flex: 1,
+        marginRight: 10,
+        backgroundColor: '#607cff',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderRadius: 10,
+        height: 50,
+        width: '90%',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    image: {
+        width: '90%',
+        height: 200,
+        borderRadius: 10,
+        marginBottom: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '90%',
+    },
+    button: {
+        flex: 1,
+        marginRight: 10,
+        backgroundColor: '#607cff',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderRadius: 10,
+        height: 55,
+        width: 160,
+        alignItems: 'center',
+    },
+    buttonClear: {
+        flex: 1,
+        marginRight: 10,
+        backgroundColor: '#607cff',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderRadius: 10,
+        height: 55,
+        width: 160,
+        alignItems: 'center',
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContainer: {
+        backgroundColor: '#ffffff',
+        padding: 20,
+        borderRadius: 10,
+        width: '80%',
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#0d47a1',
+        marginBottom: 10,
+    },
 
+    modalMessage: {
+        fontSize: 16,
+        color: '#333333',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    modalButton: {
+        backgroundColor: '#607cff',
+    },
 });
 
 export default CrearRutina;
