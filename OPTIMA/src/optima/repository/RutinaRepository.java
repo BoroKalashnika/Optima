@@ -10,6 +10,8 @@ import optima.model.Rutina;
 public interface RutinaRepository extends MongoRepository<Rutina, String> {
 
 	Optional<Rutina> findById(String id);
+	
+	Rutina findByNombreRutina(String nombreRutina);
 
 	void deleteById(String id);
 	

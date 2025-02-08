@@ -283,14 +283,30 @@ public class Controller {
 	@PostMapping("/optima/crearRutina")
 	ResponseEntity<Object> crearRutina(@RequestBody Rutina nuevaRutina)
 			throws NoSuchAlgorithmException, MessagingException {
+		JSONObject respusta = new JSONObject();
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(nuevaRutina.getToken());
 		if (usuarioBaseDatos.isPresent()) {
-			nuevaRutina.setToken("");
-			Rutina rutinaGuardada = rutinaRepository.save(nuevaRutina);
+			nuevaRutina.setToken(null);
+			if (nuevaRutina.getNombreRutina().equals("$¿¡crea!?")) {
+				Rutina rutinaGuardada = rutinaRepository.save(nuevaRutina);
 
-			JSONObject respusta = new JSONObject();
-			respusta.put("idRutina", rutinaGuardada.getId());
-			return ResponseEntity.ok(respusta.toString());
+				respusta.put("idRutina", rutinaGuardada.getId());
+				return ResponseEntity.status(HttpStatus.CREATED).body(respusta.toString());
+			} else {
+				Rutina actualizarRutina = rutinaRepository.findByNombreRutina(nuevaRutina.getNombreRutina());
+
+				actualizarRutina.setNombreRutina(nuevaRutina.getNombreRutina());
+				actualizarRutina.setValoracion(nuevaRutina.getValoracion());
+				actualizarRutina.setDificultad(nuevaRutina.getDificultad());
+				actualizarRutina.setGrupoMuscular(nuevaRutina.getGrupoMuscular());
+				actualizarRutina.setEjercicios(nuevaRutina.getEjercicios());
+				actualizarRutina.setDieta(nuevaRutina.getDieta());
+				actualizarRutina.setVistaPrevia(nuevaRutina.getVistaPrevia());
+				actualizarRutina.setAmbito(nuevaRutina.getAmbito());
+
+				respusta.put("message", "Rutina creada con exito");
+				return ResponseEntity.status(HttpStatus.CREATED).body(respusta.toString());
+			}
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
@@ -318,14 +334,14 @@ public class Controller {
 
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(nuevoEjercicio.getToken());
 		if (usuarioBaseDatos.isPresent()) {
-			nuevoEjercicio.setToken("");
-			ejercicioRepository.save(nuevoEjercicio);
+			nuevoEjercicio.setToken(null);
+			Ejercicio ejercicio = ejercicioRepository.save(nuevoEjercicio);
 
-			response.put("message", "Ejercicio creado");
+			response.put("message", ejercicio.getId());
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
 		}
-		response.put("message", "");
+		response.put("message", "Token expirado.");
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 	}
 
