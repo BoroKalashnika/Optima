@@ -286,8 +286,11 @@ public class Controller {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(nuevaRutina.getToken());
 		if (usuarioBaseDatos.isPresent()) {
 			nuevaRutina.setToken("");
-			rutinaRepository.save(nuevaRutina);
-			return ResponseEntity.status(HttpStatus.CREATED).build();
+			Rutina rutinaGuardada = rutinaRepository.save(nuevaRutina);
+
+			JSONObject respusta = new JSONObject();
+			respusta.put("idRutina", rutinaGuardada.getId());
+			return ResponseEntity.ok(respusta.toString());
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
