@@ -6,6 +6,7 @@ import {
     TextInput,
     Alert,
     StyleSheet,
+    ScrollView
 } from 'react-native';
 import Video from 'react-native-video';
 import { Button } from 'react-native-paper';
@@ -14,6 +15,7 @@ import RNFS from 'react-native-fs';
 import { SelectList } from 'react-native-dropdown-select-list';
 import uploadVideo from '../../Utils/services/uploadVideo';
 import postData from '../../Utils/services/postData';
+import getData from '../../Utils/services/getData';
 import Context from '../../Utils/Context';
 import Carga from '../../Components/carga/Carga';
 
@@ -24,6 +26,8 @@ const CrearEjercicio = (props) => {
     const [videoFile, setVideoFile] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const { loading, setLoading } = useContext(Context);
+    const { token } = useContext(Context);
+    const { idRutina } = useContext(Context);
 
     const data = [
         { key: '1', value: 'Pecho' },
@@ -91,14 +95,16 @@ const CrearEjercicio = (props) => {
 
                 const thumbnailUrl = `https://res.cloudinary.com/dhfvnvuox/video/upload/so_auto/${publicId}.jpg`; // Using AI to pick an interesting frame
 
+                const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
+
                 const json = {
                     nombreEjercicio: nombre,
                     grupoMuscular: grupoMuscular,
                     dificultad: dificultad,
                     video: videoUrl,
                     explicacion: descripcion,
-                    idRutina: '',
-                    usuario: '',
+                    idRutina: idRutina,
+                    usuario: usuario.correo,
                     vistaPrevia: thumbnailUrl,
                 };
 
@@ -116,6 +122,7 @@ const CrearEjercicio = (props) => {
                 Alert.alert('ERROR', 'Failed to upload video');
                 setLoading(false);
             }
+            handleOnPress();
         } else {
             Alert.alert('ERROR', 'Completa todos los campos');
         }
@@ -132,7 +139,7 @@ const CrearEjercicio = (props) => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.subContainer}>
                 <Text style={styles.title}>Crear Ejercicio</Text>
             </View>
@@ -202,16 +209,15 @@ const CrearEjercicio = (props) => {
                     </Pressable>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        width: '100%',
+        flexGrow: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        padding: 20,
         backgroundColor: '#1F2937',
     },
     subContainer: {

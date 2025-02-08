@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { View, Text, TextInput, Image, ScrollView, StyleSheet, Modal , Alert} from 'react-native';
+import { useState, useContext } from 'react';
+import { View, Text, TextInput, Image, ScrollView, StyleSheet, Modal, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import postData from '../../Utils/services/postData';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Context from '../../Utils/Context';
 
 const CrearRutina = (props) => {
     const [nomRutina, setNomRutina] = useState('');
@@ -17,6 +18,8 @@ const CrearRutina = (props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
+    const { token } = useContext(Context);
+    const { setIdRutina } = useContext(Context);
 
     const registrarRutina = async () => {
         const json = {
@@ -44,9 +47,9 @@ const CrearRutina = (props) => {
 
     const pickImage = () => {
         const options = {
-            mediaType: 'photo', // solo imágenes
+            mediaType: 'photo',
             includeBase64: false,
-            maxWidth: 800, // tamaño máximo de la imagen
+            maxWidth: 800,
             maxHeight: 600,
         };
 
@@ -56,7 +59,7 @@ const CrearRutina = (props) => {
             } else if (response.errorCode) {
                 Alert.alert('Error', 'Ocurrió un error al seleccionar la imagen');
             } else {
-                setVistaPrevia(response.assets[0].uri); // Accede al URI de la imagen seleccionada
+                setVistaPrevia(response.assets[0].uri);
             }
         });
     };

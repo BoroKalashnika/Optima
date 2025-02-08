@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#1F2937', // bg-gray-950
-
+        padding: 20,
         alignItems: "center"
     },
     containerRow: {
@@ -89,11 +89,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: 30,
         width: '100%',
     },
     containerCrear: {
-        width: '80%',
+        width: '100%',
         borderColor: '#607cff',
         borderRadius: 30,
         borderWidth: 2,
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
     containerFlatList: {
         flex: 7,
         marginBottom: 20,
-        width: "90%"
+        width: "100%"
     },
     image: {
         width: 100,
