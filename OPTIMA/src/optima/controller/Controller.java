@@ -294,18 +294,24 @@ public class Controller {
 				return ResponseEntity.status(HttpStatus.CREATED).body(respusta.toString());
 			} else {
 				Rutina actualizarRutina = rutinaRepository.findByNombreRutina(nuevaRutina.getNombreRutina());
+				if (actualizarRutina != null) {
+					actualizarRutina.setNombreRutina(nuevaRutina.getNombreRutina());
+					actualizarRutina.setValoracion(nuevaRutina.getValoracion());
+					actualizarRutina.setDificultad(nuevaRutina.getDificultad());
+					actualizarRutina.setGrupoMuscular(nuevaRutina.getGrupoMuscular());
+					actualizarRutina.setEjercicios(nuevaRutina.getEjercicios());
+					actualizarRutina.setDieta(nuevaRutina.getDieta());
+					actualizarRutina.setVistaPrevia(nuevaRutina.getVistaPrevia());
+					actualizarRutina.setAmbito(nuevaRutina.getAmbito());
 
-				actualizarRutina.setNombreRutina(nuevaRutina.getNombreRutina());
-				actualizarRutina.setValoracion(nuevaRutina.getValoracion());
-				actualizarRutina.setDificultad(nuevaRutina.getDificultad());
-				actualizarRutina.setGrupoMuscular(nuevaRutina.getGrupoMuscular());
-				actualizarRutina.setEjercicios(nuevaRutina.getEjercicios());
-				actualizarRutina.setDieta(nuevaRutina.getDieta());
-				actualizarRutina.setVistaPrevia(nuevaRutina.getVistaPrevia());
-				actualizarRutina.setAmbito(nuevaRutina.getAmbito());
+					rutinaRepository.save(actualizarRutina);
 
-				respusta.put("message", "Rutina creada con exito");
-				return ResponseEntity.status(HttpStatus.CREATED).body(respusta.toString());
+					respusta.put("message", "Rutina creada con exito");
+					return ResponseEntity.status(HttpStatus.CREATED).body(respusta.toString());
+				} else {
+					respusta.put("message", "Rutina no encontrada para actualizar");
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respusta.toString());
+				}
 			}
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
