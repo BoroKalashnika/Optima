@@ -1,7 +1,7 @@
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dhfvnvuox/video/upload';
 const CLOUDINARY_UPLOAD_PRESET = 'optima';
 
-const uploadVideo = async (videoFile, setVideo) => {
+const uploadVideo = async (videoFile) => {
   let formData = new FormData();
   formData.append('file', {
     uri: videoFile,
@@ -21,13 +21,12 @@ const uploadVideo = async (videoFile, setVideo) => {
 
     let data = await response.json();
     if (data.secure_url) {
-      setVideo(data.secure_url);
-      return 'Video uploaded successfully!';
+      return data.secure_url;
     } else {
       return 'Failed to upload video';
     }
   } catch (error) {
-    return 'Something went wrong while uploading';
+    return 'Failed to upload video';
   }
 };
 

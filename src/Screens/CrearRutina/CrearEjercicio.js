@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import {
     View,
     Text,
@@ -6,15 +6,16 @@ import {
     TextInput,
     Alert,
     StyleSheet,
-    Image,
 } from 'react-native';
-import { Button } from 'react-native-paper';
 import Video from 'react-native-video';
+import { Button } from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
 import { SelectList } from 'react-native-dropdown-select-list';
 import uploadVideo from '../../Utils/services/uploadVideo';
 import postData from '../../Utils/services/postData';
+import Context from '../../Utils/Context';
+import Carga from '../../Components/carga/Carga';
 
 const CrearEjercicio = (props) => {
     const [nombre, setNombre] = useState('');
@@ -23,6 +24,7 @@ const CrearEjercicio = (props) => {
     const [videoFile, setVideoFile] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [vistaPrevia, setVistaPrevia] = useState('');
+    const { loading, setLoading } = useContext(Context);
 
     const data = [
         { key: '1', value: 'Pecho' },
@@ -39,16 +41,15 @@ const CrearEjercicio = (props) => {
     ];
 
     const pickVideo = async () => {
-        // Utilizamos launchImageLibrary de react-native-image-picker
         launchImageLibrary(
             {
                 mediaType: 'video',
                 quality: 1,
-                videoStabilizationMode: 2, // Si deseas alguna estabilización, puedes configurarlo
+                videoStabilizationMode: 2,
             },
             (response) => {
                 if (response.didCancel) {
-                    return; // Si el usuario cancela
+                    return;
                 }
 
                 if (response.errorCode) {
@@ -58,14 +59,13 @@ const CrearEjercicio = (props) => {
 
                 const videoUri = response.assets[0].uri;
 
-                // Usamos react-native-fs para obtener el tamaño del archivo
                 RNFS.stat(videoUri)
                     .then((statResult) => {
-                        const fileSizeInMB = statResult.size / (1024 * 1024); // Convertir tamaño a MB
-                        const maxSize = 51; // Tamaño máximo permitido (MB)
+                        const fileSizeInMB = statResult.size / (1024 * 1024);
+                        const maxSize = 51; 
 
                         if (fileSizeInMB <= maxSize) {
-                            setVideoFile(videoUri); // Guardamos la URI del video
+                            setVideoFile(videoUri);
                         } else {
                             Alert.alert(
                                 'Archivo demasiado grande',
@@ -81,32 +81,49 @@ const CrearEjercicio = (props) => {
     };
 
     const crearEjercicio = async () => {
-        const videoUrl = await uploadVideo(videoFile);
-        const json = {
-            nombreEjercicio: nombre,
-            grupoMuscular: grupoMuscular,
-            dificultad: dificultad,
-            video: videoUrl,
-            explicacion: descripcion,
-            idRutina: '',
-            usuario: '',
-            vistaPrevia: vistaPrevia,
-        };
+        if (nombre && grupoMuscular && dificultad && videoFile && descripcion) {
+            setLoading(true);
 
-        const response = await postData(
-            'http://13.216.205.228:8080/optima/crearEjercicio',
-            json
-        );
+            const videoUrl = await uploadVideo(videoFile);
+            if (videoUrl != 'Failed to upload video') {
+                const json = {
+                    nombreEjercicio: nombre,
+                    grupoMuscular: grupoMuscular,
+                    dificultad: dificultad,
+                    video: videoUrl,
+                    explicacion: descripcion,
+                    idRutina: '',
+                    usuario: '',
+                    vistaPrevia: vistaPrevia,
+                };
 
-        if (response.status === 201) {
-            Alert.alert('RUTINA CREADA', response.message);
+                const response = await postData(
+                    'http://13.216.205.228:8080/optima/crearEjercicio',
+                    json, setLoading
+                );
+
+                if (response.status === 201) {
+                    Alert.alert('RUTINA CREADA', response.message);
+                } else {
+                    Alert.alert('ERROR', response.message);
+                }
+            } else {
+                Alert.alert('ERROR', 'Failed to upload video');
+                setLoading(false);
+            }
         } else {
-            Alert.alert('ERROR', response.message);
+            Alert.alert('ERROR', 'Completa todos los campos');
         }
     };
     const handleOnPress = () => {
-        props.navegation.goBack();
+        props.navigation.goBack();
     };
+
+    if (loading) {
+        return (
+            <Carga />
+        );
+    }
 
     return (
         <View style={styles.container}>
