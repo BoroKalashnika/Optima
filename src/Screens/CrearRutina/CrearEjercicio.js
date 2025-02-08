@@ -15,7 +15,6 @@ import RNFS from 'react-native-fs';
 import { SelectList } from 'react-native-dropdown-select-list';
 import uploadVideo from '../../Utils/services/uploadVideo';
 import postData from '../../Utils/services/postData';
-import getData from '../../Utils/services/getData';
 import Context from '../../Utils/Context';
 import Carga from '../../Components/carga/Carga';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -32,6 +31,7 @@ const CrearEjercicio = (props) => {
     const { token } = useContext(Context);
     const { idRutina } = useContext(Context);
     const { idEjercicios, setIdEjercicios } = useContext(Context);
+    const { email } = useContext(Context);
 
     const data = [
         { key: '1', value: 'Pecho' },
@@ -99,8 +99,6 @@ const CrearEjercicio = (props) => {
 
                 const thumbnailUrl = `https://res.cloudinary.com/dhfvnvuox/video/upload/so_auto/${publicId}.jpg`; // Using AI to pick an interesting frame
 
-                const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
-
                 const json = {
                     nombreEjercicio: nombre,
                     grupoMuscular: grupoMuscular,
@@ -108,7 +106,7 @@ const CrearEjercicio = (props) => {
                     video: videoUrl,
                     explicacion: descripcion,
                     idRutina: idRutina,
-                    usuario: usuario.correo,
+                    usuario: email,
                     vistaPrevia: thumbnailUrl,
                     token: token
                 };
@@ -117,20 +115,29 @@ const CrearEjercicio = (props) => {
                     'http://13.216.205.228:8080/optima/crearEjercicio',
                     json, setLoading
                 );
-                
+
                 if (response.status === 201) {
-                    setIdEjercicios([...idEjercicios], response.data.message);
-                    Alert.alert('RUTINA CREADA', "Ejercicio creado");
+                    setIdEjercicios([...idEjercicios, response.data.message]);
+                    setAlertMessage('Ejercicio creado correctamente.');
+                    setAlertTitle('Éxito');
+                    setModalVisible(true);
+                    handleOnPress();
                 } else {
-                    Alert.alert('ERROR', response.message);
+                    setAlertMessage(response.message);
+                    setAlertTitle('ERROR');
+                    setModalVisible(true);
                 }
             } else {
-                Alert.alert('ERROR', 'Failed to upload video');
+                setAlertMessage('Failed to upload video');
+                setAlertTitle('ERROR');
+                setModalVisible(true);
                 setLoading(false);
             }
-            handleOnPress();
+            props.navigation.navigate("CrearRutina");
         } else {
-            Alert.alert('ERROR', 'Completa todos los campos');
+            setAlertMessage('Completa todos los campos');
+            setAlertTitle('ERROR');
+            setModalVisible(true);
         }
     };
 

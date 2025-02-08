@@ -14,20 +14,18 @@ const CrearRutina = (props) => {
     const [dificultad, setDificultad] = useState('Principiante');
     const [tipo, setTipo] = useState('Gimnasio');
     const [ambito, setAmbito] = useState('');
-    const [ejercicios, setEjercicios] = useState('');
     const [dieta, setDieta] = useState('');
     const [vistaPrevia, setVistaPrevia] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
     const { token } = useContext(Context);
+    const { email, setEmail } = useContext(Context);
     const { setIdRutina } = useContext(Context);
     const { loading, setLoading } = useContext(Context);
     const { idEjercicios, setIdEjercicios } = useContext(Context);
 
     useEffect(() => {
-        console.log(idEjercicios);
-
         crearRutinaId();
     }, []);
 
@@ -36,9 +34,11 @@ const CrearRutina = (props) => {
 
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
 
+        setEmail(usuario.correo);
+
         const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
         let existe = false;
-
+        //añadir validacion en el back por si a caso
         rutinas.rutinas.forEach(element => {
             if (element.nombreRutina == '$¿¡crea!?') {
                 existe = true;
@@ -69,24 +69,31 @@ const CrearRutina = (props) => {
     const registrarRutina = async () => {
         const json = {
             nombreRutina: nomRutina,
-            puntuacnion: '',
+            valoracion: '0',
             dificultad: dificultad,
             tipo: tipo,
             ambito: ambito,
-            creador: '',
-            ejercicios: [],
+            ejercicios: idEjercicios,
             dieta: dieta,
             vistaPrevia: vistaPrevia,
+            token: token,
         };
+        console.log(json);
+
         const response = await postData(
             'http://13.216.205.228:8080/optima/crearRutina',
             json, setLoading
         );
+
         if (response.status === 201) {
-            Alert.alert('RUTINA CREADA', response.message);
-            //props.navigation.navigate('');
+            setAlertMessage('Rutina creada correctamente.');
+            setAlertTitle('Éxito');
+            setModalVisible(true);
+            props.navigation.navigate('RutinasCreadas');
         } else {
-            Alert.alert('ERROR', response.message);
+            setAlertMessage(response.data.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
         }
         setIdEjercicios([]);
     };
@@ -115,22 +122,26 @@ const CrearRutina = (props) => {
         setDificultad('Principiante');
         setTipo('Gimnasio');
         setAmbito('');
-        setEjercicios('');
         setDieta('');
         setVistaPrevia(null);
+        setIdEjercicios([]);
     };
 
     const validarCampos = () => {
-        if (!nomRutina || !ambito || !ejercicios || !dieta || !vistaPrevia) {
+        if (!nomRutina || !ambito || idEjercicios == [] || !dieta || !vistaPrevia) {
+            if (idEjercicios == []) {
+                setAlertMessage('No ha insertado ningún ejercicio.');
+                setAlertTitle('Error');
+                setModalVisible(true);
+                return;
+            }
             setAlertMessage('Todos los campos deben estar completos antes de guardar.');
             setAlertTitle('Error');
             setModalVisible(true);
             return;
         }
         registrarRutina();
-        setAlertMessage('Rutina creada correctamente.');
-        setAlertTitle('Éxito');
-        setModalVisible(true);
+
     };
 
     return (
