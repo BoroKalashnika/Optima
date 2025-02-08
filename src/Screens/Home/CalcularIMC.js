@@ -1,5 +1,4 @@
-import { useState , useContext } from 'react';
-import Context from '../../Utils/Context';
+import { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, ScrollView } from 'react-native';
 import { HelperText } from 'react-native-paper';
 import MensajeAlert from '../../Components/mensajeAlert/MensajeAlert';
@@ -11,7 +10,7 @@ const CalcularIMC = (props) => {
     const [mensaje, setMensaje] = useState('');
     const [titulo, setTitulo] = useState('');
     const [historial, setHistorial] = useState([]);
-    const {modalVisible, setModalVisible} = useContext(Context);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const alturaHasErrors = () => {
         const regex = /^(0\.[5-9]\d?|[1-2]\.\d{1,2})$/;
@@ -130,7 +129,7 @@ const CalcularIMC = (props) => {
                     ))}
                 </ScrollView>
             </View>
-            <MensajeAlert visible={modalVisible} mensaje={mensaje} titulo={titulo} cerrarModal={cerrarModal}/>
+            <MensajeAlert visible={modalVisible} mensaje={mensaje} titulo={titulo} cerrarModal={cerrarModal} />
         </View>
     );
 }
