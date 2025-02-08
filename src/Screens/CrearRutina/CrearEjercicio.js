@@ -31,6 +31,7 @@ const CrearEjercicio = (props) => {
     const { loading, setLoading } = useContext(Context);
     const { token } = useContext(Context);
     const { idRutina } = useContext(Context);
+    const { setIdEjercicios } = useContext(Context);
 
     const data = [
         { key: '1', value: 'Pecho' },

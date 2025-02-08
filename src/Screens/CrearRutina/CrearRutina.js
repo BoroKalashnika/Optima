@@ -1,11 +1,13 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, Image, ScrollView, StyleSheet, Modal, Alert, Pressable } from 'react-native';
 import { Button } from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import postData from '../../Utils/services/postData';
+import getData from '../../Utils/services/getData';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Context from '../../Utils/Context';
+import Carga from '../../Components/carga/Carga';
 
 const CrearRutina = (props) => {
     const [nomRutina, setNomRutina] = useState('');
@@ -20,6 +22,46 @@ const CrearRutina = (props) => {
     const [alertTitle, setAlertTitle] = useState('');
     const { token } = useContext(Context);
     const { setIdRutina } = useContext(Context);
+    const { loading, setLoading } = useContext(Context);
+
+    useEffect(() => {
+        crearRutinaId();
+    }, []);
+
+    const crearRutinaId = async () => {
+        setLoading(true);
+
+        const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
+
+        const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
+        let existe = false;
+
+        rutinas.rutinas.forEach(element => {
+            if (element.nombreRutina == '$¿¡crea!?') {
+                existe = true;
+            }
+        });
+
+        if (!existe) {
+            const json = {
+                nombreRutina: "$¿¡crea!?",
+                creador: usuario.correo,
+                token: token,
+                idUsuario: usuario.id
+            };
+
+            const response = await postData('http://13.216.205.228:8080/optima/crearRutina', json, setLoading);
+
+            setIdRutina(response.data.message.idRutina);
+        }
+        setLoading(false);
+    };
+
+    if (loading) {
+        return (
+            <Carga />
+        );
+    }
 
     const registrarRutina = async () => {
         const json = {
@@ -35,7 +77,7 @@ const CrearRutina = (props) => {
         };
         const response = await postData(
             'http://13.216.205.228:8080/optima/crearRutina',
-            json
+            json, setLoading
         );
         if (response.status === 201) {
             Alert.alert('RUTINA CREADA', response.message);
@@ -136,9 +178,11 @@ const CrearRutina = (props) => {
                     <Picker.Item label="Casa" value="Casa" style={styles.pickerItem} />
                 </Picker>
             </View>
-            <Button mode="contained" style={styles.imagePickerButton} onPress={pickImage}>
-                Seleccionar Imagen
-            </Button>
+            <View style={styles.buttonContainer}>
+                <Button mode="contained" style={styles.imagePickerButton} onPress={pickImage}>
+                    Seleccionar Imagen
+                </Button>
+            </View>
             {vistaPrevia && (
                 <Image source={{ uri: vistaPrevia }} style={styles.image} />
             )}

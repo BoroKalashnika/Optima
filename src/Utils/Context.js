@@ -6,6 +6,7 @@ export const Provider = ({ children }) => {
     const [email, setEmail] = useState('');
     const [codigo, setCodigo] = useState('');
     const [idRutina, setIdRutina] = useState('');
+    const [idEjercicios, setIdEjercicios] = useState([]);
     return (
         <Context.Provider value={{
             loading,
@@ -17,7 +18,9 @@ export const Provider = ({ children }) => {
             codigo,
             setCodigo,
             idRutina,
-            setIdRutina
+            setIdRutina,
+            idEjercicios,
+            setIdEjercicios
         }}>
             {children}
         </Context.Provider>

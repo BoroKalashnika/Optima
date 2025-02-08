@@ -10,8 +10,8 @@ const postData = async (url, json, setLoading) => {
         });
 
         const status = response.status;
-        const data = await response.json();;
-
+        const data = await response.json();
+        
         return { status, data: data };
 
     } catch (error) {
