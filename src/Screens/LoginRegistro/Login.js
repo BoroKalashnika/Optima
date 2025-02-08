@@ -52,13 +52,14 @@ const Login = (props) => {
                             Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión')
                         } else {
                             setToken(tokenCache.token);
-                            props.navigation.navigate('Home');
+                            props.navigation.navigate('HomeNavegacion');
                         }
                     } else {
                         await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
                         await removeToken();
                         setToken('');
                         Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión')
+                        props.navigation.navigate('Login');
                     }
                 })
             }
