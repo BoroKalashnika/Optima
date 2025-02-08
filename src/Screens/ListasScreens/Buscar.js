@@ -1,6 +1,6 @@
 import { FlatList, View, Image, StyleSheet, Text } from 'react-native';
 import Card from '../../Components/card/Card';
-import Icon from 'react-native-vector-icons/AntDesign';
+import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 
 const data = [
     {
@@ -34,13 +34,13 @@ const data = [
         imagen: require('../../Assets/img/logo.png'),
     },
     {
-        id: '5',
+        id: '6',
         nombre: 'Ejercicio 5',
         descripcion: 'Descripción del ejercicio 5',
         imagen: require('../../Assets/img/logo.png'),
     },
     {
-        id: '5',
+        id: '7',
         nombre: 'Ejercicio 5',
         descripcion: 'Descripción del ejercicio 5',
         imagen: require('../../Assets/img/logo.png'),
@@ -49,11 +49,9 @@ const data = [
 const Buscar = (props) => {
     return (
         <View style={styles.container}>
-            <View style={styles.containerRow}>
-                <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
-                <Text style={styles.title}>Tus Favoritos</Text>
-                <Icon name="setting" size={50} color="#607cff" style={{marginRight:10}}/>
-            </View>
+            <HeaderRutina tipo={'ajustes'}/>
+                {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
+            
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
                 <FlatList
