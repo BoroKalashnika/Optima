@@ -9,6 +9,7 @@ const CalcularIMC = (props) => {
     const [altura, setAltura] = useState('');
     const [imc, setImc] = useState(null);
     const [mensaje, setMensaje] = useState('');
+    const [titulo, setTitulo] = useState('');
     const [historial, setHistorial] = useState([]);
     const {modalVisible, setModalVisible} = useContext(Context);
 
@@ -30,10 +31,12 @@ const CalcularIMC = (props) => {
         const alturaNum = parseFloat(altura);
 
         if (!pesoNum || !alturaNum || alturaNum <= 0 || pesoNum <= 0) {
+            setTitulo('Error')
             setMensaje('Por favor, ingrese valores válidos.');
             setModalVisible(true);
             return;
         } else if (alturaHasErrors() && pesoHasErrors()) {
+            setTitulo('Error')
             setMensaje('Por favor, ingrese valores válidos.');
             setModalVisible(true);
             return;
@@ -53,7 +56,7 @@ const CalcularIMC = (props) => {
         } else {
             mensajeResultado = 'Obesidad';
         }
-
+        setTitulo('Resultado')
         setMensaje(mensajeResultado);
         setModalVisible(true);
 
@@ -70,6 +73,7 @@ const CalcularIMC = (props) => {
         setAltura('');
         setImc(null);
         setMensaje('');
+        setTitulo('');
     };
 
     return (
@@ -126,7 +130,7 @@ const CalcularIMC = (props) => {
                     ))}
                 </ScrollView>
             </View>
-            <MensajeAlert visible={modalVisible} mensaje={mensaje} cerrarModal={cerrarModal}/>
+            <MensajeAlert visible={modalVisible} mensaje={mensaje} titulo={titulo} cerrarModal={cerrarModal}/>
         </View>
     );
 }
