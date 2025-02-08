@@ -23,7 +23,6 @@ const CrearEjercicio = (props) => {
     const [dificultad, setDificultad] = useState('');
     const [videoFile, setVideoFile] = useState('');
     const [descripcion, setDescripcion] = useState('');
-    const [vistaPrevia, setVistaPrevia] = useState('');
     const { loading, setLoading } = useContext(Context);
 
     const data = [
@@ -62,7 +61,7 @@ const CrearEjercicio = (props) => {
                 RNFS.stat(videoUri)
                     .then((statResult) => {
                         const fileSizeInMB = statResult.size / (1024 * 1024);
-                        const maxSize = 51; 
+                        const maxSize = 51;
 
                         if (fileSizeInMB <= maxSize) {
                             setVideoFile(videoUri);
@@ -85,7 +84,13 @@ const CrearEjercicio = (props) => {
             setLoading(true);
 
             const videoUrl = await uploadVideo(videoFile);
-            if (videoUrl != 'Failed to upload video') {
+
+            if (videoUrl !== 'Failed to upload video') {
+
+                const publicId = videoUrl.split('/').slice(-1)[0].split('.')[0]; // Extract the public ID
+
+                const thumbnailUrl = `https://res.cloudinary.com/dhfvnvuox/video/upload/so_auto/${publicId}.jpg`; // Using AI to pick an interesting frame
+
                 const json = {
                     nombreEjercicio: nombre,
                     grupoMuscular: grupoMuscular,
@@ -94,7 +99,7 @@ const CrearEjercicio = (props) => {
                     explicacion: descripcion,
                     idRutina: '',
                     usuario: '',
-                    vistaPrevia: vistaPrevia,
+                    vistaPrevia: thumbnailUrl,
                 };
 
                 const response = await postData(
@@ -115,6 +120,7 @@ const CrearEjercicio = (props) => {
             Alert.alert('ERROR', 'Completa todos los campos');
         }
     };
+
     const handleOnPress = () => {
         props.navigation.goBack();
     };
