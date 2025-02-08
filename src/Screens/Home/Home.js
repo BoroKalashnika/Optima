@@ -8,13 +8,26 @@ import CalcularMacros from "./CalcularMacros"
 
 const Stack = createStackNavigator();
 
-const Home = () => (
-    <Stack.Navigator options="headerShown=false">
-        <Stack.Screen name="Usuario" component={Usuario} options={{ headerShown: false }} />
-        <Stack.Screen name="CalcularIMC" component={CalcularIMC} options={{ headerShown: false }} />
-        <Stack.Screen name="CalcularMacros" component={CalcularMacros} options={{ headerShown: false }} />
-        {/* <Stack.Screen name="Ajustes" component={Ajustes} options={{ headerShown: false }} /> */}
-    </Stack.Navigator>
-);
+const Home = () => {
+    useFocusEffect(() => {
+        const backAction = () => {
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+
+        return () => backHandler.remove();
+    });
+    return (
+        <Stack.Navigator options="headerShown=false">
+            <Stack.Screen name="Usuario" component={Usuario} options={{ headerShown: false }} />
+            <Stack.Screen name="CalcularIMC" component={CalcularIMC} options={{ headerShown: false }} />
+            <Stack.Screen name="CalcularMacros" component={CalcularMacros} options={{ headerShown: false }} />
+            {/* <Stack.Screen name="Ajustes" component={Ajustes} options={{ headerShown: false }} /> */}
+        </Stack.Navigator>);
+};
 
 export default Home;

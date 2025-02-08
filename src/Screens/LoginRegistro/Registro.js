@@ -55,11 +55,11 @@ const Registro = (props) => {
 
     const registrarUsuario = async () => {
         if (email === '' || password === '' || repetriContra === '' || usuario === '' || peso === '' || altura === '' || opcion === '') {
-            Alert.alert("ERROR",'Campos vacios porfavor completalos')
+            Alert.alert("ERROR", 'Campos vacios porfavor completalos')
         } else if (password !== repetriContra) {
-            Alert.alert("ERROR",'Contraseña no coincide')
-        }else if(emailHasErrors()||usuarioHasErrors()||contrasenyaHasErrors()||alturaHasErrors()||pesoHasErrors()){
-            Alert.alert("ERROR",'Algunos de los campos es invalido')
+            Alert.alert("ERROR", 'Contraseña no coincide')
+        } else if (emailHasErrors() || usuarioHasErrors() || contrasenyaHasErrors() || alturaHasErrors() || pesoHasErrors()) {
+            Alert.alert("ERROR", 'Algunos de los campos es invalido')
         } else {
             const json = {
                 nomUsu: usuario,
@@ -96,131 +96,126 @@ const Registro = (props) => {
     }
 
     return (
-        <ScrollView scrollEnabled={false} contentContainerStyle={styles.container}>
-                <View style={styles.subContainer}>
-                    <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
-                </View>
-                <View style={styles.formContainer}>
-                    <View style={styles.inputContainer}>
-                        {(email != '' && emailHasErrors()) && (
-                            <HelperText type="error">
-                                Dirección de correo invalida
-                            </HelperText>
-                        )}
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Introduce el Email"
-                            placeholderTextColor="#9CA3AF"
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
-                            autoCapitalize="none"
-                        />
-                        {(password != '' && contrasenyaHasErrors()) && (
-                            <HelperText type="error">
-                                Contraseña con al menos una letra mayúscula, una minúscula y un número
-                            </HelperText>
-                        )}
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Introduce la contraseña"
-                            placeholderTextColor="#9CA3AF"
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Repetir Contraseña"
-                            placeholderTextColor="#9CA3AF"
-                            value={repetriContra}
-                            onChangeText={setRepetirContras}
-                            secureTextEntry
-                        />
-                    </View>
-                    {(usuario != '' && usuarioHasErrors()) && (
+        <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.subContainer}>
+                <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
+            </View>
+            <View style={styles.formContainer}>
+                <View style={styles.inputContainer}>
+                    {(email != '' && emailHasErrors()) && (
                         <HelperText type="error">
-                            Nombre usuario invalido longitud 3-20 carácteres
+                            Dirección de correo invalida
                         </HelperText>
                     )}
                     <TextInput
                         style={styles.input}
-                        placeholder="Nombre Usuario"
+                        placeholder="Introduce el Email"
                         placeholderTextColor="#9CA3AF"
-                        value={usuario}
-                        onChangeText={setUsuario}
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
                     />
-                    <View style={styles.helpersDatos}>
-                        <View style={styles.containerHelper}>
-                            {(altura != '' && alturaHasErrors()) && (
-                                <HelperText type="error">
-                                    Altura en centímetros
-                                </HelperText>
-                            )}
-                        </View>
-                        <View style={styles.containerHelper}>
-                            {(peso != '' && pesoHasErrors()) && (
-                                <HelperText type="error">
-                                    Peso en kilogramos
-                                </HelperText>
-                            )}
-                        </View>
-                    </View>
-                    <View style={styles.containerDatos}>
-                        <TextInput
-                            style={[styles.input, { width: '49%' }]}
-                            placeholder="Altura (cm)"
-                            placeholderTextColor="#9CA3AF"
-                            value={altura}
-                            onChangeText={setAltura}
-                        />
-
-                        <TextInput
-                            style={[styles.input, { width: '49%' }]}
-                            placeholder="Peso (kg)"
-                            placeholderTextColor="#9CA3AF"
-                            value={peso}
-                            onChangeText={setPeso}
-                        />
-                    </View>
-                    <SelectList
-                        setSelected={(val) => setOpcion(val)}
-                        data={data}
-                        save="value"
-                        boxStyles={styles.selectBox}
-                        inputStyles={styles.selectInput}
-                        dropdownStyles={styles.dropdown}
-                        dropdownTextStyles={styles.dropdownText}
-                        placeholder='Selecciona una dificultad inicial'
+                    {(password != '' && contrasenyaHasErrors()) && (
+                        <HelperText type="error">
+                            Contraseña con al menos una letra mayúscula, una minúscula y un número
+                        </HelperText>
+                    )}
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Introduce la contraseña"
+                        placeholderTextColor="#9CA3AF"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
                     />
-                    <View style={styles.subContainer}>
-                        <Pressable style={styles.bottom} onPress={() => registrarUsuario()}>
-                            <Text style={styles.textLogin}>Registrarse</Text>
-                        </Pressable>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Repetir Contraseña"
+                        placeholderTextColor="#9CA3AF"
+                        value={repetriContra}
+                        onChangeText={setRepetirContras}
+                        secureTextEntry
+                    />
+                </View>
+                {(usuario != '' && usuarioHasErrors()) && (
+                    <HelperText type="error">
+                        Nombre usuario invalido longitud 3-20 carácteres
+                    </HelperText>
+                )}
+                <TextInput
+                    style={styles.input}
+                    placeholder="Nombre Usuario"
+                    placeholderTextColor="#9CA3AF"
+                    value={usuario}
+                    onChangeText={setUsuario}
+                />
+                <View style={styles.helpersDatos}>
+                    <View style={styles.containerHelper}>
+                        {(altura != '' && alturaHasErrors()) && (
+                            <HelperText type="error">
+                                Altura en centímetros
+                            </HelperText>
+                        )}
                     </View>
-                    <View style={styles.login}>
-                        <Text style={styles.resetPasswordText}>Ya tengo cuenta</Text>
-                        <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Login")}>
-                            <Text style={styles.textLogin}>Login</Text>
-                        </Pressable>
+                    <View style={styles.containerHelper}>
+                        {(peso != '' && pesoHasErrors()) && (
+                            <HelperText type="error">
+                                Peso en kilogramos
+                            </HelperText>
+                        )}
                     </View>
                 </View>
+                <View style={styles.containerDatos}>
+                    <TextInput
+                        style={[styles.input, { width: '49%' }]}
+                        placeholder="Altura (cm)"
+                        placeholderTextColor="#9CA3AF"
+                        value={altura}
+                        onChangeText={setAltura}
+                    />
+
+                    <TextInput
+                        style={[styles.input, { width: '49%' }]}
+                        placeholder="Peso (kg)"
+                        placeholderTextColor="#9CA3AF"
+                        value={peso}
+                        onChangeText={setPeso}
+                    />
+                </View>
+                <SelectList
+                    setSelected={(val) => setOpcion(val)}
+                    data={data}
+                    save="value"
+                    boxStyles={styles.selectBox}
+                    inputStyles={styles.selectInput}
+                    dropdownStyles={styles.dropdown}
+                    dropdownTextStyles={styles.dropdownText}
+                    placeholder='Selecciona una dificultad inicial'
+                />
+                <View style={styles.subContainer}>
+                    <Pressable style={styles.bottom} onPress={() => registrarUsuario()}>
+                        <Text style={styles.textLogin}>Registrarse</Text>
+                    </Pressable>
+                </View>
+                <View style={styles.login}>
+                    <Text style={styles.resetPasswordText}>Ya tengo cuenta</Text>
+                    <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Login")}>
+                        <Text style={styles.textLogin}>Login</Text>
+                    </Pressable>
+                </View>
+            </View>
         </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        flexGrow: 1,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#1F2937', // bg-gray-950
-    },
-    containerCarga: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
+        backgroundColor: '#1F2937',
     },
     helpersDatos: {
         width: '100%',

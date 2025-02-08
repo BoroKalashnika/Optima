@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Card from '../../Components/card/Card';
 
 const Usuario = (props) => {
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     calculadoraContainer: {
-        width: '110%',
+        width: '105%',
         marginTop: 20,
     },
     calcRow: {

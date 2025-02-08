@@ -106,7 +106,7 @@ const Login = (props) => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.subContainer}>
                 <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
             </View>
@@ -149,17 +149,17 @@ const Login = (props) => {
                     </View>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#1F2937', // bg-gray-950
+        backgroundColor: '#1F2937',
     },
     subContainer: {
         alignItems: 'center',

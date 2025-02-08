@@ -5,11 +5,9 @@ import {
     Text,
     Pressable,
     TextInput,
-    Button,
     Alert,
     StyleSheet,
     Image,
-    ScrollView
 } from 'react-native';
 import { HelperText } from 'react-native-paper';
 import postData from '../../Utils/services/postData';

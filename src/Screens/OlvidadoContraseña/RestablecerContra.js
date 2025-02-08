@@ -5,7 +5,6 @@ import {
     Text,
     Pressable,
     TextInput,
-    Button,
     Alert,
     BackHandler,
     StyleSheet,
@@ -87,7 +86,7 @@ const RestablecerContra = (props) => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.subContainer}>
                 <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
             </View>
@@ -126,13 +125,13 @@ const RestablecerContra = (props) => {
                 </View>
             </View>
 
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
