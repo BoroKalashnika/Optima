@@ -31,7 +31,7 @@ const CrearEjercicio = (props) => {
     const { loading, setLoading } = useContext(Context);
     const { token } = useContext(Context);
     const { idRutina } = useContext(Context);
-    const { setIdEjercicios } = useContext(Context);
+    const { idEjercicios, setIdEjercicios } = useContext(Context);
 
     const data = [
         { key: '1', value: 'Pecho' },
@@ -110,15 +110,17 @@ const CrearEjercicio = (props) => {
                     idRutina: idRutina,
                     usuario: usuario.correo,
                     vistaPrevia: thumbnailUrl,
+                    token: token
                 };
 
                 const response = await postData(
                     'http://13.216.205.228:8080/optima/crearEjercicio',
                     json, setLoading
                 );
-
+                
                 if (response.status === 201) {
-                    Alert.alert('RUTINA CREADA', response.message);
+                    setIdEjercicios([...idEjercicios], response.data.message);
+                    Alert.alert('RUTINA CREADA', "Ejercicio creado");
                 } else {
                     Alert.alert('ERROR', response.message);
                 }
@@ -203,14 +205,14 @@ const CrearEjercicio = (props) => {
                     onChangeText={setDescripcion}
                 />
                 <View style={styles.subContainer}>
-                    <Pressable style={[styles.bottom,{marginRight:5}]} onPress={handleOnPress}>
+                    <Pressable style={[styles.bottom, { marginRight: 5 }]} onPress={handleOnPress}>
                         <MaterialIcons name="cancel" color="#fe876d" size={35} />
                         <Text style={styles.resetPasswordText}>Cancelar</Text>
                     </Pressable>
                     <Pressable
-                        style={[styles.bottom,{marginLeft:5}]}
+                        style={[styles.bottom, { marginLeft: 5 }]}
                         onPress={crearEjercicio}>
-                        <Ionicons name="add-circle-outline" color="lightgreen" size={35}  />
+                        <Ionicons name="add-circle-outline" color="lightgreen" size={35} />
                         <Text style={styles.resetPasswordText}>Crear Ejercicio</Text>
                     </Pressable>
                 </View>
@@ -230,7 +232,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 10,             
+        marginTop: 10,
     },
     formContainer: {
         paddingHorizontal: 16,
@@ -287,7 +289,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 5,
         flexDirection: 'row',
-        flex:1
+        flex: 1
     },
     selectBox: {
         backgroundColor: '#374151',

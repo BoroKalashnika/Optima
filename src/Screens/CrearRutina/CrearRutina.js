@@ -23,8 +23,11 @@ const CrearRutina = (props) => {
     const { token } = useContext(Context);
     const { setIdRutina } = useContext(Context);
     const { loading, setLoading } = useContext(Context);
+    const { idEjercicios, setIdEjercicios } = useContext(Context);
 
     useEffect(() => {
+        console.log(idEjercicios);
+
         crearRutinaId();
     }, []);
 
@@ -52,7 +55,7 @@ const CrearRutina = (props) => {
 
             const response = await postData('http://13.216.205.228:8080/optima/crearRutina', json, setLoading);
 
-            setIdRutina(response.data.message.idRutina);
+            setIdRutina(response.data.idRutina);
         }
         setLoading(false);
     };
@@ -85,6 +88,7 @@ const CrearRutina = (props) => {
         } else {
             Alert.alert('ERROR', response.message);
         }
+        setIdEjercicios([]);
     };
 
     const pickImage = () => {
