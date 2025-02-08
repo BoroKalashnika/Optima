@@ -106,7 +106,7 @@ android {
         }
     }
     project.ext.vectoricons = [
-    iconFontNames: ['Ionicons.ttf']
+    iconFontNames: ['Ionicons.ttf', 'AntDesign.ttf']
     ]
 }
 
