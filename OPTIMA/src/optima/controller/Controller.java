@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -186,30 +185,49 @@ public class Controller {
 	}
 
 	// ACCIONES RUITNAS
+	@SuppressWarnings("null")
 	@GetMapping("/optima/obtenerRutinas")
-	public ResponseEntity<Object> obtenerRutinas(@RequestParam(value = "token") String token) {
+	public ResponseEntity<Object> obtenerRutinas(@RequestParam(value = "token") String token,
+			@RequestParam(value = "index") String index, @RequestParam(value = "offset") String offset) {
+
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		JSONObject response = new JSONObject();
 		if (usuarioBaseDatos.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Token inválido"));
+			response.put("error", "Token inválido");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 
 		List<Rutina> rutinas = rutinaRepository.findAll();
+		List<Rutina> rutinasIndex = null;
+
+		for (int i = Integer.parseInt(index); i < Integer.parseInt(offset); i++) {
+			rutinasIndex.add(rutinas.get(i));
+		}
+
 		response.put("count", rutinas.size());
-		response.put("rutinas", rutinas);
+		response.put("rutinas", rutinasIndex);
 
 		return ResponseEntity.ok(response.toString());
 	}
 
+	@SuppressWarnings("null")
 	@GetMapping("/optima/obtenerRutinasCreadas")
 	public ResponseEntity<Object> obtenerRutinasCreadas(@RequestParam(value = "token") String token,
-			@RequestParam(value = "idUsuario") String idUsuario) {
+			@RequestParam(value = "idUsuario") String idUsuario, @RequestParam(value = "index") String index,
+			@RequestParam(value = "offset") String offset) {
 		JSONObject response = new JSONObject();
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
 			List<Rutina> rutinas = rutinaRepository.findByIdUsuario(idUsuario);
+
+			List<Rutina> rutinasIndex = null;
+
+			for (int i = Integer.parseInt(index); i < Integer.parseInt(offset); i++) {
+				rutinasIndex.add(rutinas.get(i));
+			}
+
 			response.put("count", rutinas.size());
-			response.put("rutinas", rutinas);
+			response.put("rutinas", rutinasIndex);
 
 			return ResponseEntity.ok(response.toString());
 		}
