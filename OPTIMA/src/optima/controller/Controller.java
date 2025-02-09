@@ -210,24 +210,16 @@ public class Controller {
 		return ResponseEntity.ok(response.toString());
 	}
 
-	@SuppressWarnings("null")
 	@GetMapping("/optima/obtenerRutinasCreadas")
 	public ResponseEntity<Object> obtenerRutinasCreadas(@RequestParam(value = "token") String token,
-			@RequestParam(value = "idUsuario") String idUsuario, @RequestParam(value = "index") String index,
-			@RequestParam(value = "offset") String offset) {
+			@RequestParam(value = "idUsuario") String idUsuario) {
 		JSONObject response = new JSONObject();
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
 			List<Rutina> rutinas = rutinaRepository.findByIdUsuario(idUsuario);
 
-			List<Rutina> rutinasIndex = null;
-
-			for (int i = Integer.parseInt(index); i < Integer.parseInt(offset); i++) {
-				rutinasIndex.add(rutinas.get(i));
-			}
-
 			response.put("count", rutinas.size());
-			response.put("rutinas", rutinasIndex);
+			response.put("rutinas", rutinas);
 
 			return ResponseEntity.ok(response.toString());
 		}
