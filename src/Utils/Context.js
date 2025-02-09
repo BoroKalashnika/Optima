@@ -7,6 +7,9 @@ export const Provider = ({ children }) => {
     const [codigo, setCodigo] = useState('');
     const [idRutina, setIdRutina] = useState('');
     const [idEjercicios, setIdEjercicios] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertTitle, setAlertTitle] = useState('');
     return (
         <Context.Provider value={{
             loading,
@@ -20,7 +23,13 @@ export const Provider = ({ children }) => {
             idRutina,
             setIdRutina,
             idEjercicios,
-            setIdEjercicios
+            setIdEjercicios,
+            modalVisible, 
+            setModalVisible,
+            alertMessage, 
+            setAlertMessage,
+            alertTitle, 
+            setAlertTitle
         }}>
             {children}
         </Context.Provider>

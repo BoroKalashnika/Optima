@@ -8,6 +8,7 @@ import getData from '../../Utils/services/getData';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Context from '../../Utils/Context';
 import Carga from '../../Components/carga/Carga';
+import CardEjercicio from '../../Components/cardEjercicio/CardEjercicio';
 
 const CrearRutina = (props) => {
     const [nomRutina, setNomRutina] = useState('');
@@ -16,11 +17,12 @@ const CrearRutina = (props) => {
     const [ambito, setAmbito] = useState('');
     const [dieta, setDieta] = useState('');
     const [vistaPrevia, setVistaPrevia] = useState(null);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [alertTitle, setAlertTitle] = useState('');
+    const [ejerciciosRutina, setEjerciciosRutina] = useState([]);
+    const { modalVisible, setModalVisible } = useContext(Context);
+    const { alertMessage, setAlertMessage } = useContext(Context);
+    const { alertTitle, setAlertTitle } = useContext(Context);
     const { token, setToken } = useContext(Context);
-    const { email, setEmail } = useContext(Context);
+    const { email } = useContext(Context);
     const { idRutina, setIdRutina } = useContext(Context);
     const { loading, setLoading } = useContext(Context);
     const { idEjercicios, setIdEjercicios } = useContext(Context);
@@ -29,11 +31,18 @@ const CrearRutina = (props) => {
         crearRutinaId();
     }, []);
 
+    useEffect(() => {
+        const newArray = [];
+        getData('http://13.216.205.228:8080/optima/obtenerEjercicios?token=' + token + '&idRutina=' + idRutina).then((element) => {
+            element.ejercicios.map((ejercicio) => {
+                newArray.push(ejercicio);
+            })
+            setEjerciciosRutina(newArray);
+        });
+    }, [idEjercicios]);
+
     const crearRutinaId = async () => {
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
-
-        setEmail(usuario.correo);
-
         const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
         let existe = false;
         //añadir validacion en el back por si a caso
@@ -46,7 +55,7 @@ const CrearRutina = (props) => {
         if (!existe) {
             const json = {
                 nombreRutina: "$¿¡crea!?",
-                creador: usuario.correo,
+                creador: email,
                 token: token,
                 idUsuario: usuario.id
             };
@@ -86,6 +95,7 @@ const CrearRutina = (props) => {
             setAlertMessage('Rutina creada correctamente.');
             setAlertTitle('Éxito');
             setModalVisible(true);
+            limpiarCampos();
             props.navigation.navigate('RutinasCreadas');
         } else {
             setAlertMessage(response.data.message);
@@ -162,7 +172,13 @@ const CrearRutina = (props) => {
                 <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "5%" }} />
                 <Text style={styles.text}>Crear Ejercicio</Text>
             </Pressable>
-
+            <View style={styles.listContainer}>
+            <ScrollView nestedScrollEnabled={true}>
+                {ejerciciosRutina.map((element) => (
+                    <CardEjercicio />
+                ))}
+            </ScrollView>
+            </View>
             <TextInput
                 style={styles.input}
                 placeholder="Dieta"
@@ -353,7 +369,13 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 30,
         color: 'white',
-    }
+    },
+    listContainer: {
+        width: '90%',
+        maxHeight: 140,
+        alignSelf: 'center',
+        marginBottom:8,
+    },
 });
 
 export default CrearRutina;

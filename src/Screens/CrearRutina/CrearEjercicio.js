@@ -7,7 +7,7 @@ import {
     Alert,
     StyleSheet,
     ScrollView,
-    BackHandler
+    BackHandler,
 } from 'react-native';
 import Video from 'react-native-video';
 import { Button } from 'react-native-paper';
@@ -29,6 +29,9 @@ const CrearEjercicio = (props) => {
     const [dificultad, setDificultad] = useState('');
     const [videoFile, setVideoFile] = useState('');
     const [descripcion, setDescripcion] = useState('');
+    const {modalVisible, setModalVisible} = useContext(Context);
+    const {alertMessage, setAlertMessage} = useContext(Context);
+    const {alertTitle, setAlertTitle} = useContext(Context);
     const { loading, setLoading } = useContext(Context);
     const { token } = useContext(Context);
     const { idRutina } = useContext(Context);
@@ -103,6 +106,7 @@ const CrearEjercicio = (props) => {
     };
 
     const crearEjercicio = async () => {
+        setLoading(true);
         if (nombre && grupoMuscular && dificultad && videoFile && descripcion) {
             const videoUrl = await uploadVideo(videoFile);
 
@@ -134,7 +138,7 @@ const CrearEjercicio = (props) => {
                     setAlertMessage('Ejercicio creado correctamente.');
                     setAlertTitle('Éxito');
                     setModalVisible(true);
-                    handleOnPress();
+                    limpiarCampos();
                 } else {
                     setAlertMessage(response.message);
                     setAlertTitle('ERROR');
@@ -145,12 +149,20 @@ const CrearEjercicio = (props) => {
                 setAlertTitle('ERROR');
                 setModalVisible(true);
             }
-            props.navigation.navigate("CrearRutina");
         } else {
             setAlertMessage('Completa todos los campos');
             setAlertTitle('ERROR');
             setModalVisible(true);
         }
+        handleOnPress();
+    };
+
+    const limpiarCampos = () => {
+        setNombre('');
+        setGrupoMuscular('');
+        setDificultad('');
+        setVideoFile('');
+        setDescripcion('');
     };
 
     const handleOnPress = () => {
@@ -224,13 +236,13 @@ const CrearEjercicio = (props) => {
                     onChangeText={setDescripcion}
                 />
                 <View style={styles.subContainer}>
-                    <Pressable style={[styles.bottom, { marginRight: 5 }]} onPress={handleOnPress}>
+                    <Pressable style={[styles.bottom, { marginRight: 5 }]} onPress={() => handleOnPress()}>
                         <MaterialIcons name="cancel" color="#fe876d" size={35} />
                         <Text style={styles.resetPasswordText}>Cancelar</Text>
                     </Pressable>
                     <Pressable
                         style={[styles.bottom, { marginLeft: 5 }]}
-                        onPress={crearEjercicio}>
+                        onPress={() => crearEjercicio()}>
                         <Ionicons name="add-circle-outline" color="lightgreen" size={35} />
                         <Text style={styles.resetPasswordText}>Crear Ejercicio</Text>
                     </Pressable>

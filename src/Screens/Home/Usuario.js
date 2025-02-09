@@ -1,8 +1,22 @@
+import { useContext, useEffect } from 'react';
+import Context from '../../Utils/Context';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
+import getData from '../../Utils/services/getData';
 
 const Usuario = (props) => {
+    const { token, setToken } = useContext(Context);
+    const { email, setEmail } = useContext(Context);
+
+    useEffect(() => {
+        if(!email){
+            getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token).then((response) => {
+                setEmail(response.correo)
+            });
+        }
+    }, []);
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <HeaderRutina tipo={'user'} />
@@ -169,7 +183,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontStyle: 'italic',
         color: 'white',
-        textAlign:'center',
+        textAlign: 'center',
     }
 });
 
