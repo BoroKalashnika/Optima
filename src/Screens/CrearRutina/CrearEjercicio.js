@@ -6,13 +6,15 @@ import {
     TextInput,
     Alert,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    BackHandler
 } from 'react-native';
 import Video from 'react-native-video';
 import { Button } from 'react-native-paper';
 import { launchImageLibrary } from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { useFocusEffect } from '@react-navigation/native';
 import uploadVideo from '../../Utils/services/uploadVideo';
 import postData from '../../Utils/services/postData';
 import Context from '../../Utils/Context';
@@ -32,6 +34,19 @@ const CrearEjercicio = (props) => {
     const { idRutina } = useContext(Context);
     const { idEjercicios, setIdEjercicios } = useContext(Context);
     const { email } = useContext(Context);
+
+    useFocusEffect(() => {
+        const backAction = () => {
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+
+        return () => backHandler.remove();
+    });
 
     const data = [
         { key: '1', value: 'Pecho' },
@@ -89,8 +104,6 @@ const CrearEjercicio = (props) => {
 
     const crearEjercicio = async () => {
         if (nombre && grupoMuscular && dificultad && videoFile && descripcion) {
-            setLoading(true);
-
             const videoUrl = await uploadVideo(videoFile);
 
             if (videoUrl !== 'Failed to upload video') {
@@ -131,7 +144,6 @@ const CrearEjercicio = (props) => {
                 setAlertMessage('Failed to upload video');
                 setAlertTitle('ERROR');
                 setModalVisible(true);
-                setLoading(false);
             }
             props.navigation.navigate("CrearRutina");
         } else {

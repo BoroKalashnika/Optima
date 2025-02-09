@@ -19,9 +19,9 @@ const CrearRutina = (props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
-    const { token } = useContext(Context);
+    const { token, setToken } = useContext(Context);
     const { email, setEmail } = useContext(Context);
-    const { setIdRutina } = useContext(Context);
+    const { idRutina, setIdRutina } = useContext(Context);
     const { loading, setLoading } = useContext(Context);
     const { idEjercicios, setIdEjercicios } = useContext(Context);
 
@@ -30,8 +30,6 @@ const CrearRutina = (props) => {
     }, []);
 
     const crearRutinaId = async () => {
-        setLoading(true);
-
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
 
         setEmail(usuario.correo);
@@ -57,7 +55,6 @@ const CrearRutina = (props) => {
 
             setIdRutina(response.data.idRutina);
         }
-        setLoading(false);
     };
 
     if (loading) {
