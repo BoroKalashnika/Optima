@@ -1,35 +1,53 @@
 import { Text, Pressable, StyleSheet, View, Image } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const Card = (props) => {
     const [color, setColor] = useState('red');
-    const [dificultad, setDificultad] = useState();
-    const [ambito, setAmbito] = useState('casa');
-    const [musculo, setMusculo] = useState('biceps');
-    const { Titulo, Descripcion, NomCreador, Dificultad } = props;
+    const [ambitoImg, setAmbitoImg] = useState('Casa');
+    const [musculoImg, setMusculoImg] = useState('Biceps');
+    const { ambito, musculo, dificultad, imagen,titulo } = props;
 
     const chancheColor = () => {
-        if (dificultad === 'alta') setColor('red');
-        if (dificultad === 'media') setColor('yellow');
-        if (dificultad === 'baja') setColor('green');
+        if (dificultad === 'Experto') setColor('red');
+        if (dificultad === 'Intermedio') setColor('yellow');
+        if (dificultad === 'Principiante') setColor('green');
     };
+    const chancheMusculo = () => {
+        if (musculo === 'biceps') setMusculoImg(require('../../Assets/img/biceps.png'));
+        if (musculo === 'pecho') setMusculoImg(require('../../Assets/img/pecho.png'));
+        if (musculo === 'triceps') setMusculoImg(require('../../Assets/img/triceps.png'));
+        if (musculo === 'pierna') setMusculoImg(require('../../Assets/img/pierna.png'));
+        if (musculo === 'espalda') setMusculoImg(require('../../Assets/img/espalda.png'));
+
+    };
+    const chancheAmbito = () => {
+        if (ambito === 'Casa') setAmbitoImg(require('../../Assets/img/casa.png'));
+        if (ambito === 'Gimnasio') setAmbitoImg(require('../../Assets/img/pesa.png'));
+        if (ambito === 'Calistenia') setAmbitoImg(require('../../Assets/img/calistenia.png'));
+    };
+
+    useEffect(() => {
+        chancheAmbito();
+        chancheColor();
+        chancheMusculo();
+    }, [])
 
     return (
         <Pressable onPress={props.onRutina}>
             <View style={styles.container}>
-                <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
+                    <Image source={{ uri: imagen }} style={styles.image} />
                 <View style={styles.subContainer}>
                     <View style={styles.containerDescripcion}>
-                        <Text style={styles.title}>Titulo</Text>
+                        <Text style={styles.title}>{titulo}</Text>
                     </View>
                     <View style={styles.containerRow}>
                         <Image
-                            source={require('../../Assets/img/casa.png')}
+                            source={ambitoImg}
                             style={styles.icono}
                         />
                         <Image
-                            source={require('../../Assets/img/biceps.png')}
+                            source={musculoImg}
                             style={styles.icono}
                         />
                         <Icon name="dashboard" size={40} color={color} />
@@ -58,6 +76,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         marginTop: 10,
         alignItems: 'center',
+        padding: 10
     },
     containerRow: {
         flex: 1,
@@ -70,6 +89,7 @@ const styles = StyleSheet.create({
     },
     subContainer: {
         flex: 2,
+        marginLeft:10
     },
     title: {
         fontSize: 37,
@@ -80,8 +100,9 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     image: {
-        width: 170,
-        height: 170,
+        width: 130,
+        height: 130,
+        
     },
     icono: {
         width: 40,

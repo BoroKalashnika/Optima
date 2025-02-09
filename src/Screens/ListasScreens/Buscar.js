@@ -54,7 +54,7 @@ const Buscar = (props) => {
             
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
-                <FlatList
+                {/* <FlatList
                     data={data}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
@@ -67,7 +67,7 @@ const Buscar = (props) => {
                             }}
                         />
                     )}
-                />
+                /> */}
             </View>
         </View>
     );

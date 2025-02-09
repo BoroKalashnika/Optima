@@ -1,70 +1,43 @@
 import { FlatList, View, Image, StyleSheet, Text, Pressable } from 'react-native';
+import { useState, useContext, useEffect } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import Icon from 'react-native-vector-icons/Ionicons';
+import getData from '../../Utils/services/getData';
+import Context from '../../Utils/Context';
 
-const data = [
-    {
-        id: '1',
-        nombre: 'Ejercicio 1',
-        descripcion: 'Descripción del ejercicio 1',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '2',
-        nombre: 'Ejercicio 2',
-        descripcion: 'Descripción del ejercicio 2',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '3',
-        nombre: 'Ejercicio 3',
-        descripcion: 'Descripción del ejercicio 3',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '4',
-        nombre: 'Ejercicio 4',
-        descripcion: 'Descripción del ejercicio 4',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '5',
-        nombre: 'Ejercicio 5',
-        descripcion: 'Descripción del ejercicio 5',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '6',
-        nombre: 'Ejercicio 5',
-        descripcion: 'Descripción del ejercicio 5',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '7',
-        nombre: 'Ejercicio 5',
-        descripcion: 'Descripción del ejercicio 5',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-];
+
 const Buscar = (props) => {
+    const { token, setToken } = useContext(Context);
+    const [rutinas, setRutinas] = useState([]);
+    useEffect(async () => {
+        const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
+        getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + "&idUsuario=" + usuario.id + "&index=0&offset=10").then((element) => {
+            const newArray = [];
+            element.rutinas.map((rutina)=>{newArray.push(rutina)})
+            setRutinas(newArray);
+        });
+    }, [])
+
     return (
         <View style={styles.container}>
             <HeaderRutina tipo={'ajustes'} titulo={'Rutinas Creadas'} />
             {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
-
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
                 <FlatList
-                    data={data}
+                    data={rutinas}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <Card
-                            nombre={item.nombre}
-                            descripcion={item.descripcion}
-                            imagen={item.imagen}
+                            dificultad={item.dificultad}
+                            ambito={item.ambito}
+                            imagen={item.vistaPrevia}
+                            musculo={item.ambito}
+                            titulo={item.nombreRutina}
                             onRutina={() => {
                                 props.navigation.navigate('VerRutina');
+
                             }}
                         />
                     )}

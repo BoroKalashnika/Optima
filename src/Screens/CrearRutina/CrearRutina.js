@@ -13,8 +13,8 @@ import CardEjercicio from '../../Components/cardEjercicio/CardEjercicio';
 const CrearRutina = (props) => {
     const [nomRutina, setNomRutina] = useState('');
     const [dificultad, setDificultad] = useState('Principiante');
-    const [tipo, setTipo] = useState('Gimnasio');
-    const [ambito, setAmbito] = useState('');
+    const [musculo, setMusculo] = useState('Biceps');
+    const [ambito, setAmbito] = useState('Gimnasio');
     const [dieta, setDieta] = useState('');
     const [vistaPrevia, setVistaPrevia] = useState(null);
     const [ejerciciosRutina, setEjerciciosRutina] = useState([]);
@@ -161,31 +161,6 @@ const CrearRutina = (props) => {
                 value={nomRutina}
                 onChangeText={setNomRutina}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Ámbito"
-                placeholderTextColor="#90caf9"
-                value={ambito}
-                onChangeText={setAmbito}
-            />
-            <Pressable style={styles.containerCrear} onPress={() => props.navigation.navigate('CrearEjercicio')}>
-                <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "5%" }} />
-                <Text style={styles.text}>Crear Ejercicio</Text>
-            </Pressable>
-            <View style={styles.listContainer}>
-            <ScrollView nestedScrollEnabled={true}>
-                {ejerciciosRutina.map((element) => (
-                    <CardEjercicio />
-                ))}
-            </ScrollView>
-            </View>
-            <TextInput
-                style={styles.input}
-                placeholder="Dieta"
-                placeholderTextColor="#90caf9"
-                value={dieta}
-                onChangeText={setDieta}
-            />
             <View style={styles.pickerContainer}>
                 <Picker
                     selectedValue={dificultad}
@@ -198,13 +173,43 @@ const CrearRutina = (props) => {
             </View>
             <View style={styles.pickerContainer}>
                 <Picker
-                    selectedValue={tipo}
-                    onValueChange={(itemValue) => setTipo(itemValue)}
+                    selectedValue={ambito}
+                    onValueChange={(itemValue) => setAmbito(itemValue)}
                     style={styles.picker}>
                     <Picker.Item label="Gimnasio" value="Gimnasio" style={styles.pickerItem} />
                     <Picker.Item label="Calistenia" value="Calistenia" style={styles.pickerItem} />
                     <Picker.Item label="Casa" value="Casa" style={styles.pickerItem} />
                 </Picker>
+            </View>
+            <View style={styles.pickerContainer}>
+                <Picker
+                    selectedValue={musculo}
+                    onValueChange={(itemValue) => setMusculo(itemValue)}
+                    style={styles.picker}>
+                    <Picker.Item label="Biceps" value="Biceps" style={styles.pickerItem} />
+                    <Picker.Item label="Triceps" value="Triceps" style={styles.pickerItem} />
+                    <Picker.Item label="Pecho" value="Pecho" style={styles.pickerItem} />
+                    <Picker.Item label="Espalda" value="Espalda" style={styles.pickerItem} />
+                    <Picker.Item label="Pierna" value="Pierna" style={styles.pickerItem} />
+                </Picker>
+            </View>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Dieta"
+                    placeholderTextColor="#90caf9"
+                    value={dieta}
+                    onChangeText={setDieta}
+                />
+            <Pressable style={styles.containerCrear} onPress={() => props.navigation.navigate('CrearEjercicio')}>
+                <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "5%" }} />
+                <Text style={styles.text}>Crear Ejercicio</Text>
+            </Pressable>
+            <View style={styles.listContainer}>
+            <ScrollView nestedScrollEnabled={true}>
+                {ejerciciosRutina.map((element) => (
+                    <CardEjercicio />
+                ))}
+            </ScrollView>
             </View>
             <View style={styles.buttonContainer}>
                 <Button mode="contained" style={styles.imagePickerButton} onPress={pickImage}>
