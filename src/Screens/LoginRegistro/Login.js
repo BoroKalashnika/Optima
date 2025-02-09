@@ -92,7 +92,7 @@ const Login = (props) => {
 
             if (response.status === 200) {
                 await saveToken(response.data.token);
-                setToken({ token: response.data.token });
+                setToken(response.data.token);
                 props.navigation.navigate('HomeNavegacion');
             } else {
                 Alert.alert("ERROR", response.data.message);

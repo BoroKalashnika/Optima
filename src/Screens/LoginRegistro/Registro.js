@@ -118,7 +118,7 @@ const Registro = (props) => {
                     />
                     {(password != '' && contrasenyaHasErrors()) && (
                         <HelperText type="error">
-                            Contraseña con al menos una letra mayúscula, una minúscula y un número
+                            Contraseña con minimo 8 caracteres, al menos una letra mayúscula, una minúscula y un número
                         </HelperText>
                     )}
                     <TextInput
