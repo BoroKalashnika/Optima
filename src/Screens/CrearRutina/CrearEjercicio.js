@@ -8,6 +8,7 @@ import {
     StyleSheet,
     ScrollView,
     BackHandler,
+    Modal
 } from 'react-native';
 import Video from 'react-native-video';
 import { Button } from 'react-native-paper';
@@ -29,9 +30,9 @@ const CrearEjercicio = (props) => {
     const [dificultad, setDificultad] = useState('');
     const [videoFile, setVideoFile] = useState('');
     const [descripcion, setDescripcion] = useState('');
-    const {modalVisible, setModalVisible} = useContext(Context);
-    const {alertMessage, setAlertMessage} = useContext(Context);
-    const {alertTitle, setAlertTitle} = useContext(Context);
+    const { modalVisible, setModalVisible } = useContext(Context);
+    const { alertMessage, setAlertMessage } = useContext(Context);
+    const { alertTitle, setAlertTitle } = useContext(Context);
     const { loading, setLoading } = useContext(Context);
     const { token } = useContext(Context);
     const { idRutina } = useContext(Context);
@@ -139,6 +140,7 @@ const CrearEjercicio = (props) => {
                     setAlertTitle('Éxito');
                     setModalVisible(true);
                     limpiarCampos();
+                    handleOnPress();
                 } else {
                     setAlertMessage(response.message);
                     setAlertTitle('ERROR');
@@ -154,7 +156,7 @@ const CrearEjercicio = (props) => {
             setAlertTitle('ERROR');
             setModalVisible(true);
         }
-        handleOnPress();
+        setLoading(false);
     };
 
     const limpiarCampos = () => {
@@ -247,7 +249,7 @@ const CrearEjercicio = (props) => {
                         <Text style={styles.resetPasswordText}>Crear Ejercicio</Text>
                     </Pressable>
                 </View>
-            </View>
+            </View>       
         </ScrollView>
     );
 }
