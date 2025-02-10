@@ -63,7 +63,6 @@ const CrearRutina = (props) => {
         });
 
         const response = await getData(`http://13.216.205.228:8080/optima/obtenerEjercicios?token=${token}&idRutina=${rutinaId}`);
-        console.log(response);
 
         if (response.count != 0) {
             setEjerciciosRutina(response.ejercicios);
@@ -93,7 +92,6 @@ const CrearRutina = (props) => {
                 idUsuario: usuario.id,
                 timestamp: `${new Date()}`,
             };
-            console.log(json);
 
             const response = await postData('http://13.216.205.228:8080/optima/crearRutina', json, setLoading);
 
@@ -119,7 +117,6 @@ const CrearRutina = (props) => {
             vistaPrevia: vistaPrevia,
             token: token,
         };
-        console.log(json);
 
         const response = await postData(
             'http://13.216.205.228:8080/optima/crearRutina',
@@ -130,13 +127,15 @@ const CrearRutina = (props) => {
             setAlertMessage('Rutina creada correctamente.');
             setAlertTitle('Éxito');
             setModalVisible(true);
-            //falla y es importante que funcione por los setIdEjercicios([]); setEjerciciosRutina([]);            
+            //falla y es importante que funcione por los setIdEjercicios([]); setEjerciciosRutina([]);  
+            props.navigation.goBack();          
             limpiarCampos();
-            props.navigation.navigate('RutinasCreadas');
         } else {
             setAlertMessage(response.data.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
+            props.navigation.goBack();          
+            limpiarCampos();
         }
         setIdEjercicios([]);
     };
@@ -162,8 +161,8 @@ const CrearRutina = (props) => {
 
     const limpiarCampos = () => {
         setNomRutina('');
-        setDificultad('Principiante');
-        setTipo('Gimnasio');
+        setDificultad('');
+        setAmbito('');
         setAmbito('');
         setDieta('');
         setVistaPrevia(null);
@@ -261,25 +260,9 @@ const CrearRutina = (props) => {
                     Guardar
                 </Button>
                 <Button mode="contained" style={styles.buttonClear} onPress={limpiarCampos}>
-                    Limpiar
+                    Cancelar
                 </Button>
             </View>
-
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}>
-                <View style={styles.modalOverlay}>
-                    <View style={styles.modalContainer}>
-                        <Text style={styles.modalTitle}>{alertTitle}</Text>
-                        <Text style={styles.modalMessage}>{alertMessage}</Text>
-                        <Button mode="contained" onPress={() => setModalVisible(false)} style={styles.modalButton}>
-                            Cerrar
-                        </Button>
-                    </View>
-                </View>
-            </Modal>
         </ScrollView>
     );
 }
@@ -369,35 +352,6 @@ const styles = StyleSheet.create({
         height: 55,
         width: 160,
         alignItems: 'center',
-    },
-    modalOverlay: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContainer: {
-        backgroundColor: '#ffffff',
-        padding: 20,
-        borderRadius: 10,
-        width: '80%',
-        alignItems: 'center',
-    },
-    modalTitle: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: '#0d47a1',
-        marginBottom: 10,
-    },
-
-    modalMessage: {
-        fontSize: 16,
-        color: '#333333',
-        marginBottom: 20,
-        textAlign: 'center',
-    },
-    modalButton: {
-        backgroundColor: '#607cff',
     },
     containerCrear: {
         width: '90%',
