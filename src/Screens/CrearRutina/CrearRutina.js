@@ -99,13 +99,20 @@ const CrearRutina = (props) => {
         });
 
         if (!existe) {
+            const timestamp = 1707571200000;
+            const date = new Date(timestamp);
+            const opciones = { day: "2-digit", year: "numeric", month: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" };
+            const fechaFormateada = date.toLocaleString("es-ES", opciones);
+
             const json = {
                 nombreRutina: "$$crea$$",
                 creador: email,
                 token: token,
                 idUsuario: usuario.id,
-                timestamp: `${new Date()}`,
+                timestamp: fechaFormateada,
             };
+
+            console.log();
 
             const response = await postData('http://13.216.205.228:8080/optima/crearRutina', json, setLoading);
 
@@ -142,13 +149,13 @@ const CrearRutina = (props) => {
             setAlertTitle('Éxito');
             setModalVisible(true);
             //falla y es importante que funcione por los setIdEjercicios([]); setEjerciciosRutina([]);  
-            props.navigation.goBack();          
+            props.navigation.goBack();
             limpiarCampos();
         } else {
             setAlertMessage(response.data.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
-            props.navigation.goBack();          
+            props.navigation.goBack();
             limpiarCampos();
         }
     };
@@ -186,9 +193,9 @@ const CrearRutina = (props) => {
     const cancelarPress = () => {
         setAlertMessage('Creación de rutina cancelada');
         setAlertTitle('Cancelado');
-        setModalVisible(true);  
+        setModalVisible(true);
         limpiarCampos();
-        props.navigation.goBack();        
+        props.navigation.goBack();
     }
 
     const validarCampos = () => {
