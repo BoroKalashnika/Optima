@@ -19,6 +19,7 @@ public class Usuario {
 	private String fotoPerfil;
 	private List<String> rutinasGuardadas;
 	private List<String> rutinasCreadas;
+	private String rutinaActiva;
 	private String nivel;
 	private String peso;
 	private String altura;
@@ -163,6 +164,14 @@ public class Usuario {
 
 	public void setHistorialImc(List<String> historialImc) {
 		this.historialImc = historialImc;
+	}
+
+	public String getRutinaActiva() {
+		return rutinaActiva;
+	}
+
+	public void setRutinaActiva(String rutinaActiva) {
+		this.rutinaActiva = rutinaActiva;
 	}
 
 	public String encriptacionContrasenya(String contrasenya) throws NoSuchAlgorithmException {
