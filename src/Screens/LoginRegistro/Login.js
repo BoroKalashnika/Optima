@@ -40,7 +40,7 @@ const Login = (props) => {
             const tokenCache = await getToken();
             if (tokenCache) {
                 getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + tokenCache.token).then(async (response) => {
-                    if (response.token === tokenCache.token) {
+                    if (response.token === tokenCache.token && response.message === "200") {
                         const fechaGuardada = new Date(tokenCache.dateTimeTokenGenerado);
                         const fechaActual = new Date();
                         const diferenciaTiempo = fechaActual.getTime() - fechaGuardada.getTime();
