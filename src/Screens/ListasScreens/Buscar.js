@@ -6,7 +6,7 @@ import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import Icon from 'react-native-vector-icons/Ionicons';
 import getData from '../../Utils/services/getData';
 import Context from '../../Utils/Context';
-
+import { Picker } from '@react-native-picker/picker';
 
 const Buscar = (props) => {
     const { token, setToken } = useContext(Context);
@@ -18,38 +18,91 @@ const Buscar = (props) => {
     const [paginActual, setPaginActual] = useState(1);
     const [indiceActual, setIndiceActual] = useState(0);
     const [indiceFinal, setIndiceFinal] = useState(10);
-
+    const [filtro, setFiltro] = useState(false);
+    const [dificultad, setDificultad] = useState('Principiante');
+    const [musculo, setMusculo] = useState('Biceps');
+    const [ambito, setAmbito] = useState('Gimnasio');
 
     useEffect(() => {
         getRutinas();
-        
+
     }, [rutinas])
 
     const getRutinas = async () => {
-        getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token +"&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
+        getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
             console.log(element);
+            console.log(token);
             setPaginasTotal(Math.ceil(element.count / 10));
             const newArray = [];
             element.rutinas.map((rutina) => {
-                newArray.push(rutina) 
+                newArray.push(rutina)
             })
             setRutinas(newArray);
         });
     }
 
-    const handleNext=()=>{
-        setIndiceActual+=10;
-        setIndiceFinal+=10;
+    const handleNext = () => {
+        setIndiceActual += 10;
+        setIndiceFinal += 10;
     }
-    const handlePrevious=()=>{
-        setIndiceActual-=10;
-        setIndiceFinal-=10;
+    const handlePrevious = () => {
+        setIndiceActual -= 10;
+        setIndiceFinal -= 10;
     }
 
     return (
         <View style={styles.container}>
             <HeaderRutina tipo={'ajustes'} titulo={'Buscar Rutinas'} />
             {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
+
+            {filtro ? (
+                <View style={styles.ContainerFiltro}>
+                    <View style={styles.pickerContainer}>
+                        <Picker
+                            selectedValue={dificultad}
+                            onValueChange={(itemValue) => setDificultad(itemValue)}
+                            style={styles.picker}>
+                            <Picker.Item label="Principiante" value="Principiante" style={styles.pickerItem} />
+                            <Picker.Item label="Intermedio" value="Intermedio" style={styles.pickerItem} />
+                            <Picker.Item label="Experto" value="Experto" style={styles.pickerItem} />
+                        </Picker>
+                    </View>
+
+                    <View style={styles.pickerContainer}>
+                        <Picker
+                            selectedValue={ambito}
+                            onValueChange={(itemValue) => setAmbito(itemValue)}
+                            style={styles.picker}>
+                            <Picker.Item label="Gimnasio" value="Gimnasio" style={styles.pickerItem} />
+                            <Picker.Item label="Calistenia" value="Calistenia" style={styles.pickerItem} />
+                            <Picker.Item label="Casa" value="Casa" style={styles.pickerItem} />
+                        </Picker>
+                    </View>
+
+                    <View style={styles.pickerContainer}>
+                        <Picker
+                            selectedValue={musculo}
+                            onValueChange={(itemValue) => setMusculo(itemValue)}
+                            style={styles.picker}>
+                            <Picker.Item label="Biceps" value="Biceps" style={styles.pickerItem} />
+                            <Picker.Item label="Triceps" value="Triceps" style={styles.pickerItem} />
+                            <Picker.Item label="Pecho" value="Pecho" style={styles.pickerItem} />
+                            <Picker.Item label="Espalda" value="Espalda" style={styles.pickerItem} />
+                            <Picker.Item label="Pierna" value="Pierna" style={styles.pickerItem} />
+                        </Picker>
+                    </View>
+                        <Button mode="contained" style={styles.imagePickerButton} onPress={() => { setFiltro(false) }}>
+                            Filtrar
+                        </Button>
+                </View>
+            ) : (
+                <View style={styles.buttonContainer}>
+                    <Button mode="contained" style={styles.imagePickerButton} onPress={() => { setFiltro(true) }}>
+                        Buscar
+                    </Button>
+                </View>
+            )}
+
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
                 <FlatList
@@ -124,6 +177,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         padding: 5
     },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '90%',
+        color: "white"
+    },
     containerCrear: {
         width: '90%',
         flexDirection: 'row',
@@ -132,6 +191,14 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         marginBottom: 20,
         alignItems: "center",
+    },
+    
+    picker: {
+        color: '#bbdefb',
+    },
+    pickerItem: {
+        color: '#607cff',
+        fontSize: 16,
     },
     image: {
         width: 100,
@@ -198,6 +265,34 @@ const styles = StyleSheet.create({
         marginTop: 5,
         flexDirection: 'row',
         flex: 1
+    },
+    ContainerFiltro: {
+        width: '90%', // Ocupa el 90% del ancho
+        marginTop: 5,
+        marginBottom: 10,
+        padding: 5,
+        justifyContent: 'center', // Centra los elementos verticalmente
+        alignItems: 'center', // Centra los elementos horizontalmente
+    },
+
+    pickerContainer: {
+        width: '100%', // Ocupa el 100% del ancho del contenedor padre (90% del total)
+        marginBottom: 10,
+        backgroundColor: '#374151',
+        color: '#F9FAFB',
+        borderRadius: 8,
+        borderColor: '#607cff',
+        borderWidth: 1,
+    },
+
+    imagePickerButton: {
+        width: '100%', // Ocupa el 100% del ancho del contenedor padre (90% del total)
+        backgroundColor: '#607cff',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginBottom: 10,
     },
 });
 
