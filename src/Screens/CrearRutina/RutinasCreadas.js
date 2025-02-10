@@ -10,6 +10,7 @@ import Context from '../../Utils/Context';
 const Buscar = (props) => {
     const { token, setToken } = useContext(Context);
     const [rutinas, setRutinas] = useState([]);
+    /*
     useEffect(async () => {
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
         getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + "&idUsuario=" + usuario.id + "&index=0&offset=10").then((element) => {
@@ -18,14 +19,14 @@ const Buscar = (props) => {
             setRutinas(newArray);
         });
     }, [])
-
+*/
     return (
         <View style={styles.container}>
             <HeaderRutina tipo={'ajustes'} titulo={'Rutinas Creadas'} />
             {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
-                <FlatList
+                {/*<FlatList
                     data={rutinas}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
@@ -41,7 +42,7 @@ const Buscar = (props) => {
                             }}
                         />
                     )}
-                />
+                />*/}
             </View>
             <Pressable style={styles.containerCrear} onPress={() => props.navigation.navigate('CrearRutina')}>
                 <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "7%" }} /><Text style={styles.text}>Crear Rutina</Text>

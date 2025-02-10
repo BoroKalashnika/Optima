@@ -18,28 +18,61 @@ const CrearRutina = (props) => {
     const [dieta, setDieta] = useState('');
     const [vistaPrevia, setVistaPrevia] = useState(null);
     const [ejerciciosRutina, setEjerciciosRutina] = useState([]);
+    const [draft, setDraft] = useState('');
     const { modalVisible, setModalVisible } = useContext(Context);
     const { alertMessage, setAlertMessage } = useContext(Context);
     const { alertTitle, setAlertTitle } = useContext(Context);
-    const { token, setToken } = useContext(Context);
+    const { token } = useContext(Context);
     const { email } = useContext(Context);
     const { idRutina, setIdRutina } = useContext(Context);
     const { loading, setLoading } = useContext(Context);
     const { idEjercicios, setIdEjercicios } = useContext(Context);
+    const { ejercicio } = useContext(Context);
 
     useEffect(() => {
         crearRutinaId();
+        !idRutina && getIdRutina();
+        idRutina && getEjercicios();
     }, []);
 
     useEffect(() => {
-        const newArray = [];
-        getData('http://13.216.205.228:8080/optima/obtenerEjercicios?token=' + token + '&idRutina=' + idRutina).then((element) => {
-            element.ejercicios.map((ejercicio) => {
-                newArray.push(ejercicio);
-            })
-            setEjerciciosRutina(newArray);
+        getEjercicios();
+    }, [ejercicio]);
+
+    const getIdRutina = async () => {
+        const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
+        const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
+
+        rutinas.rutinas.forEach(element => {
+            if (element.nombreRutina == '$$crea$$') {
+                setIdRutina(element.id);
+                return element.id;
+            }
         });
-    }, [idEjercicios]);
+    }
+
+    const getEjercicios = async () => {
+        const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
+        const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
+        let rutinaId;
+
+        rutinas.rutinas.forEach(element => {
+            if (element.nombreRutina == '$$crea$$') {
+                rutinaId = element.id;
+            }
+        });
+
+        const response = await getData(`http://13.216.205.228:8080/optima/obtenerEjercicios?token=${token}&idRutina=${rutinaId}`);
+        console.log(response);
+
+        if (response.count != 0) {
+            setEjerciciosRutina(response.ejercicios);
+            setIdEjercicios(response.ejercicios.map(element => element.id));
+            setDraft(' (Draft)');
+        } else {
+            setDraft('');
+        }
+    }
 
     const crearRutinaId = async () => {
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
@@ -47,14 +80,14 @@ const CrearRutina = (props) => {
         let existe = false;
         //añadir validacion en el back por si a caso
         rutinas.rutinas.forEach(element => {
-            if (element.nombreRutina == '$¿¡crea!?') {
+            if (element.nombreRutina == '$$crea$$') {
                 existe = true;
             }
         });
 
         if (!existe) {
             const json = {
-                nombreRutina: "$¿¡crea!?",
+                nombreRutina: "$$crea$$",
                 creador: email,
                 token: token,
                 idUsuario: usuario.id
@@ -77,7 +110,7 @@ const CrearRutina = (props) => {
             nombreRutina: nomRutina,
             valoracion: '0',
             dificultad: dificultad,
-            tipo: tipo,
+            grupoMuscular: musculo,
             ambito: ambito,
             ejercicios: idEjercicios,
             dieta: dieta,
@@ -95,6 +128,7 @@ const CrearRutina = (props) => {
             setAlertMessage('Rutina creada correctamente.');
             setAlertTitle('Éxito');
             setModalVisible(true);
+            //falla y es importante que funcione por los setIdEjercicios([]); setEjerciciosRutina([]);            
             limpiarCampos();
             props.navigation.navigate('RutinasCreadas');
         } else {
@@ -132,10 +166,11 @@ const CrearRutina = (props) => {
         setDieta('');
         setVistaPrevia(null);
         setIdEjercicios([]);
+        setEjerciciosRutina([]);
     };
 
     const validarCampos = () => {
-        if (!nomRutina || !ambito || idEjercicios == [] || !dieta || !vistaPrevia) {
+        if (!nomRutina || !ambito || !dieta || !vistaPrevia) {
             if (idEjercicios == []) {
                 setAlertMessage('No ha insertado ningún ejercicio.');
                 setAlertTitle('Error');
@@ -153,7 +188,7 @@ const CrearRutina = (props) => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Crear Nueva Rutina</Text>
+            <Text style={styles.title}>Crear Nueva Rutina{draft}</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Nombre de la rutina"
@@ -193,23 +228,23 @@ const CrearRutina = (props) => {
                     <Picker.Item label="Pierna" value="Pierna" style={styles.pickerItem} />
                 </Picker>
             </View>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Dieta"
-                    placeholderTextColor="#90caf9"
-                    value={dieta}
-                    onChangeText={setDieta}
-                />
+            <TextInput
+                style={styles.input}
+                placeholder="Dieta"
+                placeholderTextColor="#90caf9"
+                value={dieta}
+                onChangeText={setDieta}
+            />
             <Pressable style={styles.containerCrear} onPress={() => props.navigation.navigate('CrearEjercicio')}>
                 <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "5%" }} />
                 <Text style={styles.text}>Crear Ejercicio</Text>
             </Pressable>
             <View style={styles.listContainer}>
-            <ScrollView nestedScrollEnabled={true}>
-                {ejerciciosRutina.map((element) => (
-                    <CardEjercicio />
-                ))}
-            </ScrollView>
+                <ScrollView nestedScrollEnabled={true}>
+                    {ejerciciosRutina.map((element, index) => (
+                        <CardEjercicio />
+                    ))}
+                </ScrollView>
             </View>
             <View style={styles.buttonContainer}>
                 <Button mode="contained" style={styles.imagePickerButton} onPress={pickImage}>
@@ -379,7 +414,7 @@ const styles = StyleSheet.create({
         width: '90%',
         maxHeight: 140,
         alignSelf: 'center',
-        marginBottom:8,
+        marginBottom: 8,
     },
 });
 

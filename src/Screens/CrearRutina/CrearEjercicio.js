@@ -37,6 +37,7 @@ const CrearEjercicio = (props) => {
     const { token } = useContext(Context);
     const { idRutina } = useContext(Context);
     const { idEjercicios, setIdEjercicios } = useContext(Context);
+    const { ejercicio, setEjercicio } = useContext(Context);
     const { email } = useContext(Context);
 
     useFocusEffect(() => {
@@ -135,7 +136,8 @@ const CrearEjercicio = (props) => {
                 );
 
                 if (response.status === 201) {
-                    setIdEjercicios([...idEjercicios, response.data.message]);
+                    //setIdEjercicios([...idEjercicios, response.data.message]);
+                    setEjercicio(ejercicio ? false : true);
                     setAlertMessage('Ejercicio creado correctamente.');
                     setAlertTitle('Éxito');
                     setModalVisible(true);
