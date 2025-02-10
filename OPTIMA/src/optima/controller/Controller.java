@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -185,24 +186,25 @@ public class Controller {
 	}
 
 	// ACCIONES RUITNAS
-	@SuppressWarnings("null")
 	@GetMapping("/optima/obtenerRutinas")
 	public ResponseEntity<Object> obtenerRutinas(@RequestParam(value = "token") String token,
-			@RequestParam(value = "index") String index, @RequestParam(value = "offset") String offset) {
-
+			@RequestParam(value = "index") int index, @RequestParam(value = "offset") int offset) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		JSONObject response = new JSONObject();
+
 		if (usuarioBaseDatos.isEmpty()) {
 			response.put("error", "Token inválido");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 
 		List<Rutina> rutinas = rutinaRepository.findAll();
-		List<Rutina> rutinasIndex = null;
 
-		for (int i = Integer.parseInt(index); i < Integer.parseInt(offset); i++) {
-			rutinasIndex.add(rutinas.get(i));
+		if (index < 0 || offset > rutinas.size() || index >= offset) {
+			response.put("error", "Rango de índices inválido");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
 		}
+
+		List<Rutina> rutinasIndex = new ArrayList<>(rutinas.subList(index, offset));
 
 		response.put("count", rutinas.size());
 		response.put("rutinas", rutinasIndex);
@@ -244,11 +246,12 @@ public class Controller {
 
 	@DeleteMapping("/optima/eliminarRutina")
 	public ResponseEntity<Object> eliminarRutina(@RequestParam(value = "token") String token,
-			@RequestParam(value = "id") String id) {
+			@RequestParam(value = "id") String id, @RequestParam(value = "ejercicios") List<String> ejercicios) {
 		Optional<Rutina> rutina = rutinaRepository.findById(id);
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
 			if (rutina.isPresent()) {
+
 				rutinaRepository.deleteById(id);
 				return ResponseEntity.ok("Rutina eliminada correctamente.");
 			}
@@ -361,6 +364,21 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 	}
 
+	@DeleteMapping("/optima/eliminarEjercicio")
+	public ResponseEntity<Object> eliminarEjercicio(@RequestParam(value = "token") String token,
+			@RequestParam(value = "id") String id) {
+		JSONObject json = new JSONObject();
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			ejercicioRepository.findById(id);
+			json.put("message", "Ejercicio eliminado.");
+			return ResponseEntity.ok(json.toString());
+		}
+		json.put("message", "Token expirado.");
+		return ResponseEntity.ok(json.toString());
+	}
+
+	// API
 	public String ipAPI() throws IOException {
 		String api;
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("IP_API.txt");
