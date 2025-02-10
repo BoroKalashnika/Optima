@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, Image, ScrollView, StyleSheet, Modal, Alert, Pressable } from 'react-native';
+import { View, Text, TextInput, Image, ScrollView, StyleSheet, BackHandler, Alert, Pressable } from 'react-native';
 import { Button } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import postData from '../../Utils/services/postData';
@@ -28,6 +29,19 @@ const CrearRutina = (props) => {
     const { loading, setLoading } = useContext(Context);
     const { idEjercicios, setIdEjercicios } = useContext(Context);
     const { ejercicio } = useContext(Context);
+
+    useFocusEffect(() => {
+        const backAction = () => {
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+
+        return () => backHandler.remove();
+    });
 
     useEffect(() => {
         crearRutinaId();
@@ -137,7 +151,6 @@ const CrearRutina = (props) => {
             props.navigation.goBack();          
             limpiarCampos();
         }
-        setIdEjercicios([]);
     };
 
     const pickImage = () => {
@@ -169,6 +182,14 @@ const CrearRutina = (props) => {
         setIdEjercicios([]);
         setEjerciciosRutina([]);
     };
+
+    const cancelarPress = () => {
+        setAlertMessage('Creación de rutina cancelada');
+        setAlertTitle('Cancelado');
+        setModalVisible(true);  
+        limpiarCampos();
+        props.navigation.goBack();        
+    }
 
     const validarCampos = () => {
         if (!nomRutina || !ambito || !dieta || !vistaPrevia) {
@@ -259,7 +280,7 @@ const CrearRutina = (props) => {
                 <Button mode="contained" style={styles.button} onPress={validarCampos}>
                     Guardar
                 </Button>
-                <Button mode="contained" style={styles.buttonClear} onPress={limpiarCampos}>
+                <Button mode="contained" style={styles.buttonClear} onPress={cancelarPress}>
                     Cancelar
                 </Button>
             </View>
