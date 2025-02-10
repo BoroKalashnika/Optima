@@ -249,20 +249,19 @@ public class Controller {
 	}
 
 	@DeleteMapping("/optima/eliminarRutina")
-	public ResponseEntity<Object> eliminarRutina(@RequestParam(value = "token") String token,
-			@RequestParam(value = "id") String id, @RequestParam(value = "ejercicios") List<String> ejercicios) {
-		Optional<Rutina> rutina = rutinaRepository.findById(id);
-		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+	public ResponseEntity<Object> eliminarRutina(@RequestBody Rutina rutinaEliminar) {
+		Optional<Rutina> rutina = rutinaRepository.findById(rutinaEliminar.getId());
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(rutinaEliminar.getToken());
 		if (usuarioBaseDatos.isPresent()) {
 			if (rutina.isPresent()) {
-
-				for (String ejercicio : ejercicios) {
+				
+				for (String ejercicio : rutina.get().getEjercicios()) {
 					Optional<Ejercicio> ej = ejercicioRepository.findById(ejercicio);
 					cloudinaryService.deleteVideo(ej.get().getVideo());
 					ejercicioRepository.deleteById(ejercicio);
 				}
 
-				rutinaRepository.deleteById(id);
+				rutinaRepository.deleteById(rutinaEliminar.getId());
 				return ResponseEntity.ok("Rutina eliminada correctamente.");
 			}
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
