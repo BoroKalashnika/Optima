@@ -28,6 +28,7 @@ import optima.model.Usuario;
 import optima.repository.EjercicioRepository;
 import optima.repository.RutinaRepository;
 import optima.repository.UsuarioRepository;
+import optima.service.CloudinaryService;
 import optima.service.EmailService;
 
 @RestController
@@ -44,6 +45,9 @@ public class Controller {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private CloudinaryService cloudinaryService;
 
 	// USUARIOS LOGIN / LOGOUT / VERIFICAR / REGISTRAR
 	@GetMapping("/optima/tokenUsuario")
@@ -251,6 +255,12 @@ public class Controller {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
 			if (rutina.isPresent()) {
+
+				for (String ejercicio : ejercicios) {
+					Optional<Ejercicio> ej = ejercicioRepository.findById(ejercicio);
+					cloudinaryService.deleteVideo(ej.get().getVideo());
+					ejercicioRepository.deleteById(ejercicio);
+				}
 
 				rutinaRepository.deleteById(id);
 				return ResponseEntity.ok("Rutina eliminada correctamente.");
