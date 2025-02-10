@@ -439,6 +439,9 @@ public class Controller {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
 			ejercicioRepository.findById(id);
+			Optional<Ejercicio> ej = ejercicioRepository.findById(id);
+			cloudinaryService.deleteVideo(ej.get().getVideo());
+			ejercicioRepository.deleteById(id);
 			json.put("message", "Ejercicio eliminado.");
 			return ResponseEntity.ok(json.toString());
 		}
