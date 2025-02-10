@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
     View,
     Text,
@@ -9,62 +9,25 @@ import CardEjercicio from '../Components/cardEjercicio/CardEjercicio';
 import Icon from 'react-native-vector-icons/AntDesign';
 import HeaderRutina from '../Components/headerRutina/HeaderRutina';
 import getData from '../Utils/services/getData';
+import Context from '../Utils/Context';
 
 const VerRutina = (props) => {
     const [nombre, setNombre] = useState();
     const [ambito, setAmbito] = useState();
     const [dificultad, setDificultad] = useState();
-    const data = [
-        {
-            id: '1',
-            nombre: 'Ejercicio 1',
-            descripcion: 'Descripción del ejercicio 1',
-            imagen: require('../Assets/img/logo.png'),
-        },
-        {
-            id: '2',
-            nombre: 'Ejercicio 2',
-            descripcion: 'Descripción del ejercicio 2',
-            imagen: require('../Assets/img/logo.png'),
-        },
-        {
-            id: '3',
-            nombre: 'Ejercicio 3',
-            descripcion: 'Descripción del ejercicio 3',
-            imagen: require('../Assets/img/logo.png'),
-        },
-        {
-            id: '4',
-            nombre: 'Ejercicio 4',
-            descripcion: 'Descripción del ejercicio 4',
-            imagen: require('../Assets/img/logo.png'),
-        },
-        {
-            id: '5',
-            nombre: 'Ejercicio 5',
-            descripcion: 'Descripción del ejercicio 5',
-            imagen: require('../Assets/img/logo.png'),
-        },
-        {
-            id: '6',
-            nombre: 'Ejercicio 5',
-            descripcion: 'Descripción del ejercicio 5',
-            imagen: require('../Assets/img/logo.png'),
-        },
-        {
-            id: '7',
-            nombre: 'Ejercicio 5',
-            descripcion: 'Descripción del ejercicio 5',
-            imagen: require('../Assets/img/logo.png'),
-        },
-    ];
-    const [validadorPlay, setValidadorlay] = useState(false);
+    const {token,setToken} = useContext(Context);  
+    const {idRutina, setIdRutina} = useContext(Context);
+    const [validarHeart, setValidarHeart] = useState(false);
+    const [validadorClip, setValidadorClip] = useState(false);
+
 
     useEffect(() => {
         loadRutina();
     }, []);
 
-    const icono = validadorPlay ? 'heart' : 'hearto';
+    const iconoHeart = validarHeart ? 'heart' : 'hearto';
+    const iconoClip = validadorClip ? 'yellow' : '#607cff';
+
     const [stars, setStars] = useState([
         { id: 1, icon: 'staro' },
         { id: 2, icon: 'staro' },
@@ -74,9 +37,11 @@ const VerRutina = (props) => {
     ]);
 
     const PressHeart = () => {
-        setValidadorlay(!validadorPlay);
+        setValidarHeart(!validarHeart);
     };
-
+    const PressClip= () => {
+        setValidadorClip(!validadorClip);
+    };
     const PresStar = (indice) => {
         const newArray = [...stars];
         newArray.push(
@@ -94,11 +59,12 @@ const VerRutina = (props) => {
     const loadRutina = async () => {
         try {
             getData(
-                'http://13.216.205.228:8080/optima/obtenerRutina?id=67a356eccc178b5685343843&token=1'
+                'http://13.216.205.228:8080/optima/obtenerRutina?id='+idRutina+'&token='+token
             ).then((response) => {
                 setAmbito(response.ambito);
                 setDificultad(response.dificultad);
                 setNombre(response.nombreRutina);
+                console.log(response);
             });
         } catch (error) {
             console.error('Error fetching Pokémon:', error);
@@ -110,7 +76,8 @@ const VerRutina = (props) => {
             <HeaderRutina nombre={nombre} tipo={'rutina'}/>
             <View style={styles.containerRow}>
                 <Text style={styles.title}> Creador: </Text>
-                <Icon name={icono} color="red" size={50} onPress={PressHeart} />
+                <Icon name="pushpin" color={iconoClip} size={50} onPress={PressClip} />
+                <Icon name={iconoHeart} color="red" size={50} onPress={PressHeart} />
             </View>
             <View style={styles.containerDatos}>
                 <View style={styles.subContainer}>
@@ -132,7 +99,7 @@ const VerRutina = (props) => {
             </View>
             <View style={{ flex: 7 }}>
                 <Text style={styles.textEjercicio}>───── Ejercicios ─────</Text>
-                <FlatList
+                {/* <FlatList
                     data={data}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
@@ -145,7 +112,7 @@ const VerRutina = (props) => {
                             }}
                         />
                     )}
-                />
+                /> */}
             </View>
             <View style={styles.containerRow}>
                 <Text style={styles.textLogin}>Valorar</Text>

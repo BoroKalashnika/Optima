@@ -18,7 +18,7 @@ const Buscar = (props) => {
     const [paginActual, setPaginActual] = useState(1);
     const [indiceActual, setIndiceActual] = useState(1);
     const [indiceFinal, setIndiceFinal] = useState(2);
-
+    const {idRutina, setIdRutina} = useContext(Context);
 
     useEffect(() => {
         getRutinas();
@@ -28,7 +28,7 @@ const Buscar = (props) => {
     const getRutinas = async () => {
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
         getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + "&idUsuario=" + usuario.id + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
-            console.log(element);
+
             setPaginasTotal(Math.ceil(element.count / 10));
             const newArray = [];
             element.rutinas.map((rutina) => {
@@ -66,7 +66,7 @@ const Buscar = (props) => {
                             titulo={item.nombreRutina}
                             onRutina={() => {
                                 props.navigation.navigate('VerRutina');
-
+                                setIdRutina(item.id)
                             }}
                         />
                     )}

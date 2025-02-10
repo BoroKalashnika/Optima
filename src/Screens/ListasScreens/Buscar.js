@@ -17,7 +17,7 @@ const Buscar = (props) => {
     const [paginasTotal, setPaginasTotal] = useState();
     const [paginActual, setPaginActual] = useState(1);
     const [indiceActual, setIndiceActual] = useState(0);
-    const [indiceFinal, setIndiceFinal] = useState(10);
+    const [indiceFinal, setIndiceFinal] = useState(1);
     const [filtro, setFiltro] = useState(false);
     const [dificultad, setDificultad] = useState('Principiante');
     const [musculo, setMusculo] = useState('Biceps');
@@ -30,25 +30,24 @@ const Buscar = (props) => {
 
     const getRutinas = async () => {
         getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
-            console.log(element);
-            console.log(token);
-            setPaginasTotal(Math.ceil(element.count / 10));
+            setPaginasTotal(Math.ceil(element.count / 1));
             const newArray = [];
             element.rutinas.map((rutina) => {
                 newArray.push(rutina)
             })
             setRutinas(newArray);
+            console.log(paginasTotal);
         });
     }
 
-    const handleNext = () => {
-        setIndiceActual += 10;
-        setIndiceFinal += 10;
-    }
-    const handlePrevious = () => {
-        setIndiceActual -= 10;
-        setIndiceFinal -= 10;
-    }
+    const handleNext= (() => {
+        setIndiceActual += 1;
+        setIndiceFinal += 1;
+    })
+    const handlePrevious = (() => {
+        setIndiceActual -= 1;
+        setIndiceFinal -= 1;
+    })
 
     return (
         <View style={styles.container}>
