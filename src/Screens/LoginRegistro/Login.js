@@ -38,34 +38,88 @@ const Login = (props) => {
     useEffect(() => {
         const checkToken = async () => {
             const tokenCache = await getToken();
-            if (tokenCache) {
-                getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + tokenCache.token).then(async (response) => {
-                    if (response.token === tokenCache.token && response.message === "200") {
-                        const fechaGuardada = new Date(tokenCache.dateTimeTokenGenerado);
-                        const fechaActual = new Date();
-                        const diferenciaTiempo = fechaActual.getTime() - fechaGuardada.getTime();
-                        const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24));
-                        if (diferenciaDias >= 1) {
-                            await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
-                            await removeToken();
-                            setToken('');
-                            Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión')
-                        } else {
-                            setToken(tokenCache.token);
-                            props.navigation.navigate('HomeNavegacion');
+            if (!tokenCache) return;
+            try {
+                const response = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + tokenCache.token);
+
+                if (!response || response.token !== tokenCache.token) {
+                    await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
+                    await removeToken();
+                    setToken('');
+                    Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
+                        {
+                            text: "OK",
+                            onPress: () => props.navigation.navigate('Login')
                         }
-                    } else {
+                    ]);
+                } else {
+                    const fechaGuardada = new Date(tokenCache.dateTimeTokenGenerado);
+                    const fechaActual = new Date();
+                    const diferenciaTiempo = fechaActual.getTime() - fechaGuardada.getTime();
+                    const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24));
+                    if (diferenciaDias >= 1) {
                         await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
                         await removeToken();
                         setToken('');
-                        Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión')
-                        props.navigation.navigate('Login');
+                        Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
+                            {
+                                text: "OK",
+                                onPress: () => props.navigation.navigate('Login')
+                            }
+                        ]);
+                    } else {
+                        setToken(tokenCache.token);
+                        props.navigation.navigate('HomeNavegacion');
+                        startTokenVerification();
                     }
-                })
+                }
+            } catch (error) {
+                await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
+                await removeToken();
+                setToken('');
+                Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
+                    {
+                        text: "OK",
+                        onPress: () => props.navigation.navigate('Login')
+                    }
+                ]);
             }
         };
         checkToken();
     }, []);
+
+    const startTokenVerification = () => {
+        setInterval(async () => {
+            const tokenCache = await getToken();
+            if (!tokenCache) return;
+
+            try {
+                const response = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + tokenCache.token);
+
+                if (!response || response.token !== tokenCache.token) {
+                    await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
+                    await removeToken();
+                    setToken('');
+                    Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
+                        {
+                            text: "OK",
+                            onPress: () => props.navigation.navigate('Login')
+                        }
+                    ]);
+                }
+            } catch (error) {
+                await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
+                await removeToken();
+                setToken('');
+                Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
+                    {
+                        text: "OK",
+                        onPress: () => props.navigation.navigate('Login')
+                    }
+                ]);
+            }
+        }, 60000); // Cada 60 segundos (1 minuto)
+    };
 
     const loginUsuario = async () => {
         if (email === '' || password === '') {
