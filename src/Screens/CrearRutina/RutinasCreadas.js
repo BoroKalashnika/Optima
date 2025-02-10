@@ -15,15 +15,22 @@ const Buscar = (props) => {
     const { alertTitle, setAlertTitle } = useContext(Context);
     const [rutinas, setRutinas] = useState([]);
 
-    useEffect(async () => {
+    useEffect(() => {
+        getRutinas();
+        console.log(rutinas);
+    }, [rutinas])
+
+    const getRutinas = async()=>{
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
         getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + "&idUsuario=" + usuario.id + "&index=0&offset=10").then((element) => {
             const newArray = [];
-            element.rutinas.map((rutina) => { newArray.push(rutina) })
-            setRutinas(newArray);
+            element.rutinas.map((rutina) => { 
+               if(rutina.nombreRutina!=="$$crea$$") 
+                {newArray.push(rutina)} })
+               setRutinas(newArray);
         });
-    }, [])
-
+    }
+   
     return (
         <View style={styles.container}>
             <HeaderRutina tipo={'ajustes'} titulo={'Rutinas Creadas'} />
@@ -38,7 +45,8 @@ const Buscar = (props) => {
                             dificultad={item.dificultad}
                             ambito={item.ambito}
                             imagen={item.vistaPrevia}
-                            musculo={item.ambito}
+                            musculo={item.grupoMuscular}
+                            estrellas={item.valoracion}
                             titulo={item.nombreRutina}
                             onRutina={() => {
                                 props.navigation.navigate('VerRutina');

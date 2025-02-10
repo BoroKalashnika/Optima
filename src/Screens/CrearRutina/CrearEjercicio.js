@@ -89,7 +89,7 @@ const CrearEjercicio = (props) => {
                 RNFS.stat(videoUri)
                     .then((statResult) => {
                         const fileSizeInMB = statResult.size / (1024 * 1024);
-                        const maxSize = 51;
+                        const maxSize = 40;
 
                         if (fileSizeInMB <= maxSize) {
                             setVideoFile(videoUri);

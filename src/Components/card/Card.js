@@ -6,19 +6,25 @@ const Card = (props) => {
     const [color, setColor] = useState('red');
     const [ambitoImg, setAmbitoImg] = useState('Casa');
     const [musculoImg, setMusculoImg] = useState('Biceps');
-    const { ambito, musculo, dificultad, imagen,titulo } = props;
-
+    const { ambito, musculo, dificultad, imagen,titulo,estrellas } = props;
+    const [stars, setStars] = useState([
+        { id: 1, icon: 'staro' },
+        { id: 2, icon: 'staro' },
+        { id: 3, icon: 'staro' },
+        { id: 4, icon: 'staro' },
+        { id: 5, icon: 'staro' },
+    ]);
     const chancheColor = () => {
         if (dificultad === 'Experto') setColor('red');
         if (dificultad === 'Intermedio') setColor('yellow');
         if (dificultad === 'Principiante') setColor('green');
     };
     const chancheMusculo = () => {
-        if (musculo === 'biceps') setMusculoImg(require('../../Assets/img/biceps.png'));
-        if (musculo === 'pecho') setMusculoImg(require('../../Assets/img/pecho.png'));
-        if (musculo === 'triceps') setMusculoImg(require('../../Assets/img/triceps.png'));
-        if (musculo === 'pierna') setMusculoImg(require('../../Assets/img/pierna.png'));
-        if (musculo === 'espalda') setMusculoImg(require('../../Assets/img/espalda.png'));
+        if (musculo === 'Biceps') setMusculoImg(require('../../Assets/img/biceps.png'));
+        if (musculo === 'Pecho') setMusculoImg(require('../../Assets/img/pecho.png'));
+        if (musculo === 'Triceps') setMusculoImg(require('../../Assets/img/triceps.png'));
+        if (musculo === 'Pierna') setMusculoImg(require('../../Assets/img/pierna.png'));
+        if (musculo === 'Espalda') setMusculoImg(require('../../Assets/img/espalda.png'));
 
     };
     const chancheAmbito = () => {
@@ -26,11 +32,24 @@ const Card = (props) => {
         if (ambito === 'Gimnasio') setAmbitoImg(require('../../Assets/img/pesa.png'));
         if (ambito === 'Calistenia') setAmbitoImg(require('../../Assets/img/calistenia.png'));
     };
-
+    const getStars = (indice) => {
+        const newArray = [...stars];
+        newArray.push(
+            stars.map((value, index) => {
+                if (value.id <= indice) {
+                    stars[index].icon = 'star';
+                } else if (value.id > indice) {
+                    stars[index].icon = 'staro';
+                }
+            })
+        );
+        setStars(newArray);
+    };
     useEffect(() => {
         chancheAmbito();
         chancheColor();
         chancheMusculo();
+        getStars(estrellas)
     }, [])
 
     return (
@@ -53,11 +72,14 @@ const Card = (props) => {
                         <Icon name="dashboard" size={40} color={color} />
                     </View>
                     <View style={styles.containerRow}>
-                        <Icon name="star" size={25} color="yellow" />
-                        <Icon name="star" size={25} color="yellow" />
-                        <Icon name="star" size={25} color="yellow" />
-                        <Icon name="staro" size={25} color="yellow" />
-                        <Icon name="staro" size={25} color="yellow" />
+                    {stars.map((value) => (
+                        <Icon
+                            name={value.icon}
+                            size={25}
+                            color="yellow"
+                            onPress={() => PresStar(value.id)}
+                        />
+                    ))}
                     </View>
                 </View>
             </View>
