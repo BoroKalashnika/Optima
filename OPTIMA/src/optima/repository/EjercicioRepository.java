@@ -14,5 +14,8 @@ public interface EjercicioRepository extends MongoRepository<Ejercicio, String> 
 	void deleteByNombreEjercicio(String nombreEjercicio);
 
 	List<Ejercicio> findByIdRutina(String idRutina);
+	
+    void deleteByIdRutina(String idRutina);
 
 }
+

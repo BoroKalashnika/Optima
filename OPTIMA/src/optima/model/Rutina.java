@@ -21,6 +21,7 @@ public class Rutina {
 	private String ambito;
 	private String idUsuario;
 	private String token;
+	private String timestamp;
 
 	public String getIdUsuario() {
 		return idUsuario;
@@ -62,8 +63,16 @@ public class Rutina {
 		return vistaPrevia;
 	}
 
+	public String getAmbito() {
+		return ambito;
+	}
+
 	public String getToken() {
 		return token;
+	}
+
+	public String getTimestamp() {
+		return timestamp;
 	}
 
 	public void setId(String id) {
@@ -102,10 +111,6 @@ public class Rutina {
 		this.vistaPrevia = vistaPrevia;
 	}
 
-	public String getAmbito() {
-		return ambito;
-	}
-
 	public void setAmbito(String ambito) {
 		this.ambito = ambito;
 	}
@@ -116,5 +121,9 @@ public class Rutina {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
 	}
 }

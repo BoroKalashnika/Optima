@@ -297,13 +297,13 @@ public class Controller {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(nuevaRutina.getToken());
 		if (usuarioBaseDatos.isPresent()) {
 			nuevaRutina.setToken(null);
-			if (nuevaRutina.getNombreRutina().equals("$¿¡crea!?")) {
+			if (nuevaRutina.getNombreRutina().equals("$$crea$$")) {
 				Rutina rutinaGuardada = rutinaRepository.save(nuevaRutina);
 
 				respusta.put("idRutina", rutinaGuardada.getId());
 				return ResponseEntity.status(HttpStatus.CREATED).body(respusta.toString());
 			} else {
-				Rutina actualizarRutina = rutinaRepository.findByNombreRutina("$¿¡crea!?");
+				Rutina actualizarRutina = rutinaRepository.findByNombreRutina("$$crea$$");
 				if (actualizarRutina != null) {
 					actualizarRutina.setNombreRutina(nuevaRutina.getNombreRutina());
 					actualizarRutina.setValoracion(nuevaRutina.getValoracion());
