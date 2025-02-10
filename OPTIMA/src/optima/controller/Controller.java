@@ -340,6 +340,64 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 
+	@PostMapping("/optima/favoritoRutina")
+	ResponseEntity<Object> favoritoRutina(@RequestBody Rutina rutinaFavorita)
+			throws NoSuchAlgorithmException, MessagingException {
+		JSONObject respusta = new JSONObject();
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(rutinaFavorita.getToken());
+		if (usuarioBaseDatos.isPresent()) {
+			rutinaFavorita.setToken(null);
+			Usuario usuario = usuarioBaseDatos.get();
+			usuario.getRutinasGuardadas().add(rutinaFavorita.getId());
+			usuarioRepository.save(usuario);
+			respusta.put("message", "Rutina añadida a favoritos con exito");
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(respusta.toString());
+		}
+		respusta.put("message", "La rutina no se ha podido añadir a favoritos");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respusta.toString());
+	}
+
+	@DeleteMapping("/optima/deleteFavoritoRutina")
+	ResponseEntity<Object> deleteFavoritoRutina(@RequestBody Rutina rutinaFavorita)
+			throws NoSuchAlgorithmException, MessagingException {
+		JSONObject respusta = new JSONObject();
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(rutinaFavorita.getToken());
+		if (usuarioBaseDatos.isPresent()) {
+			rutinaFavorita.setToken(null);
+			Usuario usuario = usuarioBaseDatos.get();
+			for (int i = 0; i < usuario.getRutinasGuardadas().size(); i++) {
+				if (usuario.getRutinasGuardadas().get(i).equals(rutinaFavorita.getId())) {
+					usuario.getRutinasGuardadas().remove(i);
+					usuarioRepository.save(usuario);
+					respusta.put("message", "Rutina eliminada de favoritos con exito");
+					return ResponseEntity.status(HttpStatus.OK).body(respusta.toString());
+				}
+			}
+			respusta.put("message", "Error rutina no encontrada en favoritos");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respusta.toString());
+
+		}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+	}
+
+	@PostMapping("/optima/rutinaActiva")
+	ResponseEntity<Object> rutinaActiva(@RequestBody Rutina rutinaActiva)
+			throws NoSuchAlgorithmException, MessagingException {
+		JSONObject respusta = new JSONObject();
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(rutinaActiva.getToken());
+		if (usuarioBaseDatos.isPresent()) {
+			rutinaActiva.setToken(null);
+			Usuario usuario = usuarioBaseDatos.get();
+			usuario.setRutinaActiva(rutinaActiva.getId());
+			usuarioRepository.save(usuario);
+			respusta.put("message", "Rutina activa añadida");
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(respusta.toString());
+		}
+		respusta.put("message", "La rutina no se ha podido añadir a rutina activa");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respusta.toString());
+	}
+
 	// ACCIONES EJERCICIOS
 	@GetMapping("/optima/obtenerEjercicios")
 	public ResponseEntity<Object> obtenerEjercicios(@RequestParam(value = "token") String token,
