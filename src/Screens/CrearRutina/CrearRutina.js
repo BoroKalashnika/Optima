@@ -90,8 +90,10 @@ const CrearRutina = (props) => {
                 nombreRutina: "$$crea$$",
                 creador: email,
                 token: token,
-                idUsuario: usuario.id
+                idUsuario: usuario.id,
+                timestamp: `${new Date()}`,
             };
+            console.log(json);
 
             const response = await postData('http://13.216.205.228:8080/optima/crearRutina', json, setLoading);
 
