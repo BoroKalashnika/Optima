@@ -30,23 +30,24 @@ const Buscar = (props) => {
 
     const getRutinas = async () => {
         getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
-            setPaginasTotal(Math.ceil(element.count / 1));
+            setPaginasTotal(Math.floor(element.count / 1));
             const newArray = [];
             element.rutinas.map((rutina) => {
                 newArray.push(rutina)
             })
             setRutinas(newArray);
-            console.log(paginasTotal);
         });
     }
 
     const handleNext= (() => {
-        setIndiceActual += 1;
-        setIndiceFinal += 1;
+        setIndiceActual(indiceActual+1);
+        setIndiceFinal(indiceFinal+1);
+        setPaginActual(paginActual+1)
     })
     const handlePrevious = (() => {
-        setIndiceActual -= 1;
-        setIndiceFinal -= 1;
+        setIndiceActual(indiceActual-1);
+        setIndiceFinal(indiceFinal-1);
+        setPaginActual(paginActual-1)
     })
 
     return (
