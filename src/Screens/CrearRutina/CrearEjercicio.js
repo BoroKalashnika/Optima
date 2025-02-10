@@ -289,6 +289,7 @@ const styles = StyleSheet.create({
         height: 70,
         marginBottom: 10,
         borderColor: '#607cff',
+        color:"white"
     },
     textLogin: {
         fontSize: 20,

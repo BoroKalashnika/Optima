@@ -1,74 +1,105 @@
-import { FlatList, View, Image, StyleSheet, Text } from 'react-native';
+import { FlatList, View, Image, StyleSheet, Text, Pressable, Modal } from 'react-native';
+import { Button } from 'react-native-paper';
+import { useState, useContext, useEffect } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
+import Icon from 'react-native-vector-icons/Ionicons';
+import getData from '../../Utils/services/getData';
+import Context from '../../Utils/Context';
 
-const data = [
-    {
-        id: '1',
-        nombre: 'Ejercicio 1',
-        descripcion: 'Descripción del ejercicio 1',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '2',
-        nombre: 'Ejercicio 2',
-        descripcion: 'Descripción del ejercicio 2',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '3',
-        nombre: 'Ejercicio 3',
-        descripcion: 'Descripción del ejercicio 3',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '4',
-        nombre: 'Ejercicio 4',
-        descripcion: 'Descripción del ejercicio 4',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '5',
-        nombre: 'Ejercicio 5',
-        descripcion: 'Descripción del ejercicio 5',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '6',
-        nombre: 'Ejercicio 5',
-        descripcion: 'Descripción del ejercicio 5',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '7',
-        nombre: 'Ejercicio 5',
-        descripcion: 'Descripción del ejercicio 5',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-];
+
 const Buscar = (props) => {
+    const { token, setToken } = useContext(Context);
+    const { modalVisible, setModalVisible } = useContext(Context);
+    const { alertMessage, setAlertMessage } = useContext(Context);
+    const { alertTitle, setAlertTitle } = useContext(Context);
+    const [rutinas, setRutinas] = useState([]);
+    const [paginasTotal, setPaginasTotal] = useState();
+    const [paginActual, setPaginActual] = useState(1);
+    const [indiceActual, setIndiceActual] = useState(0);
+    const [indiceFinal, setIndiceFinal] = useState(10);
+
+
+    useEffect(() => {
+        getRutinas();
+        
+    }, [rutinas])
+
+    const getRutinas = async () => {
+        getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token +"&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
+            console.log(element);
+            setPaginasTotal(Math.ceil(element.count / 10));
+            const newArray = [];
+            element.rutinas.map((rutina) => {
+                newArray.push(rutina) 
+            })
+            setRutinas(newArray);
+        });
+    }
+
+    const handleNext=()=>{
+        setIndiceActual+=10;
+        setIndiceFinal+=10;
+    }
+    const handlePrevious=()=>{
+        setIndiceActual-=10;
+        setIndiceFinal-=10;
+    }
+
     return (
         <View style={styles.container}>
-            <HeaderRutina tipo={'ajustes'} titulo={'Buscar Rutinas'}/>
-                {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
-            
+            <HeaderRutina tipo={'ajustes'} titulo={'Buscar Rutinas'} />
+            {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
-                {/* <FlatList
-                    data={data}
+                <FlatList
+                    data={rutinas}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <Card
-                            nombre={item.nombre}
-                            descripcion={item.descripcion}
-                            imagen={item.imagen}
+                            dificultad={item.dificultad}
+                            ambito={item.ambito}
+                            imagen={item.vistaPrevia}
+                            musculo={item.grupoMuscular}
+                            estrellas={item.valoracion}
+                            titulo={item.nombreRutina}
                             onRutina={() => {
                                 props.navigation.navigate('VerRutina');
+
                             }}
                         />
                     )}
-                /> */}
+                />
             </View>
+            <View style={styles.subContainer}>
+                {paginActual > 1 && (
+                    <Pressable style={[styles.bottom, { marginRight: 5 }]} onPress={() => handlePrevious()}>
+                        <Text style={styles.resetPasswordText}>Atras</Text>
+                    </Pressable>
+                )}
+                {paginActual < paginasTotal && (
+                    <Pressable
+                        style={[styles.bottom, { marginLeft: 5 }]}
+                        onPress={() => handleNext()}>
+                        <Text style={styles.resetPasswordText}>Siguiente</Text>
+                    </Pressable>
+                )}
+            </View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalTitle}>{alertTitle}</Text>
+                        <Text style={styles.modalMessage}>{alertMessage}</Text>
+                        <Button mode="contained" onPress={() => setModalVisible(false)} style={styles.modalButton}>
+                            Cerrar
+                        </Button>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -82,10 +113,25 @@ const styles = StyleSheet.create({
     containerRow: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent:'space-around',
+        justifyContent: 'space-around',
         alignItems: 'center',
         marginTop: 30,
         width: '100%',
+    },
+    subContainer: {
+        flexDirection: 'row',
+        marginTop: 5,
+        marginBottom: 10,
+        padding: 5
+    },
+    containerCrear: {
+        width: '90%',
+        flexDirection: 'row',
+        borderColor: '#607cff',
+        borderRadius: 30,
+        borderWidth: 2,
+        marginBottom: 20,
+        alignItems: "center",
     },
     image: {
         width: 100,
@@ -93,7 +139,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        textAlign:'center',
+        textAlign: 'center',
         color: 'white',
     },
     textRutinas: {
@@ -105,6 +151,53 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
         textAlign: "center"
+    },
+    text: {
+        fontSize: 30,
+        color: 'white',
+        textAlign: 'center'
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContainer: {
+        backgroundColor: '#ffffff',
+        padding: 20,
+        borderRadius: 10,
+        width: '80%',
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#0d47a1',
+        marginBottom: 10,
+    },
+
+    modalMessage: {
+        fontSize: 16,
+        color: '#333333',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    modalButton: {
+        backgroundColor: '#607cff',
+    },
+    bottom: {
+        backgroundColor: '#607cff',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderRadius: 10,
+        borderColor: 'black',
+        height: 55,
+        width: 'auto',
+        alignItems: 'center',
+        marginTop: 5,
+        flexDirection: 'row',
+        flex: 1
     },
 });
 
