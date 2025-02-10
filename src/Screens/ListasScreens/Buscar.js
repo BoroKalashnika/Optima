@@ -17,38 +17,52 @@ const Buscar = (props) => {
     const [paginasTotal, setPaginasTotal] = useState();
     const [paginActual, setPaginActual] = useState(1);
     const [indiceActual, setIndiceActual] = useState(0);
-    const [indiceFinal, setIndiceFinal] = useState(1);
+    const [indiceFinal, setIndiceFinal] = useState(4);
     const [filtro, setFiltro] = useState(false);
     const [dificultad, setDificultad] = useState('Principiante');
     const [musculo, setMusculo] = useState('Biceps');
     const [ambito, setAmbito] = useState('Gimnasio');
+    const [restoRutinas, setRestoRutinas] = useState();
 
-    useEffect(() => {
-        getRutinas();
+    
+useEffect(() => {
+    getRutinas();
+    console.log(indiceActual);
+    console.log(indiceFinal);
+}, [indiceActual,indiceFinal]); // Dependencias para recalcular cuando cambien los índices
 
-    }, [rutinas])
-
-    const getRutinas = async () => {
-        getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
-            setPaginasTotal(Math.floor(element.count / 1));
-            const newArray = [];
-            element.rutinas.map((rutina) => {
-                newArray.push(rutina)
-            })
-            setRutinas(newArray);
+const getRutinas = async () => {
+    getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
+        setPaginasTotal(Math.floor(element.count / 4));
+        setRestoRutinas(element.count % 4); // Resto de rutinas en la última página
+        const newArray = [];
+        element.rutinas.map((rutina) => {
+            newArray.push(rutina);
         });
-    }
+        setRutinas(newArray);
+    });
+};
 
-    const handleNext= (() => {
-        setIndiceActual(indiceActual+1);
-        setIndiceFinal(indiceFinal+1);
-        setPaginActual(paginActual+1)
-    })
-    const handlePrevious = (() => {
-        setIndiceActual(indiceActual-1);
-        setIndiceFinal(indiceFinal-1);
-        setPaginActual(paginActual-1)
-    })
+const handleNext = () => {
+    setPaginActual(paginActual + 1);
+        if (paginActual === paginasTotal ) {
+            setIndiceFinal(indiceFinal + restoRutinas);
+        } else {
+            setIndiceFinal(indiceFinal + 4);
+        }
+        setIndiceActual(indiceActual + 4);
+};
+
+const handlePrevious = () => {
+    if (paginActual > paginasTotal ) {
+        setIndiceFinal(indiceFinal - restoRutinas);
+        console.log("hola")
+    } else {
+        setIndiceFinal(indiceFinal - 4);
+    }
+    setIndiceActual(indiceActual - 4);
+    setPaginActual(paginActual - 1);
+};
 
     return (
         <View style={styles.container}>
@@ -91,9 +105,9 @@ const Buscar = (props) => {
                             <Picker.Item label="Pierna" value="Pierna" style={styles.pickerItem} />
                         </Picker>
                     </View>
-                        <Button mode="contained" style={styles.imagePickerButton} onPress={() => { setFiltro(false) }}>
-                            Filtrar
-                        </Button>
+                    <Button mode="contained" style={styles.imagePickerButton} onPress={() => { setFiltro(false) }}>
+                        Filtrar
+                    </Button>
                 </View>
             ) : (
                 <View style={styles.buttonContainer}>
@@ -126,11 +140,13 @@ const Buscar = (props) => {
             </View>
             <View style={styles.subContainer}>
                 {paginActual > 1 && (
-                    <Pressable style={[styles.bottom, { marginRight: 5 }]} onPress={() => handlePrevious()}>
+                    <Pressable 
+                        style={[styles.bottom, { marginRight: 5 }]}
+                        onPress={() => handlePrevious()}>
                         <Text style={styles.resetPasswordText}>Atras</Text>
                     </Pressable>
                 )}
-                {paginActual < paginasTotal && (
+                {paginActual < paginasTotal&&restoRutinas==0 && (
                     <Pressable
                         style={[styles.bottom, { marginLeft: 5 }]}
                         onPress={() => handleNext()}>
@@ -192,7 +208,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         alignItems: "center",
     },
-    
+
     picker: {
         color: '#bbdefb',
     },

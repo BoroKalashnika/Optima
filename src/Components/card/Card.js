@@ -77,7 +77,6 @@ const Card = (props) => {
                             name={value.icon}
                             size={25}
                             color="yellow"
-                            onPress={() => PresStar(value.id)}
                         />
                     ))}
                     </View>
