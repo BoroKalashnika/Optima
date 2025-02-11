@@ -385,15 +385,14 @@ public class Controller {
 	}
 
 	@DeleteMapping("/optima/deleteFavoritoRutina")
-	ResponseEntity<Object> deleteFavoritoRutina(@RequestBody Rutina rutinaFavorita)
-			throws NoSuchAlgorithmException, MessagingException {
+	ResponseEntity<Object> deleteFavoritoRutina(@RequestParam(value = "token") String token,
+			@RequestParam(value = "id") String id) throws NoSuchAlgorithmException, MessagingException {
 		JSONObject respusta = new JSONObject();
-		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(rutinaFavorita.getToken());
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
-			rutinaFavorita.setToken(null);
 			Usuario usuario = usuarioBaseDatos.get();
 			for (int i = 0; i < usuario.getRutinasGuardadas().size(); i++) {
-				if (usuario.getRutinasGuardadas().get(i).equals(rutinaFavorita.getId())) {
+				if (usuario.getRutinasGuardadas().get(i).equals(id)) {
 					usuario.getRutinasGuardadas().remove(i);
 					usuarioRepository.save(usuario);
 					respusta.put("message", "Rutina eliminada de favoritos con exito");
@@ -426,6 +425,19 @@ public class Controller {
 	}
 
 	// ACCIONES EJERCICIOS
+	@GetMapping("/optima/obtenerEjercicio")
+	public ResponseEntity<Object> obtenerEjercicio(@RequestParam(value = "token") String token,
+			@RequestParam(value = "id") String id) {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			Optional<Ejercicio> ejercicio = ejercicioRepository.findById(id);
+
+			return ResponseEntity.ok(ejercicio.get().toString());
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
 	@GetMapping("/optima/obtenerEjercicios")
 	public ResponseEntity<Object> obtenerEjercicios(@RequestParam(value = "token") String token,
 			@RequestParam(value = "idRutina") String idRutina) {
