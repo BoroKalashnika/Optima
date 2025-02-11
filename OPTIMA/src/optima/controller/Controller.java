@@ -325,46 +325,57 @@ public class Controller {
 		response.put("message", "Token expirado!");
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 	}
-
+	
 	@PostMapping("/optima/crearRutina")
 	ResponseEntity<Object> crearRutina(@RequestBody Rutina nuevaRutina)
-			throws NoSuchAlgorithmException, MessagingException {
-		JSONObject respusta = new JSONObject();
-		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(nuevaRutina.getToken());
-		if (usuarioBaseDatos.isPresent()) {
-			nuevaRutina.setToken(null);
-			if (nuevaRutina.getNombreRutina().equals("$$crea$$")) {
-				Rutina rutinaGuardada = rutinaRepository.save(nuevaRutina);
-				Usuario usuario = usuarioBaseDatos.get();
-				usuario.getRutinasCreadas().add(rutinaGuardada.getId());
-				usuarioRepository.save(usuario);
-				respusta.put("idRutina", rutinaGuardada.getId());
-				return ResponseEntity.status(HttpStatus.CREATED).body(respusta.toString());
-			} else {
-				Usuario usuario = usuarioBaseDatos.get();
-				for (String rutina : usuario.getRutinasCreadas()) {
-					Optional<Rutina> rutinaListaUsuario = rutinaRepository.findById(rutina);
-					Rutina rutinaFinalizar = rutinaListaUsuario.get();
-					if (rutinaFinalizar.getNombreRutina().equals("$$crea$$")) {
-						rutinaFinalizar.setNombreRutina(nuevaRutina.getNombreRutina());
-						rutinaFinalizar.setValoracion(nuevaRutina.getValoracion());
-						rutinaFinalizar.setDificultad(nuevaRutina.getDificultad());
-						rutinaFinalizar.setGrupoMuscular(nuevaRutina.getGrupoMuscular());
-						rutinaFinalizar.setEjercicios(nuevaRutina.getEjercicios());
-						rutinaFinalizar.setDieta(nuevaRutina.getDieta());
-						rutinaFinalizar.setVistaPrevia(nuevaRutina.getVistaPrevia());
-						rutinaFinalizar.setAmbito(nuevaRutina.getAmbito());
-						rutinaRepository.save(rutinaFinalizar);
-						respusta.put("message", "Rutina creada con exito");
-						return ResponseEntity.status(HttpStatus.CREATED).body(respusta.toString());
-					}
-				}
-				respusta.put("message", "Rutina no encontrada para actualizar");
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respusta.toString());
-
-			}
-		}
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	        throws NoSuchAlgorithmException, MessagingException {
+	    JSONObject respuesta = new JSONObject();
+	    try {
+	        Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(nuevaRutina.getToken());
+	        if (usuarioBaseDatos.isPresent()) {
+	            nuevaRutina.setToken(null);
+	            if (nuevaRutina.getNombreRutina().equals("$$crea$$")) {
+	                Rutina rutinaGuardada = rutinaRepository.save(nuevaRutina);
+	                Usuario usuario = usuarioBaseDatos.get();
+	                usuario.getRutinasCreadas().add(rutinaGuardada.getId());
+	                usuarioRepository.save(usuario);
+	                respuesta.put("idRutina", rutinaGuardada.getId());
+	                return ResponseEntity.status(HttpStatus.CREATED).body(respuesta.toString());
+	            } else {
+	                Usuario usuario = usuarioBaseDatos.get();
+	                boolean rutinaEncontrada = false;
+	                for (String rutinaId : usuario.getRutinasCreadas()) {
+	                    Optional<Rutina> rutinaListaUsuario = rutinaRepository.findById(rutinaId);
+	                    if (rutinaListaUsuario.isPresent()) {
+	                        Rutina rutinaFinalizar = rutinaListaUsuario.get();
+	                        if (rutinaFinalizar.getNombreRutina().equals("$$crea$$")) {
+	                            rutinaFinalizar.setNombreRutina(nuevaRutina.getNombreRutina());
+	                            rutinaFinalizar.setValoracion(nuevaRutina.getValoracion());
+	                            rutinaFinalizar.setDificultad(nuevaRutina.getDificultad());
+	                            rutinaFinalizar.setGrupoMuscular(nuevaRutina.getGrupoMuscular());
+	                            rutinaFinalizar.setEjercicios(nuevaRutina.getEjercicios());
+	                            rutinaFinalizar.setDieta(nuevaRutina.getDieta());
+	                            rutinaFinalizar.setVistaPrevia(nuevaRutina.getVistaPrevia());
+	                            rutinaFinalizar.setAmbito(nuevaRutina.getAmbito());
+	                            rutinaRepository.save(rutinaFinalizar);
+	                            respuesta.put("message", "Rutina creada con éxito");
+	                            rutinaEncontrada = true;
+	                            return ResponseEntity.status(HttpStatus.CREATED).body(respuesta.toString());
+	                        }
+	                    }
+	                }
+	                if (!rutinaEncontrada) {
+	                    respuesta.put("message", "Rutina no encontrada para actualizar");
+	                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta.toString());
+	                }
+	            }
+	        }
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        respuesta.put("message", "Error interno del servidor");
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta.toString());
+	    }
 	}
 
 	@PostMapping("/optima/favoritoRutina")
