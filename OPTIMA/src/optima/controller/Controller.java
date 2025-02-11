@@ -281,9 +281,14 @@ public class Controller {
 		if (usuarioBaseDatos.isPresent()) {
 			if (rutinaBd.isPresent()) {
 				Rutina rutina = rutinaBd.get();
+				Optional<Usuario> creadorRutina = usuarioRepository.findByCorreo(rutina.getCreador());				
+				Usuario usuario = creadorRutina.get();
 
 				int puntuacionActual = Integer.parseInt(rutina.getValoracion());
 				int valoracion = jsonObject.getInt("valoracion");
+
+				int puntuacionUsu = Integer.valueOf(usuario.getPuntuacion()) + valoracion;
+				usuario.setPuntuacion(puntuacionUsu + "");
 
 				if (puntuacionActual != 0) {
 					int nuevaPuntuacion = Math.round((puntuacionActual + valoracion) / 2.0f);
@@ -292,6 +297,7 @@ public class Controller {
 					rutina.setValoracion(String.valueOf(valoracion));
 				}
 
+				usuarioRepository.save(usuario);
 				rutinaRepository.save(rutina);
 				return ResponseEntity.ok(response.toString());
 			}
