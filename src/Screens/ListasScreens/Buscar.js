@@ -31,8 +31,7 @@ const Buscar = (props) => {
 
         setTimeout(() => {
             getRutinas();
-            console.log(indiceActual);
-            console.log(indiceFinal);
+
             setRefreshing(false);
         }, 2000);
     };
@@ -42,7 +41,9 @@ const Buscar = (props) => {
     }, [indiceActual, indiceFinal]);
 
     const getRutinas = async () => {
-        getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
+        const response = await getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + 0 + "&offset=" + 1);
+        
+        await getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + response.count).then((element) => {
             setPaginasTotal(Math.floor(element.count / 4));
             setRestoRutinas(element.count % 4); // Resto de rutinas en la última página
             const newArray = [];
@@ -51,6 +52,8 @@ const Buscar = (props) => {
             });
             setRutinas(newArray);
         });
+        
+
     };
 
     const handleNext = () => {

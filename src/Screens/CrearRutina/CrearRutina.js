@@ -113,8 +113,6 @@ const CrearRutina = (props) => {
                 timestamp: fechaFormateada,
             };
 
-            console.log();
-
             const response = await postData('http://13.216.205.228:8080/optima/crearRutina', json, setLoading);
 
             setIdRutina(response.data.idRutina);
@@ -276,7 +274,7 @@ const CrearRutina = (props) => {
             <View style={styles.listContainer}>
                 <ScrollView nestedScrollEnabled={true}>
                     {ejerciciosRutina.map((element, index) => (
-                        <CardEjercicio />
+                        <CardEjercicio key={index} borrarEnabled={true} idEjercicio={element} />
                     ))}
                 </ScrollView>
             </View>

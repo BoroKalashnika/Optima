@@ -1,7 +1,27 @@
 import { Text, StyleSheet, View, Image, Pressable } from 'react-native';
+import React, { useContext } from 'react';
+import Icon from 'react-native-vector-icons/AntDesign';
+import Context from '../../Utils/Context';
+import deleteData from '../../Utils/services/deleteData';
 
 const CardEjercicio = (props) => {
-    const { nombre, descripcion, imagen } = props;
+    const { idEjercicios, setIdEjercicios } = useContext(Context);
+    const { token } = useContext(Context);
+    const { nombre, descripcion, imagen, idEjercicio, borrarEnabled } = props;
+
+    const borrarEjercicio = async () => {
+        try {
+            const response = await deleteData(`http://13.216.205.228:8080/optima/eliminarEjercicio?token=${token}&id=${idEjercicio}`);
+
+            if (response) {
+                const updatedEjercicios = idEjercicios.filter((ejercicioId) => ejercicioId !== idEjercicio);
+                setIdEjercicios(updatedEjercicios);
+                console.log('Exercise deleted:', idEjercicio); 
+            }
+        } catch (error) {
+            console.log('Error deleting exercise:', error);
+        }
+    }
 
     return (
         <Pressable onPress={props.onEjercicio}>
@@ -11,6 +31,10 @@ const CardEjercicio = (props) => {
                     <Text style={styles.text}>descripcion</Text>
                 </View>
                 <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
+
+                {borrarEnabled && (
+                    <Icon name="delete" size={25} color="red" onPress={borrarEjercicio} />
+                )}
             </View>
         </Pressable>
     );
