@@ -1,20 +1,24 @@
-const deleteData = async (url) => {
+const deleteData = async (url, setLoading) => {
     try {
+        setLoading(true);
         const response = await fetch(url, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
+            body: JSON.stringify(json)
         });
 
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            return jsonResponse;
-        } else {
-            console.log('Failed to delete data', response.status);
-        }
+        const status = response.status;
+        const data = await response.json();
+        
+        return { status, data: data };
+
     } catch (error) {
-        console.log('Error:', error);
+        console.error('Error en la petición post:', error);
+        return { status: null, data: { message: 'Error en la conexión' } };
+    } finally {
+        deleteData(false);
     }
 };
 

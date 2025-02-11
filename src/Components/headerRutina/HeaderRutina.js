@@ -1,4 +1,4 @@
-import { useState, useEffect,useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
     StyleSheet,
     Text,
@@ -8,21 +8,18 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign';
-import Context from '../../Utils/Context';
-import postData from '../../Utils/services/postData';
 const HeaderRutina = (props) => {
     const [validarHeart, setValidarHeart] = useState(false);
     const [validadorClip, setValidadorClip] = useState(false);
     const [iconoHeart, setIconoHeart] = useState('hearto');
-    const { token, setToken } = useContext(Context);
-    const { idRutina, setIdRutina } = useContext(Context);
-    
-    // Actualizar iconoHeart cuando validarHeart cambie
+
     useEffect(() => {
         if (validarHeart) {
             setIconoHeart('heart');
+            props.favorito && props.favorito({ estado: true });
         } else {
             setIconoHeart('hearto');
+            props.favorito && props.favorito({ estado: false });
         }
     }, [validarHeart]);
 
@@ -30,11 +27,8 @@ const HeaderRutina = (props) => {
 
     const PressHeart = () => {
         setValidarHeart(!validarHeart);
-        añadirFavorito();
-        console.log("puta")
     };
 
-   
 
     if (props.tipo === 'rutina') {
         return (
@@ -43,8 +37,8 @@ const HeaderRutina = (props) => {
                     <Text style={estilos.nombre}>{props.nombre}</Text>
                 </View>
                 <View style={estilos.containerIconos}>
-                    <Icon name="pushpin" color={iconoClip} size={45} onPress={()=>PressClip()} />
-                    <Icon name={iconoHeart} color="red" size={45} onPress={()=>PressHeart()} />
+                    <Icon name="pushpin" color={iconoClip} size={45} onPress={() => PressClip()} />
+                    <Icon name={iconoHeart} color="red" size={45} onPress={() => PressHeart()} />
                 </View>
             </View>
         );
@@ -80,7 +74,7 @@ const estilos = StyleSheet.create({
         padding: 5,
         backgroundColor: '#1F2937',
         marginTop: 15,
-        
+
     },
     containerRowAjustes: {
         flex: 1,

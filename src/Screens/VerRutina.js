@@ -18,13 +18,12 @@ const VerRutina = (props) => {
     const [nombre, setNombre] = useState();
     const { token, setToken } = useContext(Context);
     const { idRutina, setIdRutina } = useContext(Context);
-    const [validarHeart, setValidarHeart] = useState(false);
-    const [validadorClip, setValidadorClip] = useState(false);
     const [creador, setCreador] = useState();
     const [ejercicios, setEjercicios] = useState([]);
     const [color, setColor] = useState('red');
     const [ambitoImg, setAmbitoImg] = useState('');
     const [musculoImg, setMusculoImg] = useState('');
+    const [favorito, setFavorito] = useState(false);
     const { loading, setLoading } = useContext(Context);
 
     useFocusEffect(
@@ -34,8 +33,10 @@ const VerRutina = (props) => {
         }, [])
     );
 
-    const iconoHeart = validarHeart ? 'heart' : 'hearto';
-    const iconoClip = validadorClip ? 'yellow' : '#607cff';
+    const getFavorito = ({ estado }) => {
+        setFavorito(estado);
+        console.log('Favorito:', estado);
+    };
 
     const [stars, setStars] = useState([
         { id: 1, icon: 'staro' },
@@ -44,14 +45,6 @@ const VerRutina = (props) => {
         { id: 4, icon: 'staro' },
         { id: 5, icon: 'staro' },
     ]);
-
-    const PressHeart = () => {
-        setValidarHeart(!validarHeart);
-    };
-
-    const PressClip = () => {
-        setValidadorClip(!validadorClip);
-    };
 
     const PresStar = (indice) => {
         const newArray = [...stars];
@@ -124,7 +117,7 @@ const VerRutina = (props) => {
 
     return (
         <View style={styles.container}>
-            <HeaderRutina nombre={nombre} tipo={'rutina'} />
+            <HeaderRutina nombre={nombre} tipo={'rutina'} favorito={getFavorito}/>
 
             <View style={styles.containerRow}>
                 <Text style={styles.title}>{creador}</Text>
