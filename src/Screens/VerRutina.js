@@ -19,10 +19,13 @@ const VerRutina = (props) => {
     const {idRutina, setIdRutina} = useContext(Context);
     const [validarHeart, setValidarHeart] = useState(false);
     const [validadorClip, setValidadorClip] = useState(false);
+    const [creador, setCreador] = useState();
+    const [ejercicios, setEjercicios] = useState([]);
 
 
     useEffect(() => {
         loadRutina();
+        loadEjercicios();
     }, []);
 
     const iconoHeart = validarHeart ? 'heart' : 'hearto';
@@ -64,13 +67,26 @@ const VerRutina = (props) => {
                 setAmbito(response.ambito);
                 setDificultad(response.dificultad);
                 setNombre(response.nombreRutina);
-                console.log(response);
+                setCreador(response.creador);
             });
         } catch (error) {
             console.error('Error fetching Pokémon:', error);
         }
     };
-    console.log(props.navigation)
+
+    const loadEjercicios = async () => {
+        try {
+            getData(
+                'http://13.216.205.228:8080/optima/obtenerEjercicios?token='+token+'&idRutina='+idRutina
+            ).then((response) => {
+                console.log(response);
+                setEjercicios(response.ejercicios);
+            });
+        } catch (error) {
+            console.error('Error fetching Pokémon:', error);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <HeaderRutina nombre={nombre} tipo={'rutina'}/>
@@ -99,8 +115,8 @@ const VerRutina = (props) => {
             </View>
             <View style={{ flex: 7 }}>
                 <Text style={styles.textEjercicio}>───── Ejercicios ─────</Text>
-                {/* <FlatList
-                    data={data}
+                <FlatList
+                    data={ejercicios}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <CardEjercicio
@@ -112,7 +128,7 @@ const VerRutina = (props) => {
                             }}
                         />
                     )}
-                /> */}
+                />
             </View>
             <View style={styles.containerRow}>
                 <Text style={styles.textLogin}>Valorar</Text>

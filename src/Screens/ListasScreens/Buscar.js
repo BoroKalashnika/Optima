@@ -23,7 +23,7 @@ const Buscar = (props) => {
     const [musculo, setMusculo] = useState('Biceps');
     const [ambito, setAmbito] = useState('Gimnasio');
     const [restoRutinas, setRestoRutinas] = useState();
-
+    const {idRutina, setIdRutina} = useContext(Context);
     
 useEffect(() => {
     getRutinas();
@@ -132,7 +132,7 @@ const handlePrevious = () => {
                             titulo={item.nombreRutina}
                             onRutina={() => {
                                 props.navigation.navigate('VerRutina');
-
+                                setIdRutina(item.id);
                             }}
                         />
                     )}
