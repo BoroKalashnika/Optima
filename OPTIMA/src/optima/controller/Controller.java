@@ -327,7 +327,7 @@ public class Controller {
 				respusta.put("idRutina", rutinaGuardada.getId());
 				return ResponseEntity.status(HttpStatus.CREATED).body(respusta.toString());
 			} else {
-				Rutina actualizarRutina = rutinaRepository.findByNombreRutinaAndCorreo("$$crea$$",
+				Rutina actualizarRutina = rutinaRepository.findByNombreRutinaAndIdUsuario("$$crea$$",
 						nuevaRutina.getIdUsuario());
 				if (actualizarRutina != null) {
 					actualizarRutina.setNombreRutina(nuevaRutina.getNombreRutina());
