@@ -132,6 +132,7 @@ const CrearRutina = (props) => {
             dificultad: dificultad,
             grupoMuscular: musculo,
             ambito: ambito,
+            
             ejercicios: idEjercicios,
             dieta: dieta,
             vistaPrevia: vistaPrevia,

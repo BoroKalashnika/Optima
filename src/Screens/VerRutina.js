@@ -4,6 +4,7 @@ import {
     Text,
     StyleSheet,
     FlatList,
+    Image
 } from 'react-native';
 import CardEjercicio from '../Components/cardEjercicio/CardEjercicio';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -15,17 +16,23 @@ const VerRutina = (props) => {
     const [nombre, setNombre] = useState();
     const [ambito, setAmbito] = useState();
     const [dificultad, setDificultad] = useState();
-    const {token,setToken} = useContext(Context);  
-    const {idRutina, setIdRutina} = useContext(Context);
+    const { token, setToken } = useContext(Context);
+    const { idRutina, setIdRutina } = useContext(Context);
     const [validarHeart, setValidarHeart] = useState(false);
     const [validadorClip, setValidadorClip] = useState(false);
     const [creador, setCreador] = useState();
     const [ejercicios, setEjercicios] = useState([]);
-
+    const [color, setColor] = useState('red');
+    const [ambitoImg, setAmbitoImg] = useState('Casa');
+    const [musculoImg, setMusculoImg] = useState('Biceps');
+    const [musculo, setMusculo] = useState();
 
     useEffect(() => {
         loadRutina();
         loadEjercicios();
+        chancheAmbito();
+        chancheColor();
+        chancheMusculo();
     }, []);
 
     const iconoHeart = validarHeart ? 'heart' : 'hearto';
@@ -42,7 +49,7 @@ const VerRutina = (props) => {
     const PressHeart = () => {
         setValidarHeart(!validarHeart);
     };
-    const PressClip= () => {
+    const PressClip = () => {
         setValidadorClip(!validadorClip);
     };
     const PresStar = (indice) => {
@@ -62,12 +69,14 @@ const VerRutina = (props) => {
     const loadRutina = async () => {
         try {
             getData(
-                'http://13.216.205.228:8080/optima/obtenerRutina?id='+idRutina+'&token='+token
+                'http://13.216.205.228:8080/optima/obtenerRutina?id=' + idRutina + '&token=' + token
             ).then((response) => {
                 setAmbito(response.ambito);
                 setDificultad(response.dificultad);
                 setNombre(response.nombreRutina);
+                setMusculo(response.grupoMuscular)
                 setCreador(response.creador);
+                console.log(response);
             });
         } catch (error) {
             console.error('Error fetching Pokémon:', error);
@@ -77,40 +86,62 @@ const VerRutina = (props) => {
     const loadEjercicios = async () => {
         try {
             getData(
-                'http://13.216.205.228:8080/optima/obtenerEjercicios?token='+token+'&idRutina='+idRutina
+                'http://13.216.205.228:8080/optima/obtenerEjercicios?token=' + token + '&idRutina=' + idRutina
             ).then((response) => {
-                console.log(response);
-                setEjercicios(response.ejercicios);
+                const newArray = [];
+                response.ejercicios.map((ejercicio) => {
+                    newArray.push(ejercicio);
+                });
+                setEjercicios(newArray);
             });
         } catch (error) {
             console.error('Error fetching Pokémon:', error);
         }
     };
 
+    const chancheColor = () => {
+        if (dificultad === 'Experto') setColor('red');
+        if (dificultad === 'Intermedio') setColor('yellow');
+        if (dificultad === 'Principiante') setColor('green');
+    };
+    const chancheMusculo = () => {
+        if (musculo === 'Biceps') setMusculoImg(require('../Assets/img/biceps.png'));
+        if (musculo === 'Pecho') setMusculoImg(require('../Assets/img/pecho.png'));
+        if (musculo === 'Triceps') setMusculoImg(require('../Assets/img/triceps.png'));
+        if (musculo === 'Pierna') setMusculoImg(require('../Assets/img/pierna.png'));
+        if (musculo === 'Espalda') setMusculoImg(require('../Assets/img/espalda.png'));
+
+    };
+    const chancheAmbito = () => {
+        if (ambito === 'Casa') setAmbitoImg(require('../Assets/img/casa.png'));
+        if (ambito === 'Gimnasio') setAmbitoImg(require('../Assets/img/pesa.png'));
+        if (ambito === 'Calistenia') setAmbitoImg(require('../Assets/img/calistenia.png'));
+    };
     return (
         <View style={styles.container}>
-            <HeaderRutina nombre={nombre} tipo={'rutina'}/>
+            <HeaderRutina nombre={nombre} tipo={'rutina'} />
             <View style={styles.containerRow}>
-                <Text style={styles.title}> Creador: </Text>
-                <Icon name="pushpin" color={iconoClip} size={50} onPress={PressClip} />
-                <Icon name={iconoHeart} color="red" size={50} onPress={PressHeart} />
+                <Text style={styles.title}>{creador}</Text>
+                <Image source={require('../Assets/img/perfil.png')} style={styles.profileImage} />
             </View>
             <View style={styles.containerDatos}>
                 <View style={styles.subContainer}>
-                    <Text style={styles.textLogin}>Ambito {ambito}</Text>
-                    <Text style={styles.textLogin}>| {ambito}</Text>
-                    <Text style={styles.textLogin}>Dificultad {dificultad}</Text>
-                    <Text style={styles.textLogin}>| {ambito}</Text>
-                    <Text style={styles.textLogin}>Musculo {dificultad}</Text>
+                    <Text style={styles.textLogin}>Ambito</Text>
+                    <Text style={styles.textLogin}>|</Text>
+                    <Text style={styles.textLogin}>Musculo</Text>
+                    <Text style={styles.textLogin}>|</Text>
+                    <Text style={styles.textLogin}>Dificultad</Text>
                 </View>
                 <View style={styles.subContainer}>
-                    <Text style={styles.textLogin}>Casa {dificultad}</Text>
-                    <Text style={styles.textLogin}>| {ambito}</Text>
-
-                    <Text style={styles.textLogin}>Alta {dificultad}</Text>
-                    <Text style={styles.textLogin}>| {ambito}</Text>
-
-                    <Text style={styles.textLogin}>Pecho {dificultad}</Text>
+                    <Image
+                        source={ambitoImg}
+                        style={styles.icono}
+                    />
+                    <Image
+                        source={musculoImg}
+                        style={styles.icono}
+                    />
+                    <Icon name="dashboard" size={35} color={color} />
                 </View>
             </View>
             <View style={{ flex: 7 }}>
@@ -161,6 +192,7 @@ const styles = StyleSheet.create({
         borderColor: '#607cff',
         marginTop: 15,
         backgroundColor: '#003247',
+        padding:5
     },
     containerRow: {
         flex: 1,
@@ -178,6 +210,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
     },
+    icono: {
+        width: 38,
+        height: 38,
+    },
     containerStars: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
@@ -190,6 +226,11 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 30,
         color: 'white',
+    },
+    profileImage: {
+        width: 60,
+        height: 60,
+        borderRadius: 50,
     },
     textEjercicio: {
         fontSize: 25,

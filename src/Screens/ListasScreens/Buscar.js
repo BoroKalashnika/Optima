@@ -69,7 +69,6 @@ const Buscar = (props) => {
     const handlePrevious = () => {
         if (paginActual > paginasTotal) {
             setIndiceFinal(indiceFinal - restoRutinas);
-            console.log("hola")
         } else {
             setIndiceFinal(indiceFinal - 4);
         }
