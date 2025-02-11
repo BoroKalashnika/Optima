@@ -120,30 +120,11 @@ const VerRutina = (props) => {
         if (ambito === 'Calistenia') setAmbitoImg(require('../Assets/img/calistenia.png'));
     };
 
-    const añadirFavorito = async () => {
-        setLoading(true);
-        const json = {
-            idRutina: idRutina,
-            token: token
-        };
 
-        const response = await postData(
-            'http://13.216.205.228:8080/optima/crearEjercicio',
-            json, setLoading
-        );
-        if (response.status === 201) {
-            console.log("funciona");
-        } else {
-            console.log("no funciona");
-        }
-        setLoading(false);
-    }
 
     return (
         <View style={styles.container}>
-            <HeaderRutina nombre={nombre} tipo={'rutina'} onRutina={()=>
-                {añadirFavorito();}
-            }/>
+            <HeaderRutina nombre={nombre} tipo={'rutina'} />
 
             <View style={styles.containerRow}>
                 <Text style={styles.title}>{creador}</Text>
