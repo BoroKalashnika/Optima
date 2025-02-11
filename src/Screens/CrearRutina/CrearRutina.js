@@ -204,8 +204,8 @@ const CrearRutina = (props) => {
     }
 
     const validarCampos = () => {
-        if (!nomRutina || !ambito || !dieta || !vistaPrevia) {
-            if (idEjercicios == []) {
+        if (!nomRutina || !ambito || idEjercicios == '' || ejerciciosRutina == [] || !dieta || !vistaPrevia) {
+            if (idEjercicios == '' || ejerciciosRutina == []) {
                 setAlertMessage('No ha insertado ningún ejercicio.');
                 setAlertTitle('Error');
                 setModalVisible(true);
@@ -216,8 +216,8 @@ const CrearRutina = (props) => {
             setModalVisible(true);
             return;
         }
-        registrarRutina();
 
+        registrarRutina();
     };
 
     return (
