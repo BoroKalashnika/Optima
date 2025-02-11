@@ -4,24 +4,35 @@ import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'rea
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import getData from '../../Utils/services/getData';
+import frasesMotivadoras from '../../Assets/frasesMotivadoras.json';
 
 const Usuario = (props) => {
     const { token, setToken } = useContext(Context);
     const { email, setEmail } = useContext(Context);
 
     useEffect(() => {
-        if(!email){
+        if (!email) {
             getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token).then((response) => {
                 setEmail(response.correo)
             });
         }
     }, []);
 
+    function getRandom() {
+        let i = 0;
+        frasesMotivadoras.frases.forEach(element => {
+            i++;
+        });
+        const random = Math.floor(Math.random() * i);
+        return random;
+    }
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <HeaderRutina tipo={'user'} />
             <Image source={require('../../Assets/img/perfil.png')} style={styles.profileImage} />
             <Text style={styles.name}>Nombre de Usuario</Text>
+            <Text style={styles.frase}>{frasesMotivadoras.frases[getRandom()]}</Text>
             <View style={styles.containerCard}>
                 <Card />
             </View>
@@ -99,7 +110,6 @@ const Usuario = (props) => {
                     </ScrollView>
                 </View>
             </View>
-            <Text style={styles.frase}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</Text>
         </ScrollView>
     );
 };
