@@ -13,6 +13,7 @@ const Buscar = (props) => {
     const { modalVisible, setModalVisible } = useContext(Context);
     const { alertMessage, setAlertMessage } = useContext(Context);
     const { alertTitle, setAlertTitle } = useContext(Context);
+    const { idRutina, setIdRutina } = useContext(Context);
     const [rutinas, setRutinas] = useState([]);
 
     useFocusEffect(
@@ -57,7 +58,7 @@ const Buscar = (props) => {
                             titulo={item.nombreRutina}
                             onRutina={() => {
                                 props.navigation.navigate('VerRutina');
-
+                                setIdRutina(item.id);
                             }}
                         />
                     )}

@@ -1,13 +1,13 @@
 import { FlatList, View, Image, StyleSheet, Text, Pressable, Modal, RefreshControl } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect,useCallback } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import Icon from 'react-native-vector-icons/Ionicons';
 import getData from '../../Utils/services/getData';
 import Context from '../../Utils/Context';
 import { Picker } from '@react-native-picker/picker';
-
+import { useFocusEffect } from '@react-navigation/native';
 const Buscar = (props) => {
     const { token, setToken } = useContext(Context);
     const { modalVisible, setModalVisible } = useContext(Context);
@@ -36,15 +36,19 @@ const Buscar = (props) => {
         }, 2000);
     };
 
-    useEffect(() => {
-        getRutinas();
-    }, [indiceActual, indiceFinal]);
 
+     useFocusEffect(
+            useCallback(() => {
+                getRutinas();
+            }, [indiceActual, indiceFinal])
+        );
     const getRutinas = async () => {
         const response = await getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
             setPaginasTotal(Math.floor(element.count / 4));
             setRestoRutinas(element.count % 4); // Resto de rutinas en la última página
             const newArray = [];
+        console.log(element.count);
+
             element.rutinas.map((rutina) => {
                 if (rutina.nombreRutina !== "$$crea$$") { newArray.push(rutina) }
             });
@@ -158,7 +162,7 @@ const Buscar = (props) => {
                         <Text style={styles.resetPasswordText}>Atras</Text>
                     </Pressable>
                 )}
-                {paginActual < paginasTotal && restoRutinas == 0 && (
+                {paginActual <= paginasTotal && restoRutinas != 0 && (
                     <Pressable
                         style={[styles.bottom, { marginLeft: 5 }]}
                         onPress={() => handleNext()}>
