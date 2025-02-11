@@ -12,6 +12,8 @@ public interface RutinaRepository extends MongoRepository<Rutina, String> {
     
     Rutina findByNombreRutina(String nombreRutina);
     
+    Rutina findByNombreRutinaAndCorreo(String nombreRutina, String correo);
+    
     List<Rutina> findAllByNombreRutina(String nombreRutina);
 
     void deleteById(String id);

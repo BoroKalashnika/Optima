@@ -202,6 +202,12 @@ public class Controller {
 		}
 
 		List<Rutina> rutinas = rutinaRepository.findAll();
+		int contador = 0;
+		for (int i = 0; i < rutinas.size(); i++) {
+			if (!rutinas.get(i).getNombreRutina().equals("$$crea$$")) {
+				contador++;
+			}
+		}
 
 		if (index < 0 || offset > rutinas.size() || index >= offset) {
 			response.put("error", "Rango de índices inválido");
@@ -210,7 +216,7 @@ public class Controller {
 
 		List<Rutina> rutinasIndex = new ArrayList<>(rutinas.subList(index, offset));
 
-		response.put("count", rutinas.size());
+		response.put("count", contador);
 		response.put("rutinas", rutinasIndex);
 
 		return ResponseEntity.ok(response.toString());
@@ -281,7 +287,7 @@ public class Controller {
 		if (usuarioBaseDatos.isPresent()) {
 			if (rutinaBd.isPresent()) {
 				Rutina rutina = rutinaBd.get();
-				Optional<Usuario> creadorRutina = usuarioRepository.findByCorreo(rutina.getCreador());				
+				Optional<Usuario> creadorRutina = usuarioRepository.findByCorreo(rutina.getCreador());
 				Usuario usuario = creadorRutina.get();
 
 				int puntuacionActual = Integer.parseInt(rutina.getValoracion());
@@ -321,7 +327,8 @@ public class Controller {
 				respusta.put("idRutina", rutinaGuardada.getId());
 				return ResponseEntity.status(HttpStatus.CREATED).body(respusta.toString());
 			} else {
-				Rutina actualizarRutina = rutinaRepository.findByNombreRutina("$$crea$$");
+				Rutina actualizarRutina = rutinaRepository.findByNombreRutinaAndCorreo("$$crea$$",
+						nuevaRutina.getIdUsuario());
 				if (actualizarRutina != null) {
 					actualizarRutina.setNombreRutina(nuevaRutina.getNombreRutina());
 					actualizarRutina.setValoracion(nuevaRutina.getValoracion());
