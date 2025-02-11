@@ -60,6 +60,18 @@ public class Controller {
 		}
 	}
 
+	@GetMapping("/optima/obtenerUsuario")
+	public ResponseEntity<Object> obtenerUsuario(@RequestParam(value = "token") String token,
+			@RequestParam(value = "correo") String correo) {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			Optional<Usuario> usuario = usuarioRepository.findByCorreo(correo);
+			return ResponseEntity.status(HttpStatus.OK).body(usuario.get());
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
 	@GetMapping("/optima/verificar")
 	public ResponseEntity<Object> verificarCorreo(@RequestParam(value = "correo") String correo) {
 		Optional<Usuario> usuario = usuarioRepository.findByCorreo(correo);
