@@ -1,12 +1,12 @@
 import { FlatList, View, Image, StyleSheet, Text, Pressable, Modal } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useCallback } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import Icon from 'react-native-vector-icons/Ionicons';
 import getData from '../../Utils/services/getData';
 import Context from '../../Utils/Context';
-
+import { useFocusEffect } from '@react-navigation/native';
 
 const Buscar = (props) => {
     const { token, setToken } = useContext(Context);
@@ -15,11 +15,18 @@ const Buscar = (props) => {
     const { alertTitle, setAlertTitle } = useContext(Context);
     const [rutinas, setRutinas] = useState([]);
 
+    useFocusEffect(
+        useCallback(() => {
+            getRutinas();
+        }, [])
+    );
+
+    /*
     useEffect(() => {
         getRutinas();
         console.log(rutinas);
     }, [rutinas])
-
+*/
     const getRutinas = async () => {
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
         getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + "&idUsuario=" + usuario.id + "&index=0&offset=10").then((element) => {

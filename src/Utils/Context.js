@@ -10,7 +10,6 @@ export const Provider = ({ children }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');
-    const [ejercicio, setEjercicio] = useState(false);
 
     return (
         <Context.Provider value={{
@@ -32,8 +31,6 @@ export const Provider = ({ children }) => {
             setAlertMessage,
             alertTitle, 
             setAlertTitle,
-            ejercicio,
-            setEjercicio
         }}>
             {children}
         </Context.Provider>

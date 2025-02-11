@@ -24,9 +24,9 @@ const Registro = (props) => {
     const [altura, setAltura] = useState('');
     const [opcion, setOpcion] = useState('');
     const data = [
-        { key: '1', value: 'principiante' },
-        { key: '2', value: 'intermedio' },
-        { key: '3', value: 'profesionl' },
+        { key: '1', value: 'Principiante' },
+        { key: '2', value: 'Intermedio' },
+        { key: '3', value: 'Profesional' },
     ];
 
     const emailHasErrors = () => {
@@ -74,7 +74,7 @@ const Registro = (props) => {
                 altura: altura,
                 imc: "",
                 macros: [],
-                puntuacion: "",
+                valoracion: "",
                 verificado: false
             };
 

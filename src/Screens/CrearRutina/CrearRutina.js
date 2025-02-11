@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, Image, ScrollView, StyleSheet, BackHandler, Alert, Pressable } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
@@ -29,20 +29,27 @@ const CrearRutina = (props) => {
     const { idRutina, setIdRutina } = useContext(Context);
     const { loading, setLoading } = useContext(Context);
     const { idEjercicios, setIdEjercicios } = useContext(Context);
-    const { ejercicio } = useContext(Context);
 
-    useFocusEffect(() => {
-        const backAction = () => {
-            return true;
-        };
+    useFocusEffect(
+        useCallback(() => {
+            const backAction = () => {
+                return true; // Evita la acción predeterminada de retroceso
+            };
 
-        const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            backAction
-        );
+            const backHandler = BackHandler.addEventListener(
+                'hardwareBackPress',
+                backAction
+            );
 
-        return () => backHandler.remove();
-    });
+            // Llama a la función para obtener ejercicios
+            getEjercicios();
+
+            console.log(ejerciciosRutina);
+
+            // Limpieza del evento al perder el foco
+            return () => backHandler.remove();
+        }, [])
+    );
 
     useEffect(() => {
         crearRutinaId();
@@ -50,10 +57,11 @@ const CrearRutina = (props) => {
         idRutina && getEjercicios();
     }, []);
 
+    /*
     useEffect(() => {
         getEjercicios();
     }, [ejercicio]);
-
+*/
     const getIdRutina = async () => {
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
         const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
@@ -80,7 +88,11 @@ const CrearRutina = (props) => {
         const response = await getData(`http://13.216.205.228:8080/optima/obtenerEjercicios?token=${token}&idRutina=${rutinaId}`);
 
         if (response.count != 0) {
-            setEjerciciosRutina(response.ejercicios);
+            const newArray = [];
+            response.ejercicios.map((element) => {
+                newArray.push(element);
+            })
+            setEjerciciosRutina(newArray);
             setIdEjercicios(response.ejercicios.map(element => element.id));
             setDraft(' (Draft)');
         } else {
@@ -100,8 +112,7 @@ const CrearRutina = (props) => {
         });
 
         if (!existe) {
-            const timestamp = 1707571200000;
-            const date = new Date(timestamp);
+            const date = new Date();
             const opciones = { day: "2-digit", year: "numeric", month: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" };
             const fechaFormateada = date.toLocaleString("es-ES", opciones);
 
@@ -126,13 +137,14 @@ const CrearRutina = (props) => {
     }
 
     const registrarRutina = async () => {
+        setLoading(true);
         const json = {
             nombreRutina: nomRutina,
             valoracion: '0',
             dificultad: dificultad,
             grupoMuscular: musculo,
             ambito: ambito,
-            
+
             ejercicios: idEjercicios,
             dieta: dieta,
             vistaPrevia: vistaPrevia,
@@ -158,6 +170,7 @@ const CrearRutina = (props) => {
             props.navigation.goBack();
             limpiarCampos();
         }
+        setLoading(false);
     };
 
     const pickImage = () => {
@@ -288,10 +301,10 @@ const CrearRutina = (props) => {
                 <Image source={{ uri: vistaPrevia }} style={styles.image} />
             )}
             <View style={styles.buttonContainer}>
-                <Button mode="contained" style={styles.button} onPress={validarCampos}>
+                <Button mode="contained" style={styles.button} onPress={() => validarCampos()}>
                     Guardar
                 </Button>
-                <Button mode="contained" style={styles.buttonClear} onPress={cancelarPress}>
+                <Button mode="contained" style={styles.buttonClear} onPress={() => cancelarPress()}>
                     Cancelar
                 </Button>
             </View>
