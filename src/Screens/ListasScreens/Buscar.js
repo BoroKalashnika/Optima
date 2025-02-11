@@ -1,4 +1,4 @@
-import { FlatList, View, Image, StyleSheet, Text, Pressable, Modal } from 'react-native';
+import { FlatList, View, Image, StyleSheet, Text, Pressable, Modal, RefreshControl } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useState, useContext, useEffect } from 'react';
 import Card from '../../Components/card/Card';
@@ -23,46 +23,56 @@ const Buscar = (props) => {
     const [musculo, setMusculo] = useState('Biceps');
     const [ambito, setAmbito] = useState('Gimnasio');
     const [restoRutinas, setRestoRutinas] = useState();
-    const {idRutina, setIdRutina} = useContext(Context);
-    
-useEffect(() => {
-    getRutinas();
-    console.log(indiceActual);
-    console.log(indiceFinal);
-}, [indiceActual,indiceFinal]); // Dependencias para recalcular cuando cambien los índices
+    const [refreshing, setRefreshing] = useState(false);
+    const { idRutina, setIdRutina } = useContext(Context);
 
-const getRutinas = async () => {
-    getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
-        setPaginasTotal(Math.floor(element.count / 4));
-        setRestoRutinas(element.count % 4); // Resto de rutinas en la última página
-        const newArray = [];
-        element.rutinas.map((rutina) => {
-            newArray.push(rutina);
+    const onRefresh = () => {
+        setRefreshing(true);
+
+        setTimeout(() => {
+            getRutinas();
+            console.log(indiceActual);
+            console.log(indiceFinal);
+            setRefreshing(false);
+        }, 2000);
+    };
+
+    useEffect(() => {
+        getRutinas();
+    }, [indiceActual, indiceFinal]);
+
+    const getRutinas = async () => {
+        getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
+            setPaginasTotal(Math.floor(element.count / 4));
+            setRestoRutinas(element.count % 4); // Resto de rutinas en la última página
+            const newArray = [];
+            element.rutinas.map((rutina) => {
+                newArray.push(rutina);
+            });
+            setRutinas(newArray);
         });
-        setRutinas(newArray);
-    });
-};
+    };
 
-const handleNext = () => {
-    setPaginActual(paginActual + 1);
-        if (paginActual === paginasTotal ) {
+    const handleNext = () => {
+        setPaginActual(paginActual + 1);
+        if (paginActual === paginasTotal) {
             setIndiceFinal(indiceFinal + restoRutinas);
         } else {
             setIndiceFinal(indiceFinal + 4);
         }
         setIndiceActual(indiceActual + 4);
-};
+    };
 
-const handlePrevious = () => {
-    if (paginActual > paginasTotal ) {
-        setIndiceFinal(indiceFinal - restoRutinas);
-        console.log("hola")
-    } else {
-        setIndiceFinal(indiceFinal - 4);
-    }
-    setIndiceActual(indiceActual - 4);
-    setPaginActual(paginActual - 1);
-};
+    const handlePrevious = () => {
+        if (paginActual > paginasTotal) {
+            setIndiceFinal(indiceFinal - restoRutinas);
+            console.log("hola")
+        } else {
+            setIndiceFinal(indiceFinal - 4);
+        }
+        setIndiceActual(indiceActual - 4);
+        setPaginActual(paginActual - 1);
+    };
 
     return (
         <View style={styles.container}>
@@ -106,13 +116,13 @@ const handlePrevious = () => {
                         </Picker>
                     </View>
                     <Button mode="contained" style={styles.imagePickerButton} onPress={() => { setFiltro(false) }}>
-                        Filtrar
+                        Buscar
                     </Button>
                 </View>
             ) : (
                 <View style={styles.buttonContainer}>
                     <Button mode="contained" style={styles.imagePickerButton} onPress={() => { setFiltro(true) }}>
-                        Buscar
+                        Filtrar
                     </Button>
                 </View>
             )}
@@ -121,6 +131,8 @@ const handlePrevious = () => {
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
                 <FlatList
                     data={rutinas}
+                    onRefresh={onRefresh}
+                    refreshing={refreshing}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <Card
@@ -140,13 +152,13 @@ const handlePrevious = () => {
             </View>
             <View style={styles.subContainer}>
                 {paginActual > 1 && (
-                    <Pressable 
+                    <Pressable
                         style={[styles.bottom, { marginRight: 5 }]}
                         onPress={() => handlePrevious()}>
                         <Text style={styles.resetPasswordText}>Atras</Text>
                     </Pressable>
                 )}
-                {paginActual < paginasTotal&&restoRutinas==0 && (
+                {paginActual < paginasTotal && restoRutinas == 0 && (
                     <Pressable
                         style={[styles.bottom, { marginLeft: 5 }]}
                         onPress={() => handleNext()}>
@@ -197,7 +209,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '90%',
-        color: "white"
+        color: "white",
+        marginTop: 10,
     },
     containerCrear: {
         width: '90%',
@@ -284,7 +297,7 @@ const styles = StyleSheet.create({
     },
     ContainerFiltro: {
         width: '90%', // Ocupa el 90% del ancho
-        marginTop: 5,
+        marginTop: 15,
         marginBottom: 10,
         padding: 5,
         justifyContent: 'center', // Centra los elementos verticalmente
