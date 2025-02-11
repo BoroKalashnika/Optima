@@ -27,10 +27,10 @@ const CardEjercicio = (props) => {
         <Pressable onPress={props.onEjercicio}>
             <View style={styles.container}>
                 <View style={styles.containerDescripcion}>
-                    <Text style={styles.title}>nombre</Text>
-                    <Text style={styles.text}>descripcion</Text>
+                    <Text style={styles.title}>{nombre}</Text>
+                    <Text style={styles.text}>{descripcion}</Text>
                 </View>
-                <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
+                <Image source={{ uri: imagen }} style={styles.image} />
 
                 {borrarEnabled && (
                     <Icon name="delete" size={25} color="red" onPress={borrarEjercicio} />

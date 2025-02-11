@@ -9,18 +9,31 @@ import {
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const HeaderRutina = (props) => {
-    const [validadorPlay, setValidadorlay] = useState(false);
-    const icono = validadorPlay ? "heart" : "hearto";
+    const [validarHeart, setValidarHeart] = useState(false);
+    const [validadorClip, setValidadorClip] = useState(false);
+    const iconoHeart = validarHeart ? 'heart' : 'hearto';
+    const iconoClip = validadorClip ? 'yellow' : '#607cff';
 
+    
     const PressHeart = () => {
-        setValidadorlay(!validadorPlay);
+        setValidarHeart(!validarHeart);
+    };
+
+    const PressClip = () => {
+        setValidadorClip(!validadorClip);
     };
 
     if (props.tipo === 'rutina') {
         return (
             <View style={estilos.containerRow}>
-                <Text style={estilos.nombre}>{props.nombre}</Text>
-                <Icon name={icono} color="red" size={50} onPress={() => PressHeart()} />
+                <View style={estilos.containerTitulo}>
+                    <Text style={estilos.nombre}>{props.nombre}</Text>
+                </View>
+                <View style={estilos.containerRow}>
+                    <Icon name={iconoHeart} color="red" size={45} onPress={() => PressHeart()} />
+                    <Icon name="pushpin" color={iconoClip} size={45} onPress={() => PressClip()} />
+                    <Icon name={iconoHeart} color="red" size={45} onPress={() => PressHeart()} />
+                </View>
             </View>
         );
     }
@@ -30,7 +43,7 @@ const HeaderRutina = (props) => {
             <View style={estilos.containerRowAjustes}>
                 <Image source={require('../../Assets/img/logo.png')} style={estilos.image} />
                 <Text style={estilos.title}>{props.titulo}</Text>
-                <Icon name="setting" size={50} color="#607cff" style={{ marginRight: 10 }} onPress={props.pasarPagina}/>
+                <Icon name="setting" size={50} color="#607cff" style={{ marginRight: 10 }} onPress={props.pasarPagina} />
             </View>
         );
     }
@@ -49,11 +62,15 @@ const HeaderRutina = (props) => {
 const estilos = StyleSheet.create({
     containerRow: {
         flex: 1,
+        height:60,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingTop: 25,
+        padding: 5,
         backgroundColor: '#1F2937',
+        justifyContent: "flex-end",
+        marginLeft: 10,
+        marginTop:5
     },
     containerRowAjustes: {
         flex: 1,
@@ -69,6 +86,15 @@ const estilos = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#1F2937',
+    },
+    containerIconos: {
+        flex: 3,
+        flexDirection: 'row',
+        marginLeft: 5,
+        marginBottom: 5
+    },
+    containerTitulo: {
+        flex: 1
     },
     nombre: {
         fontSize: 30,

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import {
     View,
     Text,
@@ -11,11 +11,10 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import HeaderRutina from '../Components/headerRutina/HeaderRutina';
 import getData from '../Utils/services/getData';
 import Context from '../Utils/Context';
+import { useFocusEffect } from '@react-navigation/native';
 
 const VerRutina = (props) => {
     const [nombre, setNombre] = useState();
-    const [ambito, setAmbito] = useState();
-    const [dificultad, setDificultad] = useState();
     const { token, setToken } = useContext(Context);
     const { idRutina, setIdRutina } = useContext(Context);
     const [validarHeart, setValidarHeart] = useState(false);
@@ -23,17 +22,16 @@ const VerRutina = (props) => {
     const [creador, setCreador] = useState();
     const [ejercicios, setEjercicios] = useState([]);
     const [color, setColor] = useState('red');
-    const [ambitoImg, setAmbitoImg] = useState('Casa');
-    const [musculoImg, setMusculoImg] = useState('Biceps');
-    const [musculo, setMusculo] = useState();
+    const [ambitoImg, setAmbitoImg] = useState('');
+    const [musculoImg, setMusculoImg] = useState('');
 
-    useEffect(() => {
-        loadRutina();
-        loadEjercicios();
-        chancheAmbito();
-        chancheColor();
-        chancheMusculo();
-    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            loadRutina();
+            loadEjercicios();
+        }, [])
+    );
 
     const iconoHeart = validarHeart ? 'heart' : 'hearto';
     const iconoClip = validadorClip ? 'yellow' : '#607cff';
@@ -49,9 +47,11 @@ const VerRutina = (props) => {
     const PressHeart = () => {
         setValidarHeart(!validarHeart);
     };
+
     const PressClip = () => {
         setValidadorClip(!validadorClip);
     };
+
     const PresStar = (indice) => {
         const newArray = [...stars];
         newArray.push(
@@ -71,15 +71,14 @@ const VerRutina = (props) => {
             getData(
                 'http://13.216.205.228:8080/optima/obtenerRutina?id=' + idRutina + '&token=' + token
             ).then((response) => {
-                setAmbito(response.ambito);
-                setDificultad(response.dificultad);
                 setNombre(response.nombreRutina);
-                setMusculo(response.grupoMuscular)
                 setCreador(response.creador);
-                console.log(response);
+                chancheAmbito(response.ambito);
+                chancheColor(response.dificultad);
+                chancheMusculo(response.grupoMuscular);
             });
         } catch (error) {
-            console.error('Error fetching Pokémon:', error);
+            console.error('Error fetching rutina:', error);
         }
     };
 
@@ -91,32 +90,35 @@ const VerRutina = (props) => {
                 const newArray = [];
                 response.ejercicios.map((ejercicio) => {
                     newArray.push(ejercicio);
+                    console.log(ejercicio);
                 });
                 setEjercicios(newArray);
             });
         } catch (error) {
-            console.error('Error fetching Pokémon:', error);
+            console.error('Error fetching ejercicios:', error);
         }
     };
 
-    const chancheColor = () => {
+    const chancheColor = (dificultad) => {
         if (dificultad === 'Experto') setColor('red');
         if (dificultad === 'Intermedio') setColor('yellow');
         if (dificultad === 'Principiante') setColor('green');
     };
-    const chancheMusculo = () => {
+
+    const chancheMusculo = (musculo) => {
         if (musculo === 'Biceps') setMusculoImg(require('../Assets/img/biceps.png'));
         if (musculo === 'Pecho') setMusculoImg(require('../Assets/img/pecho.png'));
         if (musculo === 'Triceps') setMusculoImg(require('../Assets/img/triceps.png'));
         if (musculo === 'Pierna') setMusculoImg(require('../Assets/img/pierna.png'));
         if (musculo === 'Espalda') setMusculoImg(require('../Assets/img/espalda.png'));
-
     };
-    const chancheAmbito = () => {
+
+    const chancheAmbito = (ambito) => {
         if (ambito === 'Casa') setAmbitoImg(require('../Assets/img/casa.png'));
         if (ambito === 'Gimnasio') setAmbitoImg(require('../Assets/img/pesa.png'));
         if (ambito === 'Calistenia') setAmbitoImg(require('../Assets/img/calistenia.png'));
     };
+
     return (
         <View style={styles.container}>
             <HeaderRutina nombre={nombre} tipo={'rutina'} />
@@ -133,14 +135,8 @@ const VerRutina = (props) => {
                     <Text style={styles.textLogin}>Dificultad</Text>
                 </View>
                 <View style={styles.subContainer}>
-                    <Image
-                        source={ambitoImg}
-                        style={styles.icono}
-                    />
-                    <Image
-                        source={musculoImg}
-                        style={styles.icono}
-                    />
+                    <Image source={ambitoImg} style={styles.icono} />
+                    <Image source={musculoImg} style={styles.icono} />
                     <Icon name="dashboard" size={35} color={color} />
                 </View>
             </View>
@@ -151,9 +147,9 @@ const VerRutina = (props) => {
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <CardEjercicio
-                            nombre={item.nombre}
-                            descripcion={item.descripcion}
-                            imagen={item.imagen}
+                            nombre={item.nombreEjercicio}
+                            descripcion={item.explicacion}
+                            imagen={item.vistaPrevia}
                             onEjercicio={() => {
                                 props.navigation.navigate('VerEjercicio');
                             }}
@@ -192,7 +188,7 @@ const styles = StyleSheet.create({
         borderColor: '#607cff',
         marginTop: 15,
         backgroundColor: '#003247',
-        padding:5
+        padding: 5
     },
     containerRow: {
         flex: 1,
