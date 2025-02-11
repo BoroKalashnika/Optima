@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     StyleSheet,
     Text,
     View,
-    Image
+    Image,
+    Pressable
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -11,10 +12,19 @@ import Icon from 'react-native-vector-icons/AntDesign';
 const HeaderRutina = (props) => {
     const [validarHeart, setValidarHeart] = useState(false);
     const [validadorClip, setValidadorClip] = useState(false);
-    const iconoHeart = validarHeart ? 'heart' : 'hearto';
+    const [iconoHeart, setIconoHeart] = useState('hearto');
+
+    // Actualizar iconoHeart cuando validarHeart cambie
+    useEffect(() => {
+        if (validarHeart) {
+            setIconoHeart('heart');
+        } else {
+            setIconoHeart('hearto');
+        }
+    }, [validarHeart]);
+
     const iconoClip = validadorClip ? 'yellow' : '#607cff';
 
-    
     const PressHeart = () => {
         setValidarHeart(!validarHeart);
     };
@@ -29,10 +39,11 @@ const HeaderRutina = (props) => {
                 <View style={estilos.containerTitulo}>
                     <Text style={estilos.nombre}>{props.nombre}</Text>
                 </View>
-                <View style={estilos.containerRow}>
-                    <Icon name={iconoHeart} color="red" size={45} onPress={() => PressHeart()} />
-                    <Icon name="pushpin" color={iconoClip} size={45} onPress={() => PressClip()} />
-                    <Icon name={iconoHeart} color="red" size={45} onPress={() => PressHeart()} />
+                <View style={estilos.containerIconos}>
+                    <Icon name="pushpin" color={iconoClip} size={45} onPress={PressClip} />
+                    <Pressable onPress={props.onRutina}>
+                        <Icon name={iconoHeart} color="red" size={45} onPress={PressHeart} />
+                    </Pressable>
                 </View>
             </View>
         );
@@ -56,21 +67,19 @@ const HeaderRutina = (props) => {
             </View>
         );
     }
-
-}
+};
 
 const estilos = StyleSheet.create({
     containerRow: {
         flex: 1,
-        height:60,
+        height: 60,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 5,
         backgroundColor: '#1F2937',
-        justifyContent: "flex-end",
-        marginLeft: 10,
-        marginTop:5
+        marginTop: 15,
+        
     },
     containerRowAjustes: {
         flex: 1,
@@ -90,8 +99,10 @@ const estilos = StyleSheet.create({
     containerIconos: {
         flex: 3,
         flexDirection: 'row',
-        marginLeft: 5,
-        marginBottom: 5
+        marginRight: 5,
+        marginBottom: 5,
+        justifyContent: "flex-end",
+        height: 70,
     },
     containerTitulo: {
         flex: 1
@@ -116,4 +127,5 @@ const estilos = StyleSheet.create({
         color: 'white',
     },
 });
+
 export default HeaderRutina;

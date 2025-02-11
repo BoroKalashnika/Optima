@@ -48,7 +48,7 @@ const Buscar = (props) => {
             setRestoRutinas(element.count % 4); // Resto de rutinas en la última página
             const newArray = [];
             element.rutinas.map((rutina) => {
-                newArray.push(rutina);
+                if (rutina.nombreRutina !== "$$crea$$") { newArray.push(rutina) }
             });
             setRutinas(newArray);
         });

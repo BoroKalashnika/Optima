@@ -12,6 +12,7 @@ import HeaderRutina from '../Components/headerRutina/HeaderRutina';
 import getData from '../Utils/services/getData';
 import Context from '../Utils/Context';
 import { useFocusEffect } from '@react-navigation/native';
+import postData from '../Utils/services/postData';
 
 const VerRutina = (props) => {
     const [nombre, setNombre] = useState();
@@ -24,7 +25,7 @@ const VerRutina = (props) => {
     const [color, setColor] = useState('red');
     const [ambitoImg, setAmbitoImg] = useState('');
     const [musculoImg, setMusculoImg] = useState('');
-
+    const { loading, setLoading } = useContext(Context);
 
     useFocusEffect(
         useCallback(() => {
@@ -119,9 +120,31 @@ const VerRutina = (props) => {
         if (ambito === 'Calistenia') setAmbitoImg(require('../Assets/img/calistenia.png'));
     };
 
+    const añadirFavorito = async () => {
+        setLoading(true);
+        const json = {
+            idRutina: idRutina,
+            token: token
+        };
+
+        const response = await postData(
+            'http://13.216.205.228:8080/optima/crearEjercicio',
+            json, setLoading
+        );
+        if (response.status === 201) {
+            console.log("funciona");
+        } else {
+            console.log("no funciona");
+        }
+        setLoading(false);
+    }
+
     return (
         <View style={styles.container}>
-            <HeaderRutina nombre={nombre} tipo={'rutina'} />
+            <HeaderRutina nombre={nombre} tipo={'rutina'} onRutina={()=>
+                {añadirFavorito();}
+            }/>
+
             <View style={styles.containerRow}>
                 <Text style={styles.title}>{creador}</Text>
                 <Image source={require('../Assets/img/perfil.png')} style={styles.profileImage} />

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
     View,
     Text,
@@ -5,6 +6,11 @@ import {
 } from 'react-native';
 
 const VerEjercicio = (props) => {
+    const [nombre, setNombre]=useState();
+    const { token, setToken } = useContext(Context);
+    const { idRutina, setIdRutina } = useContext(Context);
+
+
 
     return (
         <View style={styles.container}>
