@@ -67,7 +67,7 @@ const CrearRutina = (props) => {
 
     const getEjercicios = async () => {
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
-        const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token='+token+'&idUsuario='+usuario.id);
+        const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
         let rutinaId;
 
         rutinas.rutinas.forEach(element => {
@@ -76,7 +76,7 @@ const CrearRutina = (props) => {
             }
         });
 
-        const response = await getData(`http://13.216.205.228:8080/optima/obtenerEjercicios?token=${token}&idRutina=${rutinaId}`);
+        const response = await getData('http://13.216.205.228:8080/optima/obtenerEjercicios?token=' + token + '&idRutina=' + rutinaId);
 
         if (response.count != 0) {
             const newArray = [];
@@ -85,7 +85,7 @@ const CrearRutina = (props) => {
             })
             setEjerciciosRutina(newArray);
             setIdEjercicios(response.ejercicios.map(element => element.id));
-            setDraft(' (Draft)');
+            setDraft(' (Borrador)');
         } else {
             setDraft('');
         }
@@ -93,10 +93,9 @@ const CrearRutina = (props) => {
 
     const crearRutinaId = async () => {
         const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
-        const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token='+token+'&idUsuario='+usuario.id);
+        const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
         let existe = false;
 
-        //añadir validacion en el back por si a caso
         rutinas.rutinas.forEach(element => {
             if (element.nombreRutina == "$$crea$$") {
                 existe = true;
@@ -232,7 +231,7 @@ const CrearRutina = (props) => {
                 placeholder="Nombre de la rutina"
                 placeholderTextColor="#90caf9"
                 value={nomRutina}
-                onChangeText={setNomRutina}
+                onChangeText={(newText) => setNomRutina(newText)}
             />
             <View style={styles.pickerContainer}>
                 <Picker
@@ -271,7 +270,7 @@ const CrearRutina = (props) => {
                 placeholder="Dieta"
                 placeholderTextColor="#90caf9"
                 value={dieta}
-                onChangeText={setDieta}
+                onChangeText={(newText) => setDieta(newText)}
             />
             <Pressable style={styles.containerCrear} onPress={() => props.navigation.navigate('CrearEjercicio')}>
                 <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "5%" }} />
