@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Context from '../../Utils/Context';
 import Carga from '../../Components/carga/Carga';
 import CardEjercicio from '../../Components/cardEjercicio/CardEjercicio';
+import RNFS from 'react-native-fs';
 
 const CrearRutina = (props) => {
     const [nomRutina, setNomRutina] = useState('');
@@ -174,7 +175,11 @@ const CrearRutina = (props) => {
             } else if (response.errorCode) {
                 Alert.alert('Error', 'Ocurrió un error al seleccionar la imagen');
             } else {
-                setVistaPrevia(response.assets[0].uri);
+                const format = response.assets[0].type;
+                RNFS.readFile(response.assets[0].uri, 'base64')
+                    .then(base64String => {
+                        setVistaPrevia(`data:${format};base64,${base64String}`);
+                    }).catch(err => console.error(err));
             }
         });
     };
