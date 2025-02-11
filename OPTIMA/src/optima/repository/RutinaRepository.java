@@ -10,9 +10,7 @@ public interface RutinaRepository extends MongoRepository<Rutina, String> {
 
     Optional<Rutina> findById(String id);
     
-    Rutina findByNombreRutina(String nombreRutina);
-    
-    Rutina findByNombreRutinaAndIdUsuario(String nombreRutina, String idUsuario);
+    Optional<Rutina> findByNombreRutina(String nombreRutina);
     
     List<Rutina> findAllByNombreRutina(String nombreRutina);
 
