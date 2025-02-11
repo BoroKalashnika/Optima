@@ -140,7 +140,7 @@ const CrearRutina = (props) => {
         setLoading(true);
         const json = {
             nombreRutina: nomRutina,
-            valoracion: '0',
+            valoracion: "0",
             dificultad: dificultad,
             grupoMuscular: musculo,
             ambito: ambito,
