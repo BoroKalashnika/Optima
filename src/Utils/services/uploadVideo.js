@@ -1,5 +1,4 @@
-const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dhfvnvuox/video/upload';
-const CLOUDINARY_UPLOAD_PRESET = 'optima';
+import config from '../../config/config';
 
 const uploadVideo = async (videoFile) => {
   let formData = new FormData();
@@ -8,10 +7,10 @@ const uploadVideo = async (videoFile) => {
     type: 'video/mp4',
     name: 'upload.mp4',
   });
-  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  formData.append('upload_preset', config.CLOUDINARY_UPLOAD_PRESET);
 
   try {
-    let response = await fetch(CLOUDINARY_URL, {
+    let response = await fetch(config.CLOUDINARY_URL, {
       method: 'POST',
       body: formData,
       headers: {
