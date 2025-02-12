@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.cloudinary.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -252,25 +254,28 @@ public class Controller {
 		// offset) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		JSONObject response = new JSONObject();
-
-		if (usuarioBaseDatos.isEmpty()) {
-			response.put("error", "Token inválido");
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
-		}
-
-		List<Rutina> rutinas = rutinaRepository.findAll();
-		List<Rutina> rutinasFiltro = rutinas;
-
-		if (rutinas.size() < 1) {
-			response.put("count", "0");
-			response.put("rutinas", "no hay rutinas");
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response.toString());
-		}
-		rutinasFiltro.clear();
-		for (int i = 0; i < rutinas.size(); i++) {
-			if (!rutinas.get(i).getNombreRutina().equals("$$crea$$")) {
-				rutinasFiltro.add(rutinas.get(i));
+		if (usuarioBaseDatos.isPresent()) {
+			List<Rutina> rutinasBaseDatos = rutinaRepository.findAll();
+			if (rutinasBaseDatos.size() < 1) {
+				response.put("count", "0");
+				response.put("rutinas", "no hay rutinas");
+				return ResponseEntity.ok(response.toString());
+			} else {
+				int count = 0;
+				List<Rutina> RutinasBuscar = new ArrayList<Rutina>();
+				for (int i = 0; i < rutinasBaseDatos.size(); i++) {
+					if (!rutinasBaseDatos.get(i).getNombreRutina().equals("$$crea$$")) {
+						RutinasBuscar.add(rutinasBaseDatos.get(i));
+						count++;
+					}
+				}
+				response.put("count", count);
+				response.put("rutinas", RutinasBuscar);
+				return ResponseEntity.ok(response.toString());
 			}
+		} else {
+			response.put("message", "Token inválido");
+			return ResponseEntity.ok(response.toString());
 		}
 
 //		int end = Math.min(index + offset, rutinas.size());
@@ -280,11 +285,6 @@ public class Controller {
 //		}
 //
 //		List<Rutina> rutinasIndex = new ArrayList<>(rutinas.subList(index, end));
-
-		response.put("count", rutinasFiltro.size());
-		response.put("rutinas", rutinasFiltro);
-
-		return ResponseEntity.ok(response.toString());
 	}
 
 	@GetMapping("/optima/obtenerRutinasCreadas")
