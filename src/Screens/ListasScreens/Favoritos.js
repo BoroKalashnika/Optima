@@ -16,7 +16,6 @@ const Favoritos = (props) => {
 
     const getRutinasFavoritas = async () => {
         try {
-            // Obtener la respuesta inicial con los IDs de las rutinas favoritas
             const response = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
             const newArray = [];
             console.log(response);
@@ -25,12 +24,8 @@ const Favoritos = (props) => {
                     const rutinaResponse = await getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + element);
                     newArray.push(rutinaResponse);
                 });
-
-                // Esperar que todas las promesas se resuelvan
                 await Promise.all(rutinasPromises);
             }
-
-            //console.log('Rutinas completas:', newArray);
             setRutinas(newArray);
 
         } catch (error) {
