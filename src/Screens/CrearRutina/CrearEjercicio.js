@@ -22,7 +22,7 @@ import Context from '../../Utils/Context';
 import Carga from '../../Components/carga/Carga';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import config from '../../config/config';
 
 const CrearEjercicio = (props) => {
     const [nombre, setNombre] = useState('');
@@ -130,13 +130,12 @@ const CrearEjercicio = (props) => {
                 };
 
                 const response = await postData(
-                    'http://13.216.205.228:8080/optima/crearEjercicio',
+                    config.API_OPTIMA + 'crearEjercicio',
                     json, setLoading
                 );
 
                 if (response.status === 201) {
                     setIdEjercicios([...idEjercicios, response.data.message]);
-console.log(idEjercicios, response.data.message);
                     setAlertMessage('Ejercicio creado correctamente.');
                     setAlertTitle('Éxito');
                     setModalVisible(true);
@@ -250,7 +249,7 @@ console.log(idEjercicios, response.data.message);
                         <Text style={styles.resetPasswordText}>Crear Ejercicio</Text>
                     </Pressable>
                 </View>
-            </View>       
+            </View>
         </ScrollView>
     );
 }
@@ -288,7 +287,7 @@ const styles = StyleSheet.create({
         height: 70,
         marginBottom: 10,
         borderColor: '#607cff',
-        color:"white"
+        color: "white"
     },
     textLogin: {
         fontSize: 20,

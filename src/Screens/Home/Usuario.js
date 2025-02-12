@@ -18,13 +18,8 @@ const Usuario = (props) => {
         }
     }, []);
 
-    function getRandom() {
-        let i = 0;
-        frasesMotivadoras.frases.forEach(element => {
-            i++;
-        });
-        const random = Math.floor(Math.random() * i);
-        return random;
+    const getRandom = () => {
+        return Math.floor(Math.random() * frasesMotivadoras.frases.length);
     }
 
     return (
