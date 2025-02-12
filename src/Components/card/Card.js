@@ -50,7 +50,7 @@ const Card = (props) => {
         chancheColor();
         chancheMusculo();
         getStars(estrellas)
-    }, [])
+    }, [ambito,color,musculo])
 
     return (
         <Pressable onPress={props.onRutina}>
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     },
     subContainer: {
         flex: 2,
-        marginLeft:10
+        alignItems:"center"
     },
     title: {
         fontSize: 37,

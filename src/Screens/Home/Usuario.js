@@ -12,6 +12,7 @@ const Usuario = (props) => {
     const { token, setToken } = useContext(Context);
     const { email, setEmail } = useContext(Context);
     const { idRutina, setIdRutina } = useContext(Context);
+    const [nombre, setNombre] = useState();
     const [idRutinaActiva, setIdRutinaActiva] = useState();
     const [dificultad, setDificultad] = useState();
     const [ambito, setAmbito] = useState();
@@ -45,6 +46,7 @@ const Usuario = (props) => {
         if (!email) {
             getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
                 setEmail(response.correo)
+                setNombre(response.nombre)
             });
         }
     }, []);
@@ -68,11 +70,11 @@ const Usuario = (props) => {
         <ScrollView contentContainerStyle={styles.container}>
             <HeaderRutina tipo={'user'} />
             <Image source={require('../../Assets/img/perfil.png')} style={styles.profileImage} />
-            <Text style={styles.name}>Nombre de Usuario</Text>
+            <Text style={styles.name}>{nombre}</Text>
             <Text style={styles.frase}>{frasesMotivadoras.frases[getRandom()]}</Text>
             <View style={styles.containerCard}>
                 {!idRutinaActiva ?
-                    <View style={{ marginTop: 35, marginBottom: 15,alignItems:"center" }}>
+                    <View style={{ marginTop: 35, marginBottom: 15, alignItems: "center" }}>
                         <Text style={{ color: 'white', fontSize: 18 }}>Todavía no tienes rutina activa</Text>
                         <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Buscar")}>
                             <Text style={styles.textLogin}>Buscar Rutina</Text>
