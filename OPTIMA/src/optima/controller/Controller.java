@@ -221,12 +221,13 @@ public class Controller {
 			}
 		}
 
-		if (index < 0 || offset > rutinas.size() || index >= offset) {
-			response.put("error", "Rango de índices inválido");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
+		int end = Math.min(index + offset, rutinas.size());
+		if (index < 0 || index >= rutinas.size()) {
+		    response.put("error", "Rango de índices inválido");
+		    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
 		}
 
-		List<Rutina> rutinasIndex = new ArrayList<>(rutinas.subList(index, offset));
+		List<Rutina> rutinasIndex = new ArrayList<>(rutinas.subList(index, end));
 
 		response.put("count", contador);
 		response.put("rutinas", rutinasIndex);
