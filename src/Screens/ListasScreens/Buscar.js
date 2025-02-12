@@ -159,14 +159,14 @@ const Buscar = (props) => {
                 />
             </View>
             <View style={styles.subContainer}>
-                {paginActual > 1 && (
+                {paginActual >= 1 && (
                     <Pressable
                         style={[styles.bottom, { marginRight: 5 }]}
                         onPress={() => handlePrevious()}>
                         <Text style={styles.resetPasswordText}>Atras</Text>
                     </Pressable>
                 )}
-                {paginActual <= paginasTotal && restoRutinas != 0 && (
+                {paginActual < paginasTotal && restoRutinas != 0 && (
                     <Pressable
                         style={[styles.bottom, { marginLeft: 5 }]}
                         onPress={() => handleNext()}>
