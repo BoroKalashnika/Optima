@@ -8,9 +8,13 @@ import {
 
 import Icon from 'react-native-vector-icons/AntDesign';
 const HeaderRutina = (props) => {
-    const [validarHeart, setValidarHeart] = useState(false);
+    const [validarHeart, setValidarHeart] = useState();
     const [validadorClip, setValidadorClip] = useState(false);
     const [iconoHeart, setIconoHeart] = useState('hearto');
+
+    useEffect(() => {
+        setValidarHeart(props.guardada);
+    }, [props.guardada])
 
     useEffect(() => {
         if (validarHeart) {
@@ -19,11 +23,14 @@ const HeaderRutina = (props) => {
             setIconoHeart('hearto');
         }
     }, [validarHeart]);
-    
+
     const PressHeart = () => {
         const newHeartState = !validarHeart;
         setValidarHeart(newHeartState);
-        props.favorito && props.favorito({ estado: newHeartState });
+        setIconoHeart(newHeartState ? 'heart' : 'hearto');
+        if (props.favorito) {
+            props.favorito({ estado: newHeartState });
+        }
     };
 
     const iconoClip = validadorClip ? 'yellow' : '#607cff';

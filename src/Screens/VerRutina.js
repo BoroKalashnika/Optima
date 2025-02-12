@@ -26,7 +26,7 @@ const VerRutina = (props) => {
     const [ambitoImg, setAmbitoImg] = useState('');
     const [musculoImg, setMusculoImg] = useState('');
     const [favorito, setFavorito] = useState();
-    const [estaGuardada,setEstaGuardada] = useState();
+    const [estaGuardada, setEstaGuardada] = useState(false);
     const { loading, setLoading } = useContext(Context);
     const { modalVisible, setModalVisible } = useContext(Context);
     const { alertMessage, setAlertMessage } = useContext(Context);
@@ -49,7 +49,7 @@ const VerRutina = (props) => {
 
     const getFavorito = ({ estado }) => {
         setFavorito(estado);
-        console.log('Favorito:', estado);
+        setEstaGuardada(estado);
     };
 
     const [stars, setStars] = useState([
@@ -132,6 +132,10 @@ const VerRutina = (props) => {
 
     const loadRutina = async () => {
         try {
+            getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token).then((element) => {
+                const guardada = element.rutinasGuardadas.includes(idRutina);
+                setEstaGuardada(guardada);
+            })
             getData(
                 'http://13.216.205.228:8080/optima/obtenerRutina?id=' + idRutina + '&token=' + token
             ).then((response) => {
@@ -190,7 +194,7 @@ const VerRutina = (props) => {
     }
     return (
         <View style={styles.container}>
-            <HeaderRutina nombre={nombre} tipo={'rutina'} favorito={getFavorito} />
+            <HeaderRutina nombre={nombre} tipo={'rutina'} favorito={getFavorito} guardada={estaGuardada}/>
 
             <View style={styles.containerRow}>
                 <Text style={styles.title}>{creador}</Text>
