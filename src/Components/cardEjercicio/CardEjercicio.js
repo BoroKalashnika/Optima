@@ -1,28 +1,32 @@
 import { Text, StyleSheet, View, Image, Pressable } from 'react-native';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Context from '../../Utils/Context';
 import deleteData from '../../Utils/services/deleteData';
-
+import Carga from '../../Components/carga/Carga';
+import config from '../../config/config';
 const CardEjercicio = (props) => {
     const { idEjercicios, setIdEjercicios } = useContext(Context);
     const { token } = useContext(Context);
     const { nombre, descripcion, imagen, idEjercicio, borrarEnabled } = props;
+    const { loading, setLoading } = useContext(Context);
 
     const borrarEjercicio = async () => {
-        try {
-            const response = await deleteData(`http://13.216.205.228:8080/optima/eliminarEjercicio?token=${token}&id=${idEjercicio}`);
-
-            if (response) {
-                const updatedEjercicios = idEjercicios.filter((ejercicioId) => ejercicioId !== idEjercicio);
-                setIdEjercicios(updatedEjercicios);
-                console.log('Exercise deleted:', idEjercicio); 
+        setLoading(true);
+        
+            const response = await deleteData(config.API_OPTIMA +'eliminarEjercicio?token='+token+'&id='+idEjercicio,setLoading);
+            if(response.message==="Ejercicio eliminado."){
+                 console.log("ejercicio eliminado"); 
             }
-        } catch (error) {
-            console.log('Error deleting exercise:', error);
-        }
+
+      setLoading(false);
     }
 
+    if (loading) {
+        return (
+            <Carga />
+        );
+    }
     return (
         <Pressable onPress={props.onEjercicio}>
             <View style={styles.container}>
@@ -33,7 +37,7 @@ const CardEjercicio = (props) => {
                 <Image source={{ uri: imagen }} style={styles.image} />
 
                 {borrarEnabled && (
-                    <Icon name="delete" size={25} color="red" onPress={borrarEjercicio} />
+                    <Icon name="delete" size={25} color="red" onPress={()=>borrarEjercicio()} />
                 )}
             </View>
         </Pressable>
