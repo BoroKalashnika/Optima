@@ -226,10 +226,11 @@ public class Controller {
 		JSONObject jsonObject = new JSONObject(requestBody);
 		JSONObject response = new JSONObject();
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(jsonObject.getString("token"));
-		if (usuarioBaseDatos.isPresent()) {
+		jsonObject.remove("token");
+		if (usuarioBaseDatos.isPresent()) {			
 			Usuario usuario = usuarioBaseDatos.get();
 			usuario.setImc(jsonObject.getString("imc"));
-			usuario.getHistorialImc().add(jsonObject.getString("imc"));
+			usuario.getHistorialImc().add(jsonObject.getString(requestBody));
 			usuarioRepository.save(usuario);
 			response.put("message", "IMC registrado");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
@@ -244,10 +245,11 @@ public class Controller {
 		JSONObject jsonObject = new JSONObject(requestBody);
 		JSONObject response = new JSONObject();
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(jsonObject.getString("token"));
+		jsonObject.remove("token");
 		if (usuarioBaseDatos.isPresent()) {
 			Usuario usuario = usuarioBaseDatos.get();
 			usuario.setMacros(jsonObject.getString("macros"));
-			usuario.getHistorialMacros().add(jsonObject.getString("macros"));
+			usuario.getHistorialMacros().add(jsonObject.getString(requestBody));
 			usuarioRepository.save(usuario);
 			response.put("message", "Macros registrados");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
