@@ -87,15 +87,11 @@ const VerRutina = (props) => {
         const response = await deleteData(
             config.API_OPTIMA + 'deleteFavoritoRutina?token=' + token + '&id=' + idRutina, setLoading
         );
-        if (response.status === 200) {
-            setAlertMessage('Rutina eliminada de favoritos');
-            setAlertTitle('Éxito');
-            setModalVisible(true);
-        } else {
+        if (!response.status === 200) {
             setAlertMessage(response.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
-        }
+        } 
         setLoading(false);
     }
 

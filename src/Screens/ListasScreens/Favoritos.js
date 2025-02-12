@@ -3,38 +3,36 @@ import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import getData from '../../Utils/services/getData';
 import Context from '../../Utils/Context';
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useState, useContext, useCallback } from 'react';
 import config from '../../config/config';
+
 const Favoritos = (props) => {
     const [rutinas, setRutinas] = useState();
     const { token, setToken } = useContext(Context);
-    const [contador, setContador] = useState();
+    const { idRutina, setIdRutina } = useContext(Context);
 
-    useEffect(() => {
-        getRutinasFavoritas();
-    }, [rutinas])
+    useFocusEffect(
+        useCallback(() => {
+            getRutinasFavoritas();
+        }, [])
+    );
 
     const getRutinasFavoritas = async () => {
         try {
             const response = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
             const newArray = [];
-            console.log(response);
-            if (response.rutinasGuardadas != null && response.rutinasGuardadas.length > 0) {
-                const rutinasPromises = response.rutinasGuardadas.map(async (element) => {
-                    const rutinaResponse = await getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + element);
-                    newArray.push(rutinaResponse);
-                });
-                await Promise.all(rutinasPromises);
-            }
-            setRutinas(newArray);
-
+            let llamadasRutina = response.rutinasGuardadas.map((element) => getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + element));
+            Promise.all(llamadasRutina).then((element) => {
+                element.map((rutina) => {
+                    newArray.push(rutina);
+                })
+                setRutinas(newArray);
+            })
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-        console.log(rutinas.length);
     };
-
-
 
     return (
         <View style={styles.container}>
@@ -55,6 +53,7 @@ const Favoritos = (props) => {
                             titulo={item.nombreRutina}
                             onRutina={() => {
                                 props.navigation.navigate('VerRutina');
+                                setIdRutina(item.id);
                             }}
                         />
                     )}
