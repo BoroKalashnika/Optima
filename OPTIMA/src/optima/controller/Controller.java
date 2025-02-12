@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.cloudinary.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -346,30 +345,49 @@ public class Controller {
 		JSONObject jsonObject = new JSONObject(requestBody);
 		String idRutina = jsonObject.getString("idRutina");
 		String token = jsonObject.getString("token");
+		String valoracionIdusuario = jsonObject.getString("valoracion");
+
 		JSONObject response = new JSONObject();
 		Optional<Rutina> rutinaBd = rutinaRepository.findById(idRutina);
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+
 		if (usuarioBaseDatos.isPresent()) {
 			if (rutinaBd.isPresent()) {
 				Rutina rutina = rutinaBd.get();
+				List<String> usuariosValorados = rutina.getUsuariosValorados();
 				Optional<Usuario> creadorRutina = usuarioRepository.findByCorreo(rutina.getCreador());
 				Usuario usuario = creadorRutina.get();
 
-				int puntuacionActual = Integer.parseInt(rutina.getValoracion());
-				int valoracion = jsonObject.getInt("valoracion");
+				String[] partes = valoracionIdusuario.split("-");
+				String idUsuario = partes[0];
 
-				int puntuacionUsu = Integer.valueOf(usuario.getPuntuacion()) + valoracion;
-				usuario.setPuntuacion(puntuacionUsu + "");
+				boolean yaValorado = false;
 
-				if (puntuacionActual != 0) {
-					int nuevaPuntuacion = Math.round((puntuacionActual + valoracion) / 2.0f);
-					rutina.setValoracion(String.valueOf(nuevaPuntuacion));
-				} else {
-					rutina.setValoracion(String.valueOf(valoracion));
+				for (int i = 0; i < usuariosValorados.size(); i++) {
+					String usuarioValorado = usuariosValorados.get(i);
+					if (usuarioValorado.startsWith(idUsuario + "-")) {
+						usuariosValorados.set(i, valoracionIdusuario);
+						yaValorado = true;
+						break;
+					}
 				}
 
+				if (!yaValorado) {
+					usuariosValorados.add(valoracionIdusuario);
+				}
+
+				int sumaValoraciones = 0;
+				for (String valorado : usuariosValorados) {
+					sumaValoraciones += Integer.parseInt(valorado.split("-")[1]);
+				}
+				int nuevaPuntuacionRutina = Math.round((float) sumaValoraciones / usuariosValorados.size());
+				rutina.setValoracion(String.valueOf(nuevaPuntuacionRutina));
+
+				rutina.setUsuariosValorados(usuariosValorados);
 				usuarioRepository.save(usuario);
 				rutinaRepository.save(rutina);
+
+				response.put("message", "Valoración actualizada correctamente.");
 				return ResponseEntity.ok(response.toString());
 			}
 			response.put("message", "La rutina no existe!");

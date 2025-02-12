@@ -22,6 +22,7 @@ public class Rutina {
 	private String idUsuario;
 	private String token;
 	private String timestamp;
+	private List<String> usuariosValorados;
 
 	public String getIdUsuario() {
 		return idUsuario;
@@ -73,6 +74,14 @@ public class Rutina {
 
 	public String getTimestamp() {
 		return timestamp;
+	}
+
+	public List<String> getUsuariosValorados() {
+		return usuariosValorados;
+	}
+
+	public void setUsuariosValorados(List<String> usuariosValorados) {
+		this.usuariosValorados = usuariosValorados;
 	}
 
 	public void setId(String id) {
