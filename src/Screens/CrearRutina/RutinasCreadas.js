@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import getData from '../../Utils/services/getData';
 import Context from '../../Utils/Context';
 import { useFocusEffect } from '@react-navigation/native';
+import config from '../../config/config';
 
 const Buscar = (props) => {
     const { token, setToken } = useContext(Context);
@@ -22,21 +23,10 @@ const Buscar = (props) => {
         }, [])
     );
 
-    /*
-    useEffect(() => {
-        getRutinas();
-        console.log(rutinas);
-    }, [rutinas])
-*/
     const getRutinas = async () => {
-        const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
-        getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + "&idUsuario=" + usuario.id + "&index=0&offset=10").then((element) => {
-            const newArray = [];
-            element.rutinas.map((rutina) => {
-                if (rutina.nombreRutina !== "$$crea$$") { newArray.push(rutina) }
-            })
-            setRutinas(newArray);
-        });
+        const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
+        const response = await getData(config.API_OPTIMA + 'obtenerRutinasCreadas?token=' + token + "&idUsuario=" + usuario.id);
+        setRutinas(response.rutinas);
     }
 
     return (
