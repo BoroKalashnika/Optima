@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Dimensions } from 'react-native';
 import { HelperText } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import { PieChart } from 'react-native-chart-kit';
 import MensajeAlert from '../../Components/mensajeAlert/MensajeAlert';
+import Context from '../../Utils/Context';
+import config from '../../config/config';
+import postData from '../../Utils/services/postData';
+import Carga from '../../Components/carga/Carga'
+import { ScrollView } from 'react-native-gesture-handler';
 
 const CalcularMacros = (props) => {
     const [peso, setPeso] = useState('');
@@ -15,6 +20,8 @@ const CalcularMacros = (props) => {
     const [mensaje, setMensaje] = useState('');
     const [titulo, setTitulo] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+    const { token } = useContext(Context);
+    const { loading, setLoading } = useContext(Context);
 
     const screenWidth = Dimensions.get('window').width;
 
@@ -37,7 +44,7 @@ const CalcularMacros = (props) => {
         setModalVisible(false);
     };
 
-    const calcularMacros = () => {
+    const calcularMacros = async () => {
         const pesoNum = parseFloat(peso);
         const edadNum = parseInt(edad);
         const alturaNum = parseFloat(altura);
@@ -80,10 +87,31 @@ const CalcularMacros = (props) => {
             grasas: grasas.toFixed(0)
         });
 
-        setTitulo('Calculado');
-        setMensaje('Cálculo realizado con exito');
-        setModalVisible(true);
+        const json = {
+            token: token,
+            macros: `caloriasTotales:${caloriasTotales.toFixed(0)},carbos:${carbos.toFixed(0)},proteinas:${proteinas.toFixed(0)},grasas:${grasas.toFixed(0)}`,
+        }
+
+        const response = await postData(config.API_OPTIMA + 'registrarMacros', json, setLoading);
+
+        console.log(response);
+
+        if (response.status == 200) {
+            setTitulo('Calculado');
+            setMensaje(response.data.message);
+            setModalVisible(true);
+        } else {
+            setTitulo('Error');
+            setMensaje(response.data.error);
+            setModalVisible(true);
+        }
     };
+
+    if (loading) {
+        return (
+            <Carga />
+        );
+    }
 
     const limpiarCampos = () => {
         setPeso('');
@@ -97,138 +125,145 @@ const CalcularMacros = (props) => {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Calculadora de Macros</Text>
-            {(peso != '' && pesoHasErrors()) && (
-                <HelperText type="error">
-                    Peso en kilogramos
-                </HelperText>
-            )}
-            <TextInput
-                style={styles.input}
-                placeholder="Peso (kg)"
-                placeholderTextColor="#90caf9"
-                keyboardType="numeric"
-                value={peso}
-                onChangeText={setPeso}
-            />
-            {(edad != '' && edadHasErrors()) && (
-                <HelperText type="error">
-                    Edad de 1-90 años
-                </HelperText>
-            )}
-            <TextInput
-                style={styles.input}
-                placeholder="Edad (años)"
-                placeholderTextColor="#90caf9"
-                keyboardType="numeric"
-                value={edad}
-                onChangeText={setEdad}
-            />
-            {(altura != '' && alturaHasErrors()) && (
-                <HelperText type="error">
-                    Altura en centímetros
-                </HelperText>
-            )}
-            <TextInput
-                style={styles.input}
-                placeholder="Altura (cm)"
-                placeholderTextColor="#90caf9"
-                keyboardType="numeric"
-                value={altura}
-                onChangeText={setAltura}
-            />
+        <ScrollView style={styles.container}>
+            <View style={{ justifyContent: 'center', alignItems: 'center', }}>
+                <Text style={styles.title}>Calculadora de Macros</Text>
+                {(peso != '' && pesoHasErrors()) && (
+                    <HelperText type="error">
+                        Peso en kilogramos
+                    </HelperText>
+                )}
+                <TextInput
+                    style={styles.input}
+                    placeholder="Peso (kg)"
+                    placeholderTextColor="#90caf9"
+                    keyboardType="numeric"
+                    value={peso}
+                    onChangeText={setPeso}
+                />
+                {(edad != '' && edadHasErrors()) && (
+                    <HelperText type="error">
+                        Edad de 1-90 años
+                    </HelperText>
+                )}
+                <TextInput
+                    style={styles.input}
+                    placeholder="Edad (años)"
+                    placeholderTextColor="#90caf9"
+                    keyboardType="numeric"
+                    value={edad}
+                    onChangeText={setEdad}
+                />
+                {(altura != '' && alturaHasErrors()) && (
+                    <HelperText type="error">
+                        Altura en centímetros
+                    </HelperText>
+                )}
+                <TextInput
+                    style={styles.input}
+                    placeholder="Altura (cm)"
+                    placeholderTextColor="#90caf9"
+                    keyboardType="numeric"
+                    value={altura}
+                    onChangeText={setAltura}
+                />
 
-            <View style={styles.pickerContainer}>
-                <Text style={styles.label}>Sexo</Text>
-                <Picker
-                    selectedValue={sexo}
-                    style={styles.picker}
-                    onValueChange={(itemValue) => setSexo(itemValue)}
-                >
-                    <Picker.Item label="Masculino" value="masculino" />
-                    <Picker.Item label="Femenino" value="femenino" />
-                </Picker>
-            </View>
-
-            <View style={styles.pickerContainer}>
-                <Text style={styles.label}>Nivel de Actividad</Text>
-                <Picker
-                    selectedValue={actividad}
-                    style={styles.picker}
-                    onValueChange={(itemValue) => setActividad(itemValue)}
-                >
-                    <Picker.Item label="Poco Activo" value="pocoActivo" />
-                    <Picker.Item label="Medio Activo" value="medioActivo" />
-                    <Picker.Item label="Muy Activo" value="muyActivo" />
-                </Picker>
-            </View>
-
-            <View style={styles.buttonContainer}>
-                <Button title="Calcular" onPress={calcularMacros} color="#607cff" />
-                <Button title="Limpiar" onPress={limpiarCampos} color="#607cff" />
-                <Button title="Volver" onPress={() => { props.navigation.goBack() }} color="#607cff" />
-            </View>
-
-            {macros && (
-                <View style={styles.resultContainer}>
-                    <Text style={styles.result}>Calorías Totales: {macros.caloriasTotales} kcal</Text>
-                    <Text style={styles.result}>Carbohidratos: {macros.carbos} g</Text>
-                    <Text style={styles.result}>Proteínas: {macros.proteinas} g</Text>
-                    <Text style={styles.result}>Grasas: {macros.grasas} g</Text>
-
-                    <PieChart
-                        data={[
-                            {
-                                name: 'Carbos',
-                                population: parseFloat(macros.carbos),
-                                color: '#FF6347',
-                                legendFontColor: '#7F7F7F',
-                                legendFontSize: 15
-                            },
-                            {
-                                name: 'Proteínas',
-                                population: parseFloat(macros.proteinas),
-                                color: '#4CAF50',
-                                legendFontColor: '#7F7F7F',
-                                legendFontSize: 15
-                            },
-                            {
-                                name: 'Grasas',
-                                population: parseFloat(macros.grasas),
-                                color: '#FFD700',
-                                legendFontColor: '#7F7F7F',
-                                legendFontSize: 15
-                            }
-                        ]}
-                        width={screenWidth - 60}
-                        height={100}
-                        chartConfig={{
-                            backgroundColor: '#ffffff',
-                            backgroundGradientFrom: '#ffffff',
-                            backgroundGradientTo: '#ffffff',
-                            decimalPlaces: 0,
-                            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                        }}
-                        accessor="population"
-                        style={{
-                            marginVertical: 8,
-                            borderRadius: 16,
-                        }}
-                    />
+                <View style={styles.pickerContainer}>
+                    <Text style={styles.label}>Sexo</Text>
+                    <Picker
+                        selectedValue={sexo}
+                        style={styles.picker}
+                        onValueChange={(itemValue) => setSexo(itemValue)}
+                    >
+                        <Picker.Item label="Masculino" value="masculino" />
+                        <Picker.Item label="Femenino" value="femenino" />
+                    </Picker>
                 </View>
-            )}
-            <MensajeAlert visible={modalVisible} mensaje={mensaje} titulo={titulo} cerrarModal={cerrarModal} />
-        </View>
+
+                <View style={styles.pickerContainer}>
+                    <Text style={styles.label}>Nivel de Actividad</Text>
+                    <Picker
+                        selectedValue={actividad}
+                        style={styles.picker}
+                        onValueChange={(itemValue) => setActividad(itemValue)}
+                    >
+                        <Picker.Item label="Poco Activo" value="pocoActivo" />
+                        <Picker.Item label="Medio Activo" value="medioActivo" />
+                        <Picker.Item label="Muy Activo" value="muyActivo" />
+                    </Picker>
+                </View>
+
+                <View style={styles.buttonContainer}>
+                    <Button title="Calcular" onPress={calcularMacros} color="#607cff" />
+                    <Button title="Limpiar" onPress={limpiarCampos} color="#607cff" />
+                    <Button title="Volver" onPress={() => { props.navigation.goBack() }} color="#607cff" />
+                </View>
+
+                {macros && (
+                    <View style={styles.resultContainer}>
+                        <Text style={styles.result}>Calorías Totales: {macros.caloriasTotales} kcal</Text>
+                        <Text style={styles.result}>Carbohidratos: {macros.carbos} g</Text>
+                        <Text style={styles.result}>Proteínas: {macros.proteinas} g</Text>
+                        <Text style={styles.result}>Grasas: {macros.grasas} g</Text>
+
+                        <PieChart
+                            data={[/*
+                                {
+                                    name: 'Calorías',
+                                    population: parseFloat(macros.caloriasTotales),
+                                    color: '#blue',
+                                    legendFontColor: '#7F7F7F',
+                                    legendFontSize: 15
+                                },*/
+                                {
+                                    name: 'Carbos',
+                                    population: parseFloat(macros.carbos),
+                                    color: '#FF6347',
+                                    legendFontColor: '#7F7F7F',
+                                    legendFontSize: 15
+                                },
+                                {
+                                    name: 'Proteínas',
+                                    population: parseFloat(macros.proteinas),
+                                    color: '#4CAF50',
+                                    legendFontColor: '#7F7F7F',
+                                    legendFontSize: 15
+                                },
+                                {
+                                    name: 'Grasas',
+                                    population: parseFloat(macros.grasas),
+                                    color: '#FFD700',
+                                    legendFontColor: '#7F7F7F',
+                                    legendFontSize: 15
+                                }
+                            ]}
+                            width={screenWidth - 60}
+                            height={100}
+                            chartConfig={{
+                                backgroundColor: '#ffffff',
+                                backgroundGradientFrom: '#ffffff',
+                                backgroundGradientTo: '#ffffff',
+                                decimalPlaces: 0,
+                                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                            }}
+                            accessor="population"
+                            style={{
+                                marginVertical: 8,
+                                borderRadius: 16,
+                            }}
+                        />
+                    </View>
+                )}
+                <MensajeAlert visible={modalVisible} mensaje={mensaje} titulo={titulo} cerrarModal={cerrarModal} />
+            </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         padding: 20,
         backgroundColor: '#1F2937',
     },
@@ -268,7 +303,7 @@ const styles = StyleSheet.create({
         borderColor: '#607cff',
     },
     resultContainer: {
-        marginTop: 20,
+        marginVertical: 20,
         width: '90%',
     },
     result: {

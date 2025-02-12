@@ -12,7 +12,7 @@ import Carga from '../../Components/carga/Carga'
 const CalcularIMC = (props) => {
     const [peso, setPeso] = useState('');
     const [altura, setAltura] = useState('');
-    const [imc, setImc] = useState(null);
+    const [imc, setImc] = useState('');
     const [mensaje, setMensaje] = useState('');
     const [titulo, setTitulo] = useState('');
     const [historial, setHistorial] = useState([]);
@@ -90,13 +90,23 @@ const CalcularIMC = (props) => {
 
         try {
             const response = await postData(config.API_OPTIMA + 'registrarImc', json, setLoading);
-            console.log(response);
+            if (response.status == 201) {
+                setTitulo('Calculado');
+                setMensaje('Cálculo realizado con exito');
+                setModalVisible(true);
+
+                const nuevoHistorial = [
+                    ...historial,
+                    mensaje
+                ];
+                setHistorial(nuevoHistorial);
+            } else {/*
+                setTitulo('Error');
+                setMensaje(response.data.error);
+                setModalVisible(true);
+                */
+            }
             
-            const nuevoHistorial = [
-                ...historial,
-                mensaje
-            ];
-            setHistorial(nuevoHistorial);
         } catch (error) {
             console.error("Error al registrar el IMC:", error);
         }
