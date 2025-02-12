@@ -93,6 +93,7 @@ const CrearRutina = (props) => {
     }
 
     const crearRutinaId = async () => {
+        setLoading(true);
         const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
         const rutinas = await getData(config.API_OPTIMA + 'obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
         let existe = false;
@@ -120,6 +121,7 @@ const CrearRutina = (props) => {
 
             setIdRutina(response.data.idRutina);
         }
+        setLoading(false);
     };
 
     if (loading) {

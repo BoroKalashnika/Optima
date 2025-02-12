@@ -1,6 +1,6 @@
-import { FlatList, View, Image, StyleSheet, Text, Pressable, Modal, RefreshControl } from 'react-native';
+import { FlatList, View, StyleSheet, Text, Pressable, Modal } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useState, useContext, useEffect, useCallback } from 'react';
+import { useState, useContext, useCallback } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -17,70 +17,52 @@ const Buscar = (props) => {
     const { alertTitle, setAlertTitle } = useContext(Context);
     const [rutinas, setRutinas] = useState([]);
     const [paginasTotal, setPaginasTotal] = useState();
-    const [paginActual, setPaginActual] = useState(1);
+    const [paginActual, setPaginActual] = useState(0);
     const [indiceActual, setIndiceActual] = useState(0);
-    const [indiceFinal, setIndiceFinal] = useState(4);
     const [filtro, setFiltro] = useState(false);
     const [dificultad, setDificultad] = useState('Principiante');
     const [musculo, setMusculo] = useState('Biceps');
     const [ambito, setAmbito] = useState('Gimnasio');
-    const [restoRutinas, setRestoRutinas] = useState();
-    const [refreshing, setRefreshing] = useState(false);
     const { idRutina, setIdRutina } = useContext(Context);
-
-    const onRefresh = () => {
-        setRefreshing(true);
-        setTimeout(() => {
-            getRutinas();
-            setRefreshing(false);
-        }, 2000);
-    };
 
     useFocusEffect(
         useCallback(() => {
+            setPaginActual(0);
+            setIndiceActual(0);
             getRutinas();
-        }, [indiceActual, indiceFinal])
+        }, [])
     );
 
     const getRutinas = async () => {
         try {
-            const response = await getData(config.API_OPTIMA + 'obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal);
-
-            if (response.error) {
-                throw new Error(response.error);
-            }
-
-            setPaginasTotal(Math.floor(response.count / 4));
-            setRestoRutinas(response.count % 4 === 0 ? 4 : response.count % 4);
-
-            const newArray = response.rutinas.filter(rutina => rutina.nombreRutina !== "$$crea$$");
+            const response = await getData(config.API_OPTIMA + 'obtenerRutinas?token=' + token);
+            const totalRutinas = response.count;
+            setPaginasTotal(Math.ceil(totalRutinas / 4));
+            const newArray = [];
+            response.rutinas.map((element) => {
+                newArray.push(element);
+            })
             setRutinas(newArray);
         } catch (error) {
-            console.error("Error fetching routines:", error);
             setAlertTitle("Error");
-            setAlertMessage(error.message || "No se pudo cargar las rutinas. Por favor, inténtalo de nuevo.");
+            setAlertMessage("No se pudo cargar las rutinas. Por favor, inténtalo de nuevo.");
             setModalVisible(true);
         }
     };
 
     const handleNext = () => {
-        if (paginActual >= paginasTotal) return;
-        const nextPage = paginActual + 1;
-        const newIndex = nextPage * 4;
-        const newOffset = nextPage === paginasTotal ? restoRutinas : 4;
-        setIndiceActual(newIndex);
-        setIndiceFinal(newOffset);
-        setPaginActual(nextPage);
+        if (paginActual < paginasTotal - 1) {
+            setPaginActual(paginActual + 1);
+        }
     };
 
     const handlePrevious = () => {
-        if (paginActual <= 0) return;
-        const prevPage = paginActual - 1;
-        const newIndex = prevPage * 4;
-        setIndiceActual(newIndex);
-        setIndiceFinal(4);
-        setPaginActual(prevPage);
+        if (paginActual > 0) {
+            setPaginActual(paginActual - 1);
+        }
     };
+
+    const paginatedRutinas = rutinas.slice(paginActual * 4, (paginActual + 1) * 4);
 
     return (
         <View style={styles.container}>
@@ -138,9 +120,7 @@ const Buscar = (props) => {
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
                 <FlatList
-                    data={rutinas}
-                    onRefresh={onRefresh}
-                    refreshing={refreshing}
+                    data={paginatedRutinas}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <Card
@@ -159,14 +139,14 @@ const Buscar = (props) => {
                 />
             </View>
             <View style={styles.subContainer}>
-                {paginActual >= 1 && (
+                {paginActual > 0 && (
                     <Pressable
                         style={[styles.bottom, { marginRight: 5 }]}
                         onPress={() => handlePrevious()}>
                         <Text style={styles.resetPasswordText}>Atras</Text>
                     </Pressable>
                 )}
-                {paginActual < paginasTotal && restoRutinas != 0 && (
+                {paginActual < paginasTotal - 1 && (
                     <Pressable
                         style={[styles.bottom, { marginLeft: 5 }]}
                         onPress={() => handleNext()}>
