@@ -24,7 +24,8 @@ public class Usuario {
 	private String peso;
 	private String altura;
 	private String imc;
-	private String[] macros;
+	private String macros;
+	private List<String> hiostorialMacros;
 	private String puntuacion;
 	private boolean verificado;
 	private String codigo;
@@ -78,7 +79,7 @@ public class Usuario {
 		return imc;
 	}
 
-	public String[] getMacros() {
+	public String getMacros() {
 		return macros;
 	}
 
@@ -96,6 +97,14 @@ public class Usuario {
 
 	public String getCodigo() {
 		return codigo;
+	}
+
+	public List<String> getHiostorialMacros() {
+		return hiostorialMacros;
+	}
+
+	public void setHiostorialMacros(List<String> hiostorialMacros) {
+		this.hiostorialMacros = hiostorialMacros;
 	}
 
 	public void setId(String id) {
@@ -146,7 +155,7 @@ public class Usuario {
 		this.imc = imc;
 	}
 
-	public void setMacros(String[] macros) {
+	public void setMacros(String macros) {
 		this.macros = macros;
 	}
 
