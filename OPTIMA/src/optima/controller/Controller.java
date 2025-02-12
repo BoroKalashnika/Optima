@@ -148,7 +148,7 @@ public class Controller {
 	ResponseEntity<Object> registrar(@RequestBody Usuario nuevoUsuario)
 			throws NoSuchAlgorithmException, MessagingException, IOException {
 		JSONObject response = new JSONObject();
-		if (usuarioRepository.comprobarRegistro(nuevoUsuario.getCorreo(), nuevoUsuario.getNombre()).isPresent()) {
+		if (usuarioRepository.findByCorreo(nuevoUsuario.getCorreo()).isPresent()) {
 			response.put("message", "USUARIO YA REGISTRADO");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
 		} else {
@@ -339,6 +339,34 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 
+	@GetMapping("/optima/obtenerRutinaValoracion")
+	public ResponseEntity<Object> rutinaValorada(@RequestParam(value = "token") String token,
+			@RequestParam(value = "id") String id) {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			Usuario usuario = usuarioBaseDatos.get();
+
+			Optional<Rutina> rutinaOptional = rutinaRepository.findById(id);
+			if (rutinaOptional.isPresent()) {
+				Rutina rutina = rutinaOptional.get();
+				List<String> valoraciones = rutina.getUsuariosValorados();
+
+				String idUsuario = usuario.getId();
+				for (String elemento : valoraciones) {
+					if (elemento.split("-")[0].equals(idUsuario)) {
+						return ResponseEntity.ok(elemento.split("-")[1]);
+					}
+				}
+
+				return ResponseEntity.ok("0");
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
 	@PostMapping("/optima/valorarRutina")
 	ResponseEntity<Object> valorarRutina(@RequestBody String requestBody)
 			throws NoSuchAlgorithmException, MessagingException {
@@ -366,6 +394,13 @@ public class Controller {
 				for (int i = 0; i < usuariosValorados.size(); i++) {
 					String usuarioValorado = usuariosValorados.get(i);
 					if (usuarioValorado.startsWith(idUsuario + "-")) {
+						int valoracionAnterior = Integer.parseInt(usuarioValorado.split("-")[1]);
+
+						int valoracionActualizada = Integer.parseInt(usuario.getPuntuacion()) - valoracionAnterior
+								+ Integer.parseInt(partes[1]);
+
+						usuario.setPuntuacion(valoracionActualizada + "");
+
 						usuariosValorados.set(i, valoracionIdusuario);
 						yaValorado = true;
 						break;
@@ -513,8 +548,8 @@ public class Controller {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
 			Optional<Ejercicio> ejercicio = ejercicioRepository.findById(id);
-
-			return ResponseEntity.ok(ejercicio.get().toString());
+			ejercicio.get().setToken(null);
+			return ResponseEntity.ok(ejercicio.get());
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}

@@ -11,9 +11,6 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
 	@Query("{'correo': ?0, 'contrasenya': ?1}")
 	Optional<Usuario> comprobarLogin(String correo, String contrasenya);
 
-	@Query("{'correo': ?0, 'nombre': ?1}")
-	Optional<Usuario> comprobarRegistro(String correo, String nombre);
-
 	Optional<Usuario> findByToken(String token);
 
 	Optional<Usuario> findByCorreo(String correo);
