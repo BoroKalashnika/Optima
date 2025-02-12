@@ -39,8 +39,8 @@ const Correo = (props) => {
                 nivel: "",
                 peso: "",
                 altura: "",
-                imc: "",
-                macros: [],
+                historialImc: [],
+                historialMacros: [],
                 puntuacion: "",
                 verificado: false
             };

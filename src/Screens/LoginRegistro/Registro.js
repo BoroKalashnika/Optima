@@ -72,8 +72,8 @@ const Registro = (props) => {
                 nivel: opcion,
                 peso: peso,
                 altura: altura,
-                imc: "",
-                macros: [],
+                historialImc: [],
+                historialMacros: [],
                 valoracion: "",
                 verificado: false
             };
