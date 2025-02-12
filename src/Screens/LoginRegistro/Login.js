@@ -16,6 +16,8 @@ import postData from '../../Utils/services/postData';
 import getData from '../../Utils/services/getData';
 import Carga from '../../Components/carga/Carga';
 import { saveToken, getToken, removeToken } from '../../Utils/storage';
+import config from '../../config/config';
+
 const Login = (props) => {
     const { loading, setLoading } = useContext(Context);
     const { token, setToken } = useContext(Context);
@@ -40,10 +42,10 @@ const Login = (props) => {
             const tokenCache = await getToken();
             if (!tokenCache) return;
             try {
-                const response = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + tokenCache.token);
+                const response = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + tokenCache.token);
 
                 if (!response || response.token !== tokenCache.token) {
-                    await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
+                    await postData(config.API_OPTIMA + 'logout', tokenCache, setLoading)
                     await removeToken();
                     setToken('');
                     Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
@@ -58,7 +60,7 @@ const Login = (props) => {
                     const diferenciaTiempo = fechaActual.getTime() - fechaGuardada.getTime();
                     const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24));
                     if (diferenciaDias >= 1) {
-                        await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
+                        await postData(config.API_OPTIMA + 'logout', tokenCache, setLoading)
                         await removeToken();
                         setToken('');
                         Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
@@ -74,7 +76,7 @@ const Login = (props) => {
                     }
                 }
             } catch (error) {
-                await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
+                await postData(config.API_OPTIMA + 'logout', tokenCache, setLoading)
                 await removeToken();
                 setToken('');
                 Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
@@ -94,10 +96,10 @@ const Login = (props) => {
             if (!tokenCache) return;
 
             try {
-                const response = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + tokenCache.token);
+                const response = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + tokenCache.token);
 
                 if (!response || response.token !== tokenCache.token) {
-                    await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
+                    await postData(config.API_OPTIMA + 'logout', tokenCache, setLoading)
                     await removeToken();
                     setToken('');
                     Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
@@ -108,7 +110,7 @@ const Login = (props) => {
                     ]);
                 }
             } catch (error) {
-                await postData('http://13.216.205.228:8080/optima/logout', tokenCache, setLoading)
+                await postData(config.API_OPTIMA + 'logout', tokenCache, setLoading)
                 await removeToken();
                 setToken('');
                 Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
@@ -126,23 +128,12 @@ const Login = (props) => {
             Alert.alert("ERROR", 'Campos vacios porfavor completalos')
         } else {
             const json = {
-                nomUsu: "",
                 contrasenya: password,
                 correo: email,
-                token: "",
-                fotoPerfil: "",
-                rutinasGuardadas: [],
-                rutinasCreadas: [],
-                nivel: "",
-                peso: "",
-                altura: "",
-                imc: "",
-                macros: [],
-                puntuacion: "",
                 verificado: false
             };
 
-            const response = await postData('http://13.216.205.228:8080/optima/login', json, setLoading);
+            const response = await postData(config.API_OPTIMA + 'login', json, setLoading);
 
             if (response.status === 200) {
                 await saveToken(response.data.token);
