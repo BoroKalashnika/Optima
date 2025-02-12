@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -94,26 +93,6 @@ public class Controller {
 		}
 		response.put("message", "No se ha encrontrado ningun usuario con este codigo.");
 		return ResponseEntity.ok(response.toString());
-	}
-
-	@GetMapping("/optima/obtenerHistorialMacros")
-	public ResponseEntity<Object> obtenerHistorialMacros(@RequestParam(value = "token") String token) {
-		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
-		if (usuarioBaseDatos.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(usuarioBaseDatos.get().getHistorialMacros());
-		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
-	}
-
-	@GetMapping("/optima/obtenerHistorilaImc")
-	public ResponseEntity<Object> obtenerHistorialImc(@RequestParam(value = "token") String token) {
-		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
-		if (usuarioBaseDatos.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(usuarioBaseDatos.get().getHistorialImc());
-		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
 	}
 
 	@PostMapping("/optima/restablecerContrasenya")
@@ -225,17 +204,21 @@ public class Controller {
 	ResponseEntity<Object> registrarImc(@RequestBody String requestBody) {
 		JSONObject jsonObject = new JSONObject(requestBody);
 		JSONObject response = new JSONObject();
+
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(jsonObject.getString("token"));
 		jsonObject.remove("token");
-		if (usuarioBaseDatos.isPresent()) {			
+
+		if (usuarioBaseDatos.isPresent()) {
 			Usuario usuario = usuarioBaseDatos.get();
+
 			usuario.setImc(jsonObject.getString("imc"));
-			usuario.getHistorialImc().add(jsonObject.getString(requestBody));
+			usuario.getHistorialImc().add(jsonObject.getString("mensaje"));
+
 			usuarioRepository.save(usuario);
 			response.put("message", "IMC registrado");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
-			response.put("message", "");
+			response.put("message", "Token inválido");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
@@ -244,25 +227,29 @@ public class Controller {
 	ResponseEntity<Object> registrarMacros(@RequestBody String requestBody) {
 		JSONObject jsonObject = new JSONObject(requestBody);
 		JSONObject response = new JSONObject();
+
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(jsonObject.getString("token"));
 		jsonObject.remove("token");
+
 		if (usuarioBaseDatos.isPresent()) {
 			Usuario usuario = usuarioBaseDatos.get();
+
 			usuario.setMacros(jsonObject.getString("macros"));
-			usuario.getHistorialMacros().add(jsonObject.getString(requestBody));
+
 			usuarioRepository.save(usuario);
 			response.put("message", "Macros registrados");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
-			response.put("message", "");
+			response.put("message", "Token inválido");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
 
 	// ACCIONES RUITNAS
 	@GetMapping("/optima/obtenerRutinas")
-	public ResponseEntity<Object> obtenerRutinas(@RequestParam(value = "token") String token,
-			@RequestParam(value = "index") int index, @RequestParam(value = "offset") int offset) {
+	public ResponseEntity<Object> obtenerRutinas(@RequestParam(value = "token") String token) {
+		// @RequestParam(value = "index") int index, @RequestParam(value = "offset") int
+		// offset) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		JSONObject response = new JSONObject();
 
@@ -272,23 +259,30 @@ public class Controller {
 		}
 
 		List<Rutina> rutinas = rutinaRepository.findAll();
-		int contador = 0;
+		List<Rutina> rutinasFiltro = rutinas;
+
+		if (rutinas.size() < 1) {
+			response.put("count", "0");
+			response.put("rutinas", "no hay rutinas");
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response.toString());
+		}
+		rutinasFiltro.clear();
 		for (int i = 0; i < rutinas.size(); i++) {
 			if (!rutinas.get(i).getNombreRutina().equals("$$crea$$")) {
-				contador++;
+				rutinasFiltro.add(rutinas.get(i));
 			}
 		}
 
-		int end = Math.min(index + offset, rutinas.size());
-		if (index < 0 || index >= rutinas.size()) {
-			response.put("error", "Rango de índices inválido");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
-		}
+//		int end = Math.min(index + offset, rutinas.size());
+//		if (index < 0 || index >= rutinas.size()) {
+//			response.put("error", "Rango de índices inválido");
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
+//		}
+//
+//		List<Rutina> rutinasIndex = new ArrayList<>(rutinas.subList(index, end));
 
-		List<Rutina> rutinasIndex = new ArrayList<>(rutinas.subList(index, end));
-
-		response.put("count", contador);
-		response.put("rutinas", rutinasIndex);
+		response.put("count", rutinasFiltro.size());
+		response.put("rutinas", rutinasFiltro);
 
 		return ResponseEntity.ok(response.toString());
 	}

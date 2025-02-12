@@ -24,12 +24,11 @@ public class Usuario {
 	private String peso;
 	private String altura;
 	private String imc;
+	private List<String> historialImc;
 	private String macros;
-	private List<Object> historialMacros;
 	private String puntuacion;
 	private boolean verificado;
 	private String codigo;
-	private List<Object> historialImc;
 
 	public String getId() {
 		return id;
@@ -91,20 +90,12 @@ public class Usuario {
 		return verificado;
 	}
 
-	public List<Object> getHistorialImc() {
+	public List<String> getHistorialImc() {
 		return historialImc;
 	}
 
 	public String getCodigo() {
 		return codigo;
-	}
-
-	public List<Object> getHistorialMacros() {
-		return historialMacros;
-	}
-
-	public void setHistorialMacros(List<Object> hiostorialMacros) {
-		this.historialMacros = hiostorialMacros;
 	}
 
 	public void setId(String id) {
@@ -171,7 +162,7 @@ public class Usuario {
 		this.codigo = codigo;
 	}
 
-	public void setHistorialImc(List<Object> historialImc) {
+	public void setHistorialImc(List<String> historialImc) {
 		this.historialImc = historialImc;
 	}
 
