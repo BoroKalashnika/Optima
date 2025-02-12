@@ -96,6 +96,26 @@ public class Controller {
 		return ResponseEntity.ok(response.toString());
 	}
 
+	@GetMapping("/optima/obtenerHistorialMacros")
+	public ResponseEntity<Object> obtenerHistorialMacros(@RequestParam(value = "token") String token) {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			return ResponseEntity.status(HttpStatus.OK).body(usuarioBaseDatos.get().getHiostorialMacros());
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+	
+	@GetMapping("/optima/obtenerHistorilaImc")
+	public ResponseEntity<Object> obtenerHistorialImc(@RequestParam(value = "token") String token) {
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			return ResponseEntity.status(HttpStatus.OK).body(usuarioBaseDatos.get().getHistorialImc());
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
 	@PostMapping("/optima/restablecerContrasenya")
 	public ResponseEntity<Object> restablecerContrasenya(@RequestBody Usuario usuarioRequest)
 			throws NoSuchAlgorithmException, MessagingException {
