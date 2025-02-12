@@ -6,7 +6,7 @@ const Card = (props) => {
     const [color, setColor] = useState('red');
     const [ambitoImg, setAmbitoImg] = useState('Casa');
     const [musculoImg, setMusculoImg] = useState('Biceps');
-    const { ambito, musculo, dificultad, imagen,titulo,estrellas } = props;
+    const { ambito, musculo, dificultad, imagen, titulo, estrellas } = props;
     const [stars, setStars] = useState([
         { id: 1, icon: 'staro' },
         { id: 2, icon: 'staro' },
@@ -32,30 +32,28 @@ const Card = (props) => {
         if (ambito === 'Gimnasio') setAmbitoImg(require('../../Assets/img/pesa.png'));
         if (ambito === 'Calistenia') setAmbitoImg(require('../../Assets/img/calistenia.png'));
     };
+    
     const getStars = (indice) => {
-        const newArray = [...stars];
-        newArray.push(
-            stars.map((value, index) => {
-                if (value.id <= indice) {
-                    stars[index].icon = 'star';
-                } else if (value.id > indice) {
-                    stars[index].icon = 'staro';
-                }
-            })
-        );
+        const newArray = stars.map((value) => {
+            return {
+                ...value,
+                icon: value.id <= indice ? 'star' : 'staro',
+            };
+        });
         setStars(newArray);
     };
+    
     useEffect(() => {
         chancheAmbito();
         chancheColor();
         chancheMusculo();
         getStars(estrellas)
-    }, [ambito,color,musculo])
+    }, [ambito, color, musculo, estrellas])
 
     return (
         <Pressable onPress={props.onRutina}>
             <View style={styles.container}>
-                    <Image source={{ uri: imagen }} style={styles.image} />
+                <Image source={{ uri: imagen }} style={styles.image} />
                 <View style={styles.subContainer}>
                     <View style={styles.containerDescripcion}>
                         <Text style={styles.title}>{titulo}</Text>
@@ -65,20 +63,22 @@ const Card = (props) => {
                             source={ambitoImg}
                             style={styles.icono}
                         />
+                        <View style={styles.spacer} />
                         <Image
                             source={musculoImg}
                             style={styles.icono}
                         />
+                        <View style={styles.spacer} />
                         <Icon name="dashboard" size={40} color={color} />
                     </View>
-                    <View style={styles.containerRow}>
-                    {stars.map((value) => (
-                        <Icon
-                            name={value.icon}
-                            size={25}
-                            color="yellow"
-                        />
-                    ))}
+                    <View style={styles.containerStars}>
+                        {stars.map((value) => (
+                            <Icon
+                                name={value.icon}
+                                size={25}
+                                color="yellow"
+                            />
+                        ))}
                     </View>
                 </View>
             </View>
@@ -100,9 +100,16 @@ const styles = StyleSheet.create({
         padding: 10
     },
     containerRow: {
-        flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '80%',
+    },
+    containerStars: {
+        flexDirection: 'row',
+        justifyContent:'center',
+        alignItems: 'center',
+        marginTop: 5,
     },
     containerDescripcion: {
         flex: 1,
@@ -110,7 +117,7 @@ const styles = StyleSheet.create({
     },
     subContainer: {
         flex: 2,
-        alignItems:"center"
+        alignItems: "center"
     },
     title: {
         fontSize: 37,
@@ -123,12 +130,15 @@ const styles = StyleSheet.create({
     image: {
         width: 130,
         height: 130,
-        
+
     },
     icono: {
         width: 40,
         height: 40,
     },
+    spacer: {
+        width: 15,
+    }
 });
 
 export default Card;

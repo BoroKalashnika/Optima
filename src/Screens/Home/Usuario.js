@@ -21,14 +21,6 @@ const Usuario = (props) => {
     const [estrellas, setEstrellas] = useState();
     const [titulo, setTitulo] = useState();
 
-    useFocusEffect(
-        useCallback(() => {
-            getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
-                setIdRutinaActiva(response.rutinaActiva);
-            });
-        }, [])
-    );
-
     useFocusEffect(() => {
         const backAction = () => {
             return true;
@@ -42,11 +34,19 @@ const Usuario = (props) => {
         return () => backHandler.remove();
     });
 
+    useFocusEffect(
+        useCallback(() => {
+            getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
+                setIdRutinaActiva(response.rutinaActiva);
+                setNombre(response.nombre)
+            });
+        }, [])
+    );
+
     useEffect(() => {
         if (!email) {
             getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
                 setEmail(response.correo)
-                setNombre(response.nombre)
             });
         }
     }, []);
