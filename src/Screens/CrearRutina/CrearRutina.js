@@ -279,7 +279,13 @@ const CrearRutina = (props) => {
             <View style={styles.listContainer}>
                 <ScrollView nestedScrollEnabled={true}>
                     {ejerciciosRutina.map((element, index) => (
-                        <CardEjercicio key={index} borrarEnabled={true} idEjercicio={element} />
+                        <CardEjercicio
+                            key={index}
+                            borrarEnabled={true}
+                            idEjercicio={element}
+                            nombre={element.nombreEjercicio}
+                            descripcion={element.explicacion}
+                            imagen={element.vistaPrevia} />
                     ))}
                 </ScrollView>
             </View>
