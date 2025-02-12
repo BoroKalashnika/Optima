@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState, useCallback } from 'react';
 import Context from '../../Utils/Context';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, BackHandler } from 'react-native';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import getData from '../../Utils/services/getData';
@@ -27,6 +27,19 @@ const Usuario = (props) => {
             });
         }, [])
     );
+
+    useFocusEffect(() => {
+        const backAction = () => {
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+
+        return () => backHandler.remove();
+    });
 
     useEffect(() => {
         if (!email) {
@@ -58,18 +71,24 @@ const Usuario = (props) => {
             <Text style={styles.name}>Nombre de Usuario</Text>
             <Text style={styles.frase}>{frasesMotivadoras.frases[getRandom()]}</Text>
             <View style={styles.containerCard}>
-                {!idRutinaActiva ? <Text style={{ color: 'white', fontSize: 18, marginTop: 35, marginBottom: 15 }}>Todavía no tienes rutina activa</Text> : 
-                <Card
-                    dificultad={dificultad}
-                    ambito={ambito}
-                    imagen={imagen}
-                    musculo={musculo}
-                    estrellas={estrellas}
-                    titulo={titulo}
-                    onRutina={() => {
-                        props.navigation.navigate('VerRutina');
-                        setIdRutina(idRutinaActiva);
-                    }} />}
+                {!idRutinaActiva ?
+                    <View style={{ marginTop: 35, marginBottom: 15,alignItems:"center" }}>
+                        <Text style={{ color: 'white', fontSize: 18 }}>Todavía no tienes rutina activa</Text>
+                        <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Buscar")}>
+                            <Text style={styles.textLogin}>Buscar Rutina</Text>
+                        </Pressable>
+                    </View> :
+                    <Card
+                        dificultad={dificultad}
+                        ambito={ambito}
+                        imagen={imagen}
+                        musculo={musculo}
+                        estrellas={estrellas}
+                        titulo={titulo}
+                        onRutina={() => {
+                            props.navigation.navigate('VerRutina');
+                            setIdRutina(idRutinaActiva);
+                        }} />}
             </View>
             <View style={styles.calculadoraContainer}>
                 <TouchableOpacity style={styles.calcRow} onPress={() => props.navigation.navigate('CalcularIMC')}>
@@ -181,6 +200,23 @@ const styles = StyleSheet.create({
     calculadoraContainer: {
         width: '105%',
         marginTop: 20,
+    },
+    bottom: {
+        backgroundColor: '#607cff',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderRadius: 10,
+        borderColor: 'black',
+        height: 55,
+        width: 160,
+        alignItems: 'center',
+        marginTop: 5,
+        marginBottom: 10
+
+    },
+    textLogin: {
+        fontSize: 20,
+        color: 'white',
     },
     calcRow: {
         flexDirection: 'row',
