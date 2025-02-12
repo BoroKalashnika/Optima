@@ -7,6 +7,7 @@ export const Provider = ({ children }) => {
     const [codigo, setCodigo] = useState('');
     const [idRutina, setIdRutina] = useState('');
     const [idEjercicios, setIdEjercicios] = useState([]);
+    const [idEjercicio, setIdEjercicio] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertTitle, setAlertTitle] = useState('');

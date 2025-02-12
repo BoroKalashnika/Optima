@@ -32,6 +32,7 @@ const VerRutina = (props) => {
     const { modalVisible, setModalVisible } = useContext(Context);
     const { alertMessage, setAlertMessage } = useContext(Context);
     const { alertTitle, setAlertTitle } = useContext(Context);
+    const {idEjercicio, setIdEjercicio} = useContext(Context);
 
     useFocusEffect(
         useCallback(() => {
@@ -206,6 +207,7 @@ const VerRutina = (props) => {
                             imagen={item.vistaPrevia}
                             onEjercicio={() => {
                                 props.navigation.navigate('VerEjercicio');
+                                setIdEjercicio(item.id);
                             }}
                         />
                     )}
