@@ -53,9 +53,7 @@ const VerRutina = (props) => {
 
     useEffect(() => {
         if (activo === true) {
-            console.log('Activo')
-        } else if (activo === false) {
-            console.log('No Activo')
+            añadirActivo();
         }
     }, [activo]);
 
@@ -77,6 +75,23 @@ const VerRutina = (props) => {
         { id: 5, icon: 'staro' },
     ]);
 
+    const añadirActivo = async () => {
+        setLoading(true);
+        const json = {
+            id: idRutina,
+            token: token
+        }
+        const response = await postData(
+            config.API_OPTIMA + 'rutinaActiva',
+            json, setLoading
+        );
+        if (!response.status === 202) {
+            setAlertMessage(response.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+        }
+        setLoading(false);
+    }
 
     const añadirFavoritos = async () => {
         setLoading(true);

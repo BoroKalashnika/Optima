@@ -1,22 +1,51 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 import Context from '../../Utils/Context';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import getData from '../../Utils/services/getData';
 import frasesMotivadoras from '../../Assets/frasesMotivadoras.json';
+import { useFocusEffect } from '@react-navigation/native';
+import config from '../../config/config';
 
 const Usuario = (props) => {
     const { token, setToken } = useContext(Context);
     const { email, setEmail } = useContext(Context);
+    const { idRutina, setIdRutina } = useContext(Context);
+    const [idRutinaActiva, setIdRutinaActiva] = useState();
+    const [dificultad, setDificultad] = useState();
+    const [ambito, setAmbito] = useState();
+    const [imagen, setImagen] = useState();
+    const [musculo, setMusculo] = useState();
+    const [estrellas, setEstrellas] = useState();
+    const [titulo, setTitulo] = useState();
+
+    useFocusEffect(
+        useCallback(() => {
+            getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
+                setIdRutinaActiva(response.rutinaActiva);
+            });
+        }, [])
+    );
 
     useEffect(() => {
         if (!email) {
-            getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token).then((response) => {
+            getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
                 setEmail(response.correo)
             });
         }
     }, []);
+
+    useEffect(() => {
+        getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + idRutinaActiva).then((response) => {
+            setAmbito(response.ambito);
+            setDificultad(response.dificultad);
+            setImagen(response.vistaPrevia);
+            setTitulo(response.nombreRutina);
+            setEstrellas(response.valoricion);
+            setMusculo(response.grupoMuscular);
+        })
+    }, [idRutinaActiva]);
 
     const getRandom = () => {
         return Math.floor(Math.random() * frasesMotivadoras.frases.length);
@@ -29,7 +58,17 @@ const Usuario = (props) => {
             <Text style={styles.name}>Nombre de Usuario</Text>
             <Text style={styles.frase}>{frasesMotivadoras.frases[getRandom()]}</Text>
             <View style={styles.containerCard}>
-                <Card />
+                {!idRutinaActiva ? <Text>Todavía no tienes rutina activa</Text> : <Card
+                    dificultad={dificultad}
+                    ambito={ambito}
+                    imagen={imagen}
+                    musculo={musculo}
+                    estrellas={estrellas}
+                    titulo={titulo}
+                    onRutina={() => {
+                        props.navigation.navigate('VerRutina');
+                        setIdRutina(idRutinaActiva);
+                    }} />}
             </View>
             <View style={styles.calculadoraContainer}>
                 <TouchableOpacity style={styles.calcRow} onPress={() => props.navigation.navigate('CalcularIMC')}>

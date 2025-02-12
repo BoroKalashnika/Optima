@@ -28,7 +28,6 @@ const CalcularIMC = (props) => {
 
     const getHistorial = async () => {
         const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
-        console.log(usuario);
         setHistorial(usuario.historialImc);
     }
 
