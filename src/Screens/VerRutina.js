@@ -25,6 +25,9 @@ const VerRutina = (props) => {
     const [musculoImg, setMusculoImg] = useState('');
     const [favorito, setFavorito] = useState(false);
     const { loading, setLoading } = useContext(Context);
+    const { modalVisible, setModalVisible } = useContext(Context);
+    const { alertMessage, setAlertMessage } = useContext(Context);
+    const { alertTitle, setAlertTitle } = useContext(Context);
 
     useFocusEffect(
         useCallback(() => {
@@ -32,6 +35,12 @@ const VerRutina = (props) => {
             loadEjercicios();
         }, [])
     );
+
+    useEffect(()=>{
+        if(favorito) añadirFavoritos();
+        else eliminarFavoritos();
+        console.log("hola")
+    },[favorito])
 
     const getFavorito = ({ estado }) => {
         setFavorito(estado);
@@ -45,6 +54,62 @@ const VerRutina = (props) => {
         { id: 4, icon: 'staro' },
         { id: 5, icon: 'staro' },
     ]);
+
+    const añadirFavoritos = async () => {
+        setLoading(true);
+        console.log("dfas");
+        const json = {
+            id: idRutina,
+            token: token
+        };
+
+        const response = await postData(
+            config.API_OPTIMA + 'favoritoRutina',
+            json, setLoading
+        );
+        console.log(response);
+        if (response.status === 201) {
+            setAlertMessage('Rutina añadida a favoritos');
+            setAlertTitle('Éxito');
+            setModalVisible(true);
+            console.log("si")
+        } else {
+            setAlertMessage(response.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+            console.log("no")
+        }
+        setLoading(false);
+
+    }
+
+    const eliminarFavoritos = async () => {
+        setLoading(true);
+        const json = {
+            id: idRutina,
+            token: token
+        };
+        console.log(idRutina+"-"+token)
+        const response = await postData(
+            config.API_OPTIMA + 'deleteFavoritoRutina',
+            json, setLoading
+        );
+        console.log(response);
+        if (response.status === 201) {
+            setAlertMessage('Rutina eliminada de favoritos');
+            setAlertTitle('Éxito');
+            setModalVisible(true);
+            console.log("si")
+        } else {
+            setAlertMessage(response.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+            console.log("no")
+        }
+        setLoading(false);
+
+    }
+
 
     const PresStar = (indice) => {
         const newArray = [...stars];
