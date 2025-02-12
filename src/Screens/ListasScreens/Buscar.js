@@ -50,7 +50,7 @@ const Buscar = (props) => {
                 throw new Error(response.error);
             }
 
-            setPaginasTotal(Math.ceil(response.count / 4) - 1);
+            setPaginasTotal(Math.floor(response.count / 4));
             setRestoRutinas(response.count % 4 === 0 ? 4 : response.count % 4);
 
             const newArray = response.rutinas.filter(rutina => rutina.nombreRutina !== "$$crea$$");
@@ -64,7 +64,7 @@ const Buscar = (props) => {
     };
 
     const handleNext = () => {
-        if (paginActual >= paginasTotal) return; // Prevent going past last page
+        if (paginActual >= paginasTotal) return;
         const nextPage = paginActual + 1;
         const newIndex = nextPage * 4;
         const newOffset = nextPage === paginasTotal ? restoRutinas : 4;
@@ -74,7 +74,7 @@ const Buscar = (props) => {
     };
 
     const handlePrevious = () => {
-        if (paginActual <= 0) return; // Prevent going before first page
+        if (paginActual <= 0) return;
         const prevPage = paginActual - 1;
         const newIndex = prevPage * 4;
         setIndiceActual(newIndex);

@@ -26,7 +26,7 @@ const Buscar = (props) => {
     const getRutinas = async () => {
         const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
         const response = await getData(config.API_OPTIMA + 'obtenerRutinasCreadas?token=' + token + "&idUsuario=" + usuario.id);
-        setRutinas(response.rutinas);
+        setRutinas(response.rutinas.filter(rutina => rutina.nombreRutina !== "$$crea$$"));
     }
 
     return (
