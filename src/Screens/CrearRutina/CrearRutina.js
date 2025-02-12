@@ -66,7 +66,7 @@ const CrearRutina = (props) => {
         });
     }
 
-    const getEjercicios = async () => {
+    const getEjercicios = useCallback(async () => {
         const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
         const rutinas = await getData(config.API_OPTIMA + 'obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
         let rutinaId;
@@ -88,9 +88,11 @@ const CrearRutina = (props) => {
             setIdEjercicios(response.ejercicios.map(element => element.id));
             setDraft(' (Borrador)');
         } else {
+            setEjerciciosRutina([]);
+            setIdEjercicios([]);
             setDraft('');
         }
-    }
+    },[token,setIdEjercicios]);
 
     const crearRutinaId = async () => {
         setLoading(true);
@@ -284,10 +286,13 @@ const CrearRutina = (props) => {
                         <CardEjercicio
                             key={index}
                             borrarEnabled={true}
-                            idEjercicio={element}
+                            idEjercicio={element.id}
                             nombre={element.nombreEjercicio}
                             descripcion={element.explicacion}
-                            imagen={element.vistaPrevia} />
+                            imagen={element.vistaPrevia}
+                            onDelete={getEjercicios}
+                        />
+
                     ))}
                 </ScrollView>
             </View>

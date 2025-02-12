@@ -91,6 +91,7 @@ const Usuario = (props) => {
                             props.navigation.navigate('VerRutina');
                             setIdRutina(idRutinaActiva);
                         }} />}
+
             </View>
             <View style={styles.calculadoraContainer}>
                 <TouchableOpacity style={styles.calcRow} onPress={() => props.navigation.navigate('CalcularIMC')}>
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
         color: '#bbdefb',
     },
     containerCard: {
-        width: '90%',
+        width: '95%',
         marginTop: 15,
     },
     calculadoraContainer: {

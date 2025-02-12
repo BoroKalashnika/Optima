@@ -8,18 +8,14 @@ import config from '../../config/config';
 const CardEjercicio = (props) => {
     const { idEjercicios, setIdEjercicios } = useContext(Context);
     const { token } = useContext(Context);
-    const { nombre, descripcion, imagen, idEjercicio, borrarEnabled } = props;
+    const { nombre, descripcion, imagen, idEjercicio, borrarEnabled, onDelete } = props;
     const { loading, setLoading } = useContext(Context);
 
     const borrarEjercicio = async () => {
         setLoading(true);
-        
-            const response = await deleteData(config.API_OPTIMA +'eliminarEjercicio?token='+token+'&id='+idEjercicio,setLoading);
-            if(response.message==="Ejercicio eliminado."){
-                 console.log("ejercicio eliminado"); 
-            }
-
-      setLoading(false);
+        const response = await deleteData(config.API_OPTIMA + 'eliminarEjercicio?token=' + token + '&id=' + idEjercicio, setLoading);
+        onDelete();
+        setLoading(false);
     }
 
     if (loading) {
@@ -37,7 +33,7 @@ const CardEjercicio = (props) => {
                 <Image source={{ uri: imagen }} style={styles.image} />
 
                 {borrarEnabled && (
-                    <Icon name="delete" size={25} color="red" onPress={()=>borrarEjercicio()} />
+                    <Icon name="delete" size={25} color="red" onPress={() => borrarEjercicio()} />
                 )}
             </View>
         </Pressable>
