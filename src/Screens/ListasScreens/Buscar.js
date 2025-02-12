@@ -1,6 +1,6 @@
 import { FlatList, View, Image, StyleSheet, Text, Pressable, Modal, RefreshControl } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useState, useContext, useEffect,useCallback } from 'react';
+import { useState, useContext, useEffect, useCallback } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -8,6 +8,8 @@ import getData from '../../Utils/services/getData';
 import Context from '../../Utils/Context';
 import { Picker } from '@react-native-picker/picker';
 import { useFocusEffect } from '@react-navigation/native';
+import config from '../../config/config';
+
 const Buscar = (props) => {
     const { token, setToken } = useContext(Context);
     const { modalVisible, setModalVisible } = useContext(Context);
@@ -28,54 +30,56 @@ const Buscar = (props) => {
 
     const onRefresh = () => {
         setRefreshing(true);
-
         setTimeout(() => {
             getRutinas();
-
             setRefreshing(false);
         }, 2000);
     };
 
+    useFocusEffect(
+        useCallback(() => {
+            getRutinas();
+        }, [indiceActual, indiceFinal])
+    );
 
-     useFocusEffect(
-            useCallback(() => {
-                getRutinas();
-            }, [indiceActual, indiceFinal])
-        );
     const getRutinas = async () => {
-        const response = await getData('http://13.216.205.228:8080/optima/obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal).then((element) => {
-            setPaginasTotal(Math.floor(element.count / 4));
-            setRestoRutinas(element.count % 4); // Resto de rutinas en la última página
-            const newArray = [];
-        console.log(element.count);
+        try {
+            const response = await getData(config.API_OPTIMA + 'obtenerRutinas?token=' + token + "&index=" + indiceActual + "&offset=" + indiceFinal);
 
-            element.rutinas.map((rutina) => {
-                if (rutina.nombreRutina !== "$$crea$$") { newArray.push(rutina) }
-            });
+            if (response.error) {
+                throw new Error(response.error);
+            }
+
+            setPaginasTotal(Math.ceil(response.count / 4) - 1);
+            setRestoRutinas(response.count % 4 === 0 ? 4 : response.count % 4);
+
+            const newArray = response.rutinas.filter(rutina => rutina.nombreRutina !== "$$crea$$");
             setRutinas(newArray);
-        });
-        
-
+        } catch (error) {
+            console.error("Error fetching routines:", error);
+            setAlertTitle("Error");
+            setAlertMessage(error.message || "No se pudo cargar las rutinas. Por favor, inténtalo de nuevo.");
+            setModalVisible(true);
+        }
     };
 
     const handleNext = () => {
-        setPaginActual(paginActual + 1);
-        if (paginActual === paginasTotal) {
-            setIndiceFinal(indiceFinal + restoRutinas);
-        } else {
-            setIndiceFinal(indiceFinal + 4);
-        }
-        setIndiceActual(indiceActual + 4);
+        if (paginActual >= paginasTotal) return; // Prevent going past last page
+        const nextPage = paginActual + 1;
+        const newIndex = nextPage * 4;
+        const newOffset = nextPage === paginasTotal ? restoRutinas : 4;
+        setIndiceActual(newIndex);
+        setIndiceFinal(newOffset);
+        setPaginActual(nextPage);
     };
 
     const handlePrevious = () => {
-        if (paginActual > paginasTotal) {
-            setIndiceFinal(indiceFinal - restoRutinas);
-        } else {
-            setIndiceFinal(indiceFinal - 4);
-        }
-        setIndiceActual(indiceActual - 4);
-        setPaginActual(paginActual - 1);
+        if (paginActual <= 0) return; // Prevent going before first page
+        const prevPage = paginActual - 1;
+        const newIndex = prevPage * 4;
+        setIndiceActual(newIndex);
+        setIndiceFinal(4);
+        setPaginActual(prevPage);
     };
 
     return (
