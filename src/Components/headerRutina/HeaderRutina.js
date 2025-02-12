@@ -1,10 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import {
     StyleSheet,
     Text,
     View,
     Image,
-    Pressable
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -14,7 +13,6 @@ const HeaderRutina = (props) => {
     const [iconoHeart, setIconoHeart] = useState('hearto');
 
     useEffect(() => {
-        // Elimina la llamada a props.favorito del useEffect
         if (validarHeart) {
             setIconoHeart('heart');
         } else {
@@ -25,13 +23,10 @@ const HeaderRutina = (props) => {
     const PressHeart = () => {
         const newHeartState = !validarHeart;
         setValidarHeart(newHeartState);
-        props.favorito && props.favorito({ estado: newHeartState }); // Llama aquí a la función para manejar favoritos
+        props.favorito && props.favorito({ estado: newHeartState });
     };
-    
 
     const iconoClip = validadorClip ? 'yellow' : '#607cff';
-
-    
 
     if (props.tipo === 'rutina') {
         return (

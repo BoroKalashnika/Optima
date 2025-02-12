@@ -26,6 +26,7 @@ const VerRutina = (props) => {
     const [ambitoImg, setAmbitoImg] = useState('');
     const [musculoImg, setMusculoImg] = useState('');
     const [favorito, setFavorito] = useState();
+    const [estaGuardada,setEstaGuardada] = useState();
     const { loading, setLoading } = useContext(Context);
     const { modalVisible, setModalVisible } = useContext(Context);
     const { alertMessage, setAlertMessage } = useContext(Context);
@@ -44,8 +45,8 @@ const VerRutina = (props) => {
         } else if (favorito === false) {
             eliminarFavoritos();
         }
-    }, [favorito]);  // Solo ejecuta cuando 'favorito' cambia
-    
+    }, [favorito]);
+
     const getFavorito = ({ estado }) => {
         setFavorito(estado);
         console.log('Favorito:', estado);
@@ -62,7 +63,6 @@ const VerRutina = (props) => {
 
     const añadirFavoritos = async () => {
         setLoading(true);
-        console.log("dfas");
         const json = {
             id: idRutina,
             token: token
@@ -73,7 +73,7 @@ const VerRutina = (props) => {
             json, setLoading
         );
         console.log(response);
-        if (response.status === 201) {
+        if (response.status === 202) {
             setAlertMessage('Rutina añadida a favoritos');
             setAlertTitle('Éxito');
             setModalVisible(true);
@@ -88,32 +88,32 @@ const VerRutina = (props) => {
 
     }
 
-    const eliminarFavoritos = async () => {
-        setLoading(true);
-        const json = {
-            id: idRutina,
-            token: token
-        };
-        console.log(idRutina+"-"+token)
-        const response = await postData(
-            config.API_OPTIMA + 'deleteFavoritoRutina',
-            json, setLoading
-        );
-        console.log(response);
-        if (response.status === 201) {
-            setAlertMessage('Rutina eliminada de favoritos');
-            setAlertTitle('Éxito');
-            setModalVisible(true);
-            console.log("si")
-        } else {
-            setAlertMessage(response.message);
-            setAlertTitle('ERROR');
-            setModalVisible(true);
-            console.log("no")
-        }
-        setLoading(false);
+    // const eliminarFavoritos = async () => {
+    //     setLoading(true);
+    //     const json = {
+    //         id: idRutina,
+    //         token: token
+    //     };
+    //     console.log(idRutina + "-" + token)
+    //     const response = await postData(
+    //         config.API_OPTIMA + 'deleteFavoritoRutina',
+    //         json, setLoading
+    //     );
+    //     console.log(response);
+    //     if (response.status === 201) {
+    //         setAlertMessage('Rutina eliminada de favoritos');
+    //         setAlertTitle('Éxito');
+    //         setModalVisible(true);
+    //         console.log("si")
+    //     } else {
+    //         setAlertMessage(response.message);
+    //         setAlertTitle('ERROR');
+    //         setModalVisible(true);
+    //         console.log("no")
+    //     }
+    //     setLoading(false);
 
-    }
+    // }
 
 
     const PresStar = (indice) => {
@@ -154,7 +154,6 @@ const VerRutina = (props) => {
                 const newArray = [];
                 response.ejercicios.map((ejercicio) => {
                     newArray.push(ejercicio);
-                    console.log(ejercicio);
                 });
                 setEjercicios(newArray);
             });
@@ -191,7 +190,7 @@ const VerRutina = (props) => {
     }
     return (
         <View style={styles.container}>
-            <HeaderRutina nombre={nombre} tipo={'rutina'} favorito={getFavorito}/>
+            <HeaderRutina nombre={nombre} tipo={'rutina'} favorito={getFavorito} />
 
             <View style={styles.containerRow}>
                 <Text style={styles.title}>{creador}</Text>
