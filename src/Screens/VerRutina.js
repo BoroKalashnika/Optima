@@ -148,12 +148,12 @@ const VerRutina = (props) => {
                 setEstaGuardada(guardada);
                 const activo = element.rutinaActiva === idRutina;
                 setEstaActiva(activo);
+                setCreador(element.nombre);
             })
             getData(
                 config.API_OPTIMA + 'obtenerRutina?id=' + idRutina + '&token=' + token
             ).then((response) => {
-                setNombre(response.nombreRutina);
-                setCreador(response.creador);
+                setNombre(response.nombreRutina);         
                 chancheAmbito(response.ambito);
                 chancheColor(response.dificultad);
                 chancheMusculo(response.grupoMuscular);
@@ -289,6 +289,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: '#607cff',
         marginTop: 15,
+        paddingLeft:10
     },
     subContainer: {
         flexDirection: 'row',
