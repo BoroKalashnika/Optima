@@ -9,12 +9,18 @@ import {
 import Icon from 'react-native-vector-icons/AntDesign';
 const HeaderRutina = (props) => {
     const [validarHeart, setValidarHeart] = useState();
-    const [validadorClip, setValidadorClip] = useState(false);
+    const [validadorClip, setValidadorClip] = useState();
     const [iconoHeart, setIconoHeart] = useState('hearto');
+    const [iconoClip, setIconoClip] = useState('#607cff');
 
     useEffect(() => {
         setValidarHeart(props.guardada);
     }, [props.guardada])
+
+
+    useEffect(() => {
+        setValidadorClip(props.activada);
+    }, [props.activada])
 
     useEffect(() => {
         if (validarHeart) {
@@ -23,6 +29,10 @@ const HeaderRutina = (props) => {
             setIconoHeart('hearto');
         }
     }, [validarHeart]);
+
+    useEffect(() => {
+        setIconoClip(validadorClip ? 'yellow' : '#607cff');
+    }, [validadorClip]);
 
     const PressHeart = () => {
         const newHeartState = !validarHeart;
@@ -33,7 +43,15 @@ const HeaderRutina = (props) => {
         }
     };
 
-    const iconoClip = validadorClip ? 'yellow' : '#607cff';
+    const PressClip = () => {
+        const newClipState = !validadorClip;
+        setValidadorClip(newClipState);
+        setIconoClip(newClipState ? 'yellow' : '#607cff');
+        if (props.activo) {
+            props.activo({ estado: newClipState });
+        }
+    };
+
 
     if (props.tipo === 'rutina') {
         return (

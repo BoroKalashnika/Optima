@@ -27,12 +27,14 @@ const VerRutina = (props) => {
     const [ambitoImg, setAmbitoImg] = useState('');
     const [musculoImg, setMusculoImg] = useState('');
     const [favorito, setFavorito] = useState();
+    const [activo, setActivo] = useState();
     const [estaGuardada, setEstaGuardada] = useState(false);
+    const [estaActiva, setEstaActiva] = useState(false);
     const { loading, setLoading } = useContext(Context);
     const { modalVisible, setModalVisible } = useContext(Context);
     const { alertMessage, setAlertMessage } = useContext(Context);
     const { alertTitle, setAlertTitle } = useContext(Context);
-    const {idEjercicio, setIdEjercicio} = useContext(Context);
+    const { idEjercicio, setIdEjercicio } = useContext(Context);
 
     useFocusEffect(
         useCallback(() => {
@@ -49,9 +51,22 @@ const VerRutina = (props) => {
         }
     }, [favorito]);
 
+    useEffect(() => {
+        if (activo === true) {
+            console.log('Activo')
+        } else if (activo === false) {
+            console.log('No Activo')
+        }
+    }, [activo]);
+
     const getFavorito = ({ estado }) => {
         setFavorito(estado);
         setEstaGuardada(estado);
+    };
+
+    const getActivo = ({ estado }) => {
+        setEstaActiva(estado);
+        setActivo(estado);
     };
 
     const [stars, setStars] = useState([
@@ -92,7 +107,7 @@ const VerRutina = (props) => {
             setAlertMessage(response.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
-        } 
+        }
         setLoading(false);
     }
 
@@ -116,6 +131,8 @@ const VerRutina = (props) => {
             getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((element) => {
                 const guardada = element.rutinasGuardadas.includes(idRutina);
                 setEstaGuardada(guardada);
+                const activo = element.rutinaActiva === idRutina;
+                setEstaActiva(activo);
             })
             getData(
                 config.API_OPTIMA + 'obtenerRutina?id=' + idRutina + '&token=' + token
@@ -175,7 +192,7 @@ const VerRutina = (props) => {
     }
     return (
         <View style={styles.container}>
-            <HeaderRutina nombre={nombre} tipo={'rutina'} favorito={getFavorito} guardada={estaGuardada} />
+            <HeaderRutina nombre={nombre} tipo={'rutina'} activo={getActivo} favorito={getFavorito} guardada={estaGuardada} activada={estaActiva} />
 
             <View style={styles.containerRow}>
                 <Text style={styles.title}>{creador}</Text>
