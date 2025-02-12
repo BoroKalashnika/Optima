@@ -32,6 +32,8 @@ export const Provider = ({ children }) => {
             setAlertMessage,
             alertTitle, 
             setAlertTitle,
+            idEjercicio,
+            setIdEjercicio
         }}>
             {children}
         </Context.Provider>
