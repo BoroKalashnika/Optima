@@ -25,7 +25,7 @@ public class Usuario {
 	private String altura;
 	private String imc;
 	private String macros;
-	private List<String> hiostorialMacros;
+	private List<String> historialMacros;
 	private String puntuacion;
 	private boolean verificado;
 	private String codigo;
@@ -99,12 +99,12 @@ public class Usuario {
 		return codigo;
 	}
 
-	public List<String> getHiostorialMacros() {
-		return hiostorialMacros;
+	public List<String> getHistorialMacros() {
+		return historialMacros;
 	}
 
-	public void setHiostorialMacros(List<String> hiostorialMacros) {
-		this.hiostorialMacros = hiostorialMacros;
+	public void setHistorialMacros(List<String> hiostorialMacros) {
+		this.historialMacros = hiostorialMacros;
 	}
 
 	public void setId(String id) {

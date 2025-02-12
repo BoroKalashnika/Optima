@@ -100,12 +100,12 @@ public class Controller {
 	public ResponseEntity<Object> obtenerHistorialMacros(@RequestParam(value = "token") String token) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(usuarioBaseDatos.get().getHiostorialMacros());
+			return ResponseEntity.status(HttpStatus.OK).body(usuarioBaseDatos.get().getHistorialMacros());
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 	}
-	
+
 	@GetMapping("/optima/obtenerHistorilaImc")
 	public ResponseEntity<Object> obtenerHistorialImc(@RequestParam(value = "token") String token) {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
@@ -247,7 +247,7 @@ public class Controller {
 		if (usuarioBaseDatos.isPresent()) {
 			Usuario usuario = usuarioBaseDatos.get();
 			usuario.setMacros(jsonObject.getString("macros"));
-			usuario.getHiostorialMacros().add(jsonObject.getString("macros"));
+			usuario.getHistorialMacros().add(jsonObject.getString("macros"));
 			usuarioRepository.save(usuario);
 			response.put("message", "Macros registrados");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
