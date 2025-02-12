@@ -14,21 +14,24 @@ const HeaderRutina = (props) => {
     const [iconoHeart, setIconoHeart] = useState('hearto');
 
     useEffect(() => {
+        // Elimina la llamada a props.favorito del useEffect
         if (validarHeart) {
             setIconoHeart('heart');
-            props.favorito && props.favorito({ estado: true });
         } else {
             setIconoHeart('hearto');
-            props.favorito && props.favorito({ estado: false });
         }
     }, [validarHeart]);
+    
+    const PressHeart = () => {
+        const newHeartState = !validarHeart;
+        setValidarHeart(newHeartState);
+        props.favorito && props.favorito({ estado: newHeartState }); // Llama aquí a la función para manejar favoritos
+    };
+    
 
     const iconoClip = validadorClip ? 'yellow' : '#607cff';
 
-    const PressHeart = () => {
-        setValidarHeart(!validarHeart);
-    };
-
+    
 
     if (props.tipo === 'rutina') {
         return (

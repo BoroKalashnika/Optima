@@ -13,6 +13,8 @@ import getData from '../Utils/services/getData';
 import Context from '../Utils/Context';
 import { useFocusEffect } from '@react-navigation/native';
 import postData from '../Utils/services/postData';
+import config from '../config/config';
+import Carga from '../Components/carga/Carga';
 
 const VerRutina = (props) => {
     const [nombre, setNombre] = useState();
@@ -23,7 +25,7 @@ const VerRutina = (props) => {
     const [color, setColor] = useState('red');
     const [ambitoImg, setAmbitoImg] = useState('');
     const [musculoImg, setMusculoImg] = useState('');
-    const [favorito, setFavorito] = useState(false);
+    const [favorito, setFavorito] = useState();
     const { loading, setLoading } = useContext(Context);
     const { modalVisible, setModalVisible } = useContext(Context);
     const { alertMessage, setAlertMessage } = useContext(Context);
@@ -36,12 +38,14 @@ const VerRutina = (props) => {
         }, [])
     );
 
-    useEffect(()=>{
-        if(favorito) añadirFavoritos();
-        else eliminarFavoritos();
-        console.log("hola")
-    },[favorito])
-
+    useEffect(() => {
+        if (favorito === true) {
+            añadirFavoritos();
+        } else if (favorito === false) {
+            eliminarFavoritos();
+        }
+    }, [favorito]);  // Solo ejecuta cuando 'favorito' cambia
+    
     const getFavorito = ({ estado }) => {
         setFavorito(estado);
         console.log('Favorito:', estado);
@@ -54,6 +58,7 @@ const VerRutina = (props) => {
         { id: 4, icon: 'staro' },
         { id: 5, icon: 'staro' },
     ]);
+
 
     const añadirFavoritos = async () => {
         setLoading(true);
@@ -179,7 +184,11 @@ const VerRutina = (props) => {
     };
 
 
-
+    if (loading) {
+        return (
+            <Carga />
+        );
+    }
     return (
         <View style={styles.container}>
             <HeaderRutina nombre={nombre} tipo={'rutina'} favorito={getFavorito}/>
