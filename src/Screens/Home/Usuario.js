@@ -58,7 +58,8 @@ const Usuario = (props) => {
             <Text style={styles.name}>Nombre de Usuario</Text>
             <Text style={styles.frase}>{frasesMotivadoras.frases[getRandom()]}</Text>
             <View style={styles.containerCard}>
-                {!idRutinaActiva ? <Text>Todavía no tienes rutina activa</Text> : <Card
+                {!idRutinaActiva ? <Text style={{ color: 'white', fontSize: 18, marginTop: 35, marginBottom: 15 }}>Todavía no tienes rutina activa</Text> : 
+                <Card
                     dificultad={dificultad}
                     ambito={ambito}
                     imagen={imagen}

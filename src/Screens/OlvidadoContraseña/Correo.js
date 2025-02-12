@@ -29,7 +29,7 @@ const Correo = (props) => {
             Alert.alert("ERROR", 'Correo invalido')
         } else {
             const json = {
-                nomUsu: "",
+                nombre: "",
                 contrasenya: "",
                 correo: correo,
                 token: "",

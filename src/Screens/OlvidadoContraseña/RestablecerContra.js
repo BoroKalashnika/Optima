@@ -49,7 +49,7 @@ const RestablecerContra = (props) => {
             Alert.alert("ERROR", 'Contraseña invalida')
         } else {
             const json = {
-                nomUsu: "",
+                nombre: "",
                 contrasenya: contra,
                 correo: email,
                 token: "",

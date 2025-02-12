@@ -62,7 +62,7 @@ const Registro = (props) => {
             Alert.alert("ERROR", 'Algunos de los campos es invalido')
         } else {
             const json = {
-                nomUsu: usuario,
+                nombre: usuario,
                 contrasenya: password,
                 correo: email,
                 token: "",
