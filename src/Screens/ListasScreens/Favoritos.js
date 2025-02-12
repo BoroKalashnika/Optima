@@ -1,72 +1,69 @@
 import { FlatList, View, Image, StyleSheet, Text } from 'react-native';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
-
-const data = [
-    {
-        id: '1',
-        nombre: 'Ejercicio 1',
-        descripcion: 'Descripción del ejercicio 1',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '2',
-        nombre: 'Ejercicio 2',
-        descripcion: 'Descripción del ejercicio 2',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '3',
-        nombre: 'Ejercicio 3',
-        descripcion: 'Descripción del ejercicio 3',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '4',
-        nombre: 'Ejercicio 4',
-        descripcion: 'Descripción del ejercicio 4',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '5',
-        nombre: 'Ejercicio 5',
-        descripcion: 'Descripción del ejercicio 5',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '6',
-        nombre: 'Ejercicio 5',
-        descripcion: 'Descripción del ejercicio 5',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-    {
-        id: '7',
-        nombre: 'Ejercicio 5',
-        descripcion: 'Descripción del ejercicio 5',
-        imagen: require('../../Assets/img/logo.png'),
-    },
-];
+import getData from '../../Utils/services/getData';
+import Context from '../../Utils/Context';
+import { useState, useEffect, useContext, useCallback } from 'react';
+import config from '../../config/config';
 const Favoritos = (props) => {
+    const [rutinas, setRutinas] = useState();
+    const { token, setToken } = useContext(Context);
+    const [contador, setContador] = useState();
+
+    useEffect(() => {
+        getRutinasFavoritas();
+    }, [rutinas])
+
+    const getRutinasFavoritas = async () => {
+        try {
+            // Obtener la respuesta inicial con los IDs de las rutinas favoritas
+            const response = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
+            const newArray = [];
+            console.log(response);
+            if (response.rutinasGuardadas != null && response.rutinasGuardadas.length > 0) {
+                const rutinasPromises = response.rutinasGuardadas.map(async (element) => {
+                    const rutinaResponse = await getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + element);
+                    newArray.push(rutinaResponse);
+                });
+
+                // Esperar que todas las promesas se resuelvan
+                await Promise.all(rutinasPromises);
+            }
+
+            //console.log('Rutinas completas:', newArray);
+            setRutinas(newArray);
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        console.log(rutinas.length);
+    };
+
+
+
     return (
         <View style={styles.container}>
-            <HeaderRutina tipo={'ajustes'} titulo={'Tus Favoritos'}/>
-                {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
+            <HeaderRutina tipo={'ajustes'} titulo={'Tus Favoritos'} />
+            {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
-                {/* <FlatList
-                    data={data}
+                <FlatList
+                    data={rutinas}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <Card
-                            nombre={item.nombre}
-                            descripcion={item.descripcion}
-                            imagen={item.imagen}
+                            dificultad={item.dificultad}
+                            ambito={item.ambito}
+                            imagen={item.vistaPrevia}
+                            musculo={item.grupoMuscular}
+                            estrellas={item.valoracion}
+                            titulo={item.nombreRutina}
                             onRutina={() => {
                                 props.navigation.navigate('VerRutina');
                             }}
                         />
                     )}
-                /> */}
+                />
             </View>
         </View>
     );
@@ -81,7 +78,7 @@ const styles = StyleSheet.create({
     containerRow: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent:'space-around',
+        justifyContent: 'space-around',
         alignItems: 'center',
         marginTop: 30,
         width: '100%',
@@ -92,7 +89,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        textAlign:'center',
+        textAlign: 'center',
         color: 'white',
     },
     textRutinas: {
