@@ -11,6 +11,7 @@ import Context from '../../Utils/Context';
 import Carga from '../../Components/carga/Carga';
 import CardEjercicio from '../../Components/cardEjercicio/CardEjercicio';
 import RNFS from 'react-native-fs';
+import config from '../../config/config';
 
 const CrearRutina = (props) => {
     const [nomRutina, setNomRutina] = useState('');
@@ -54,8 +55,8 @@ const CrearRutina = (props) => {
     }, []);
 
     const getIdRutina = async () => {
-        const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
-        const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
+        const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
+        const rutinas = await getData(config.API_OPTIMA + 'obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
 
         rutinas.rutinas.forEach(element => {
             if (element.nombreRutina == "$$crea$$") {
@@ -66,8 +67,8 @@ const CrearRutina = (props) => {
     }
 
     const getEjercicios = async () => {
-        const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
-        const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
+        const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
+        const rutinas = await getData(config.API_OPTIMA + 'obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
         let rutinaId;
 
         rutinas.rutinas.forEach(element => {
@@ -76,7 +77,7 @@ const CrearRutina = (props) => {
             }
         });
 
-        const response = await getData('http://13.216.205.228:8080/optima/obtenerEjercicios?token=' + token + '&idRutina=' + rutinaId);
+        const response = await getData(config.API_OPTIMA + 'obtenerEjercicios?token=' + token + '&idRutina=' + rutinaId);
 
         if (response.count != 0) {
             const newArray = [];
@@ -92,8 +93,8 @@ const CrearRutina = (props) => {
     }
 
     const crearRutinaId = async () => {
-        const usuario = await getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token);
-        const rutinas = await getData('http://13.216.205.228:8080/optima/obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
+        const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
+        const rutinas = await getData(config.API_OPTIMA + 'obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
         let existe = false;
 
         rutinas.rutinas.forEach(element => {
@@ -115,7 +116,7 @@ const CrearRutina = (props) => {
                 timestamp: fechaFormateada,
             };
 
-            const response = await postData('http://13.216.205.228:8080/optima/crearRutina', json, setLoading);
+            const response = await postData(config.API_OPTIMA + 'crearRutina', json, setLoading);
 
             setIdRutina(response.data.idRutina);
         }
@@ -142,7 +143,7 @@ const CrearRutina = (props) => {
         };
 
         const response = await postData(
-            'http://13.216.205.228:8080/optima/crearRutina',
+            config.API_OPTIMA + 'crearRutina',
             json, setLoading
         );
         console.log(response);
@@ -151,7 +152,6 @@ const CrearRutina = (props) => {
             setAlertMessage('Rutina creada correctamente.');
             setAlertTitle('Éxito');
             setModalVisible(true);
-            //falla y es importante que funcione por los setIdEjercicios([]); setEjerciciosRutina([]);  
             props.navigation.goBack();
             limpiarCampos();
         } else {
