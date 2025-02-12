@@ -35,6 +35,7 @@ const VerRutina = (props) => {
     const { alertMessage, setAlertMessage } = useContext(Context);
     const { alertTitle, setAlertTitle } = useContext(Context);
     const { idEjercicio, setIdEjercicio } = useContext(Context);
+    const [estrellas, setEstrellas] = useState();
 
     useFocusEffect(
         useCallback(() => {
@@ -139,7 +140,34 @@ const VerRutina = (props) => {
             })
         );
         setStars(newArray);
+        setEstrellas(indice);
+        console.log(idRutina+"-"+token+"-"+estrellas);
+        valorar();
     };
+    const valorar = async () => {
+        setLoading(true);
+        const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
+        const json = {
+            idRutina: idRutina,
+            token: token,
+            valoracion:usuario.id+"-"+estrellas,
+        };
+
+        const response = await postData(
+            config.API_OPTIMA + 'valorarRutina',
+            json, setLoading
+        );
+
+        console.log(response);
+        if (!response.status === 202) {
+            setAlertMessage(response.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+        }
+        setLoading(false);
+
+    }
+
 
     const loadRutina = async () => {
         try {
@@ -153,7 +181,7 @@ const VerRutina = (props) => {
             getData(
                 config.API_OPTIMA + 'obtenerRutina?id=' + idRutina + '&token=' + token
             ).then((response) => {
-                setNombre(response.nombreRutina);         
+                setNombre(response.nombreRutina);
                 chancheAmbito(response.ambito);
                 chancheColor(response.dificultad);
                 chancheMusculo(response.grupoMuscular);
@@ -289,7 +317,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: '#607cff',
         marginTop: 15,
-        paddingLeft:10
+        paddingLeft: 10
     },
     subContainer: {
         flexDirection: 'row',
