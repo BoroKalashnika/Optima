@@ -6,7 +6,6 @@ const deleteData = async (url, setLoading) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(json)
         });
 
         const status = response.status;
@@ -18,7 +17,7 @@ const deleteData = async (url, setLoading) => {
         console.error('Error en la petición post:', error);
         return { status: null, data: { message: 'Error en la conexión' } };
     } finally {
-        deleteData(false);
+        setLoading(false);
     }
 };
 

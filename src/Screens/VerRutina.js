@@ -13,6 +13,7 @@ import getData from '../Utils/services/getData';
 import Context from '../Utils/Context';
 import { useFocusEffect } from '@react-navigation/native';
 import postData from '../Utils/services/postData';
+import deleteData from '../Utils/services/deleteData';
 import config from '../config/config';
 import Carga from '../Components/carga/Carga';
 
@@ -72,48 +73,31 @@ const VerRutina = (props) => {
             config.API_OPTIMA + 'favoritoRutina',
             json, setLoading
         );
-        console.log(response);
-        if (response.status === 202) {
-            setAlertMessage('Rutina añadida a favoritos');
-            setAlertTitle('Éxito');
-            setModalVisible(true);
-            console.log("si")
-        } else {
+        if (!response.status === 202) {
             setAlertMessage(response.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
-            console.log("no")
         }
         setLoading(false);
 
     }
 
-    // const eliminarFavoritos = async () => {
-    //     setLoading(true);
-    //     const json = {
-    //         id: idRutina,
-    //         token: token
-    //     };
-    //     console.log(idRutina + "-" + token)
-    //     const response = await postData(
-    //         config.API_OPTIMA + 'deleteFavoritoRutina',
-    //         json, setLoading
-    //     );
-    //     console.log(response);
-    //     if (response.status === 201) {
-    //         setAlertMessage('Rutina eliminada de favoritos');
-    //         setAlertTitle('Éxito');
-    //         setModalVisible(true);
-    //         console.log("si")
-    //     } else {
-    //         setAlertMessage(response.message);
-    //         setAlertTitle('ERROR');
-    //         setModalVisible(true);
-    //         console.log("no")
-    //     }
-    //     setLoading(false);
-
-    // }
+    const eliminarFavoritos = async () => {
+        setLoading(true);
+        const response = await deleteData(
+            config.API_OPTIMA + 'deleteFavoritoRutina?token=' + token + '&id=' + idRutina, setLoading
+        );
+        if (response.status === 200) {
+            setAlertMessage('Rutina eliminada de favoritos');
+            setAlertTitle('Éxito');
+            setModalVisible(true);
+        } else {
+            setAlertMessage(response.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+        }
+        setLoading(false);
+    }
 
 
     const PresStar = (indice) => {
@@ -132,12 +116,12 @@ const VerRutina = (props) => {
 
     const loadRutina = async () => {
         try {
-            getData('http://13.216.205.228:8080/optima/tokenUsuario?token=' + token).then((element) => {
+            getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((element) => {
                 const guardada = element.rutinasGuardadas.includes(idRutina);
                 setEstaGuardada(guardada);
             })
             getData(
-                'http://13.216.205.228:8080/optima/obtenerRutina?id=' + idRutina + '&token=' + token
+                config.API_OPTIMA + 'obtenerRutina?id=' + idRutina + '&token=' + token
             ).then((response) => {
                 setNombre(response.nombreRutina);
                 setCreador(response.creador);
@@ -153,7 +137,7 @@ const VerRutina = (props) => {
     const loadEjercicios = async () => {
         try {
             getData(
-                'http://13.216.205.228:8080/optima/obtenerEjercicios?token=' + token + '&idRutina=' + idRutina
+                config.API_OPTIMA + 'obtenerEjercicios?token=' + token + '&idRutina=' + idRutina
             ).then((response) => {
                 const newArray = [];
                 response.ejercicios.map((ejercicio) => {
@@ -194,7 +178,7 @@ const VerRutina = (props) => {
     }
     return (
         <View style={styles.container}>
-            <HeaderRutina nombre={nombre} tipo={'rutina'} favorito={getFavorito} guardada={estaGuardada}/>
+            <HeaderRutina nombre={nombre} tipo={'rutina'} favorito={getFavorito} guardada={estaGuardada} />
 
             <View style={styles.containerRow}>
                 <Text style={styles.title}>{creador}</Text>
