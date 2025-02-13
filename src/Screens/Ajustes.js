@@ -1,37 +1,69 @@
 import { useContext, useEffect, useState, useCallback } from 'react';
 import Context from '../Utils/Context';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, BackHandler, Dimensions } from 'react-native';
-import Card from '../Components/card/Card';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import HeaderRutina from '../Components/headerRutina/HeaderRutina';
-import getData from '../Utils/services/getData';
-import frasesMotivadoras from '../Assets/frasesMotivadoras.json';
-import { useFocusEffect } from '@react-navigation/native';
-import { PieChart } from 'react-native-chart-kit';
+import Icon from 'react-native-vector-icons/AntDesign';
+import postData from '../Utils/services/postData';
+import deleteData from '../Utils/services/deleteData';
 import config from '../config/config';
-
+import Carga from '../Components/carga/Carga';
 const Ajustes = (props) => {
     const { token, setToken } = useContext(Context);
-    const { email, setEmail } = useContext(Context);
-    const { idRutina, setIdRutina } = useContext(Context);
-    const [nombre, setNombre] = useState();
-    const [historialIMC, setHistorialIMC] = useState([]);
-    const [macros, setMacros] = useState([]);
-    const [idRutinaActiva, setIdRutinaActiva] = useState();
-    const [dificultad, setDificultad] = useState();
-    const [ambito, setAmbito] = useState();
-    const [imagen, setImagen] = useState();
-    const [musculo, setMusculo] = useState();
-    const [estrellas, setEstrellas] = useState();
-    const [titulo, setTitulo] = useState();
+    const { loading, setLoading } = useContext(Context);
+    const [nombre, setNombre] = useState("nombre");
 
-
+    const cerrarSesion = async () => {
+        setLoading(true);
+        const json = {
+            token: token
+        }
+        const response = await postData(
+            config.API_OPTIMA + 'logout',
+            json, setLoading
+        );
+        if (!response.status === 202) {
+            setAlertMessage(response.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+            console.log(response);
+        }
+        setLoading(false);
+    }
+    if (loading) {
+        return (
+            <Carga />
+        );
+    }
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <HeaderRutina tipo={'user'} />
-            <Image source={require('../Assets/img/perfil.png')} style={styles.profileImage} />
-            <Text style={styles.name}>nombre</Text>
-        </ScrollView >
-        
+
+
+
+            <View style={styles.profileContainer}>
+                <Pressable onPress={() => console.log('Editar foto')}>
+                    <Image source={require('../Assets/img/perfil.png')} style={styles.profileImage} />
+                    <View style={styles.editIcon}>
+                        <Icon name="form" size={35} color="#607cff" />
+                    </View>
+                </Pressable>
+            </View>
+
+            <Text style={styles.name}>{nombre}</Text>
+
+            <Text style={styles.languageText}>Idioma de la aplicación</Text>
+            <View style={styles.flagsContainer}>
+                <Pressable>
+                    <Image source={require('../Assets/img/spain.png')} style={styles.flag} />
+                </Pressable>
+                <Pressable>
+                    <Image source={require('../Assets/img/english.png')} style={styles.flag} />
+                </Pressable>
+            </View>       
+                <Pressable style={styles.logoutButton} onPress={() => cerrarSesion()}>
+                    <Text style={styles.logoutText}>Cerrar sesión</Text>
+                </Pressable>
+        </ScrollView>
     );
 };
 
@@ -42,12 +74,8 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#1F2937',
     },
-    topImage: {
-        width: 80,
-        height: 80,
-        position: 'absolute',
-        top: 10,
-        left: 10,
+    profileContainer: {
+        position: 'relative',
     },
     profileImage: {
         width: 185,
@@ -55,105 +83,54 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         marginTop: 10,
     },
+    editIcon: {
+        position: 'absolute',
+        bottom: 10,
+        left: 10,
+        backgroundColor: '#1F2937',
+        borderRadius: 15,
+        padding: 5,
+    },
+    icon: {
+        width: 20,
+        height: 20,
+    },
     name: {
-        fontSize: 22,
+        fontSize: 40,
         fontWeight: 'bold',
         color: '#bbdefb',
+        marginTop: 10,
     },
-    containerCard: {
-        width: '95%',
-        marginTop: 15,
-    },
-    calculadoraContainer: {
-        width: '105%',
+    languageText: {
+        fontSize: 25,
+        color: 'white',
         marginTop: 20,
+        marginBottom: 10,
     },
-    bottom: {
-        backgroundColor: '#607cff',
-        justifyContent: 'center',
-        borderWidth: 2,
-        borderRadius: 10,
-        borderColor: 'black',
-        height: 55,
-        width: 160,
-        alignItems: 'center',
-        marginTop: 5,
-        marginBottom: 10
-
-    },
-    textLogin: {
-        fontSize: 20,
-        color: 'white',
-    },
-    calcRow: {
+    flagsContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '90%',
-        padding: 10,
-        backgroundColor: '#2D3748',
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        alignSelf: 'center',
+        marginTop: 10,
+        gap: 15
     },
-    calcTitle: {
-        fontSize: 17,
+    flag: {
+        width: 100,
+        height: 55,
+        borderRadius: 5,
+    },
+    logoutButton: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        backgroundColor: '#FF3B30',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+    },
+    logoutText: {
+        fontSize: 18,
+        color: 'white',
         fontWeight: 'bold',
-        color: '#bbdefb',
-        marginRight: 10,
-    },
-    image: {
-        width: 50,
-        height: 50,
-        borderRadius: 10,
-    },
-    imageClick: {
-        width: 42,
-        height: 42,
-        borderRadius: 10,
-        transform: [{ scaleX: -1 }]
-    },
-    listContainer: {
-        width: '90%',
-        maxHeight: 180,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        backgroundColor: '#607cff',
-        marginBottom: 30,
-        alignSelf: 'center',
-    },
-    listContainerMacro: {
-        width: '90%',
-        maxHeight: 180,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        backgroundColor: '#607cff',
-        alignSelf: 'center',
-    },
-    listItem: {
-        padding: 10,
-        borderTopWidth: 1,
-        borderTopColor: '#ffffff55',
-        alignItems: 'center',
-    },
-    listItemText: {
-        color: '#fff',
-        fontSize: 16,
-        textAlign: 'center'
-    },
-    frase: {
-        marginTop: 30,
-        fontSize: 22,
-        fontWeight: '500',
-        fontStyle: 'italic',
-        color: 'white',
-        textAlign: 'center',
-    },
-    result: {
-        fontSize: 15,
-        color: 'white',
-        fontWeight: '500',
-    },
+    }
 });
 
 export default Ajustes;
