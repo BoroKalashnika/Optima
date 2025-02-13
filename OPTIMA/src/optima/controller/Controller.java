@@ -246,6 +246,22 @@ public class Controller {
 		}
 	}
 
+	@DeleteMapping("/optima/eliminarHistorialImc")
+	ResponseEntity<Object> eliminarHistorialImc(@RequestParam(value = "token") String token) {
+		JSONObject response = new JSONObject();
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			Usuario usuario = usuarioBaseDatos.get();
+			usuario.getHistorialImc().clear();
+			usuarioRepository.save(usuario);
+			response.put("message", "Historial IMC limpiado con exito");
+			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
+		} else {
+			response.put("message", "Token inválido");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
+		}
+	}
+
 	// ACCIONES RUITNAS
 	@GetMapping("/optima/obtenerRutinas")
 	public ResponseEntity<Object> obtenerRutinas(@RequestParam(value = "token") String token) {
@@ -316,27 +332,6 @@ public class Controller {
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-	}
-
-	@DeleteMapping("/optima/eliminarRutina")
-	public ResponseEntity<Object> eliminarRutina(@RequestParam(value = "token") String token,
-			@RequestParam(value = "id") String id) {
-		Optional<Rutina> rutina = rutinaRepository.findById(id);
-		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
-
-		if (usuarioBaseDatos.isPresent()) {
-			if (rutina.isPresent()) {
-				for (String ejercicio : rutina.get().getEjercicios()) {
-					Optional<Ejercicio> ej = ejercicioRepository.findById(ejercicio);
-					cloudinaryService.deleteVideo(ej.get().getVideo());
-					ejercicioRepository.deleteById(ejercicio);
-				}
-				rutinaRepository.deleteById(id);
-				return ResponseEntity.ok("Rutina eliminada correctamente.");
-			}
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 
 	@GetMapping("/optima/obtenerRutinaValoracion")
@@ -484,6 +479,23 @@ public class Controller {
 		}
 	}
 
+	@PostMapping("/optima/sumarEjerciciosRutina")
+	ResponseEntity<Object> sumarEjerciciosRutina(@RequestBody Rutina rutina)
+			throws NoSuchAlgorithmException, MessagingException {
+		JSONObject respusta = new JSONObject();
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(rutina.getToken());
+		Optional<Rutina> rutinaSumarEjercicios = rutinaRepository.findById(rutina.getId());
+		if (usuarioBaseDatos.isPresent()) {
+			rutina.setToken(null);
+			rutinaSumarEjercicios.get().setEjercicios(rutina.getEjercicios());
+			rutinaRepository.save(rutinaSumarEjercicios.get());
+			respusta.put("message", "Ejercicios incluidos a rutina");
+			return ResponseEntity.status(HttpStatus.OK).body(respusta.toString());
+		}
+		respusta.put("message", "Error al incluir ejercicios a la rutina");
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respusta.toString());
+	}
+
 	@PostMapping("/optima/favoritoRutina")
 	ResponseEntity<Object> favoritoRutina(@RequestBody Rutina rutinaFavorita)
 			throws NoSuchAlgorithmException, MessagingException {
@@ -499,6 +511,49 @@ public class Controller {
 		}
 		respusta.put("message", "La rutina no se ha podido añadir a favoritos");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respusta.toString());
+	}
+
+	@PostMapping("/optima/rutinaActiva")
+	ResponseEntity<Object> rutinaActiva(@RequestBody Rutina rutinaActiva)
+			throws NoSuchAlgorithmException, MessagingException {
+		JSONObject respusta = new JSONObject();
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(rutinaActiva.getToken());
+		if (usuarioBaseDatos.isPresent()) {
+			rutinaActiva.setToken(null);
+			Usuario usuario = usuarioBaseDatos.get();
+			usuario.setRutinaActiva(rutinaActiva.getId());
+			usuarioRepository.save(usuario);
+			respusta.put("message", "Rutina activa añadida");
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(respusta.toString());
+		}
+		respusta.put("message", "La rutina no se ha podido añadir a rutina activa");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respusta.toString());
+	}
+
+	@DeleteMapping("/optima/eliminarRutina")
+	public ResponseEntity<Object> eliminarRutina(@RequestParam(value = "token") String token,
+			@RequestParam(value = "id") String id) {
+		JSONObject respusta = new JSONObject();
+		Optional<Rutina> rutina = rutinaRepository.findById(id);
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+		if (usuarioBaseDatos.isPresent()) {
+			if (rutina.isPresent()) {
+				if (rutina.get().getEjercicios() != null && !rutina.get().getEjercicios().isEmpty()) {
+					for (String ejercicio : rutina.get().getEjercicios()) {
+						Optional<Ejercicio> ej = ejercicioRepository.findById(ejercicio);
+						cloudinaryService.deleteVideo(ej.get().getVideo());
+						ejercicioRepository.deleteById(ejercicio);
+					}
+				}
+				rutinaRepository.deleteById(id);
+				respusta.put("message", "Rutina eliminada correctamente");
+				return ResponseEntity.status(HttpStatus.OK).body(respusta.toString());
+			}
+			respusta.put("message", "Rutina no encontrada para eliminar");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respusta.toString());
+		}
+		respusta.put("message", "Token expirado");
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respusta.toString());
 	}
 
 	@DeleteMapping("/optima/deleteFavoritoRutina")
@@ -524,20 +579,19 @@ public class Controller {
 
 	}
 
-	@PostMapping("/optima/rutinaActiva")
-	ResponseEntity<Object> rutinaActiva(@RequestBody Rutina rutinaActiva)
-			throws NoSuchAlgorithmException, MessagingException {
+	@DeleteMapping("/optima/eliminarRutinaActiva")
+	ResponseEntity<Object> rutinaActiva(@RequestParam(value = "token") String token,
+			@RequestParam(value = "id") String id) throws NoSuchAlgorithmException, MessagingException {
 		JSONObject respusta = new JSONObject();
-		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(rutinaActiva.getToken());
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
-			rutinaActiva.setToken(null);
 			Usuario usuario = usuarioBaseDatos.get();
-			usuario.setRutinaActiva(rutinaActiva.getId());
+			usuario.setRutinaActiva("");
 			usuarioRepository.save(usuario);
-			respusta.put("message", "Rutina activa añadida");
+			respusta.put("message", "Rutina activa eliminada");
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(respusta.toString());
 		}
-		respusta.put("message", "La rutina no se ha podido añadir a rutina activa");
+		respusta.put("message", "La rutina activa no se ha podido eliminar");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respusta.toString());
 	}
 
@@ -591,18 +645,17 @@ public class Controller {
 	@DeleteMapping("/optima/eliminarEjercicio")
 	public ResponseEntity<Object> eliminarEjercicio(@RequestParam(value = "token") String token,
 			@RequestParam(value = "id") String id) {
-		JSONObject json = new JSONObject();
+		JSONObject respuesta = new JSONObject();
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		if (usuarioBaseDatos.isPresent()) {
-			ejercicioRepository.findById(id);
 			Optional<Ejercicio> ej = ejercicioRepository.findById(id);
 			cloudinaryService.deleteVideo(ej.get().getVideo());
 			ejercicioRepository.deleteById(id);
-			json.put("message", "Ejercicio eliminado.");
-			return ResponseEntity.ok(json.toString());
+			respuesta.put("message", "Ejercicio eliminada de la rutina");
+			return ResponseEntity.status(HttpStatus.OK).body(respuesta.toString());
 		}
-		json.put("message", "Token expirado.");
-		return ResponseEntity.ok(json.toString());
+		respuesta.put("message", "Token expirado.");
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respuesta.toString());
 	}
 
 	// API
