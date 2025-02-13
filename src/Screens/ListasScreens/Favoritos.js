@@ -1,4 +1,4 @@
-import { FlatList, View, Image, StyleSheet, Text } from 'react-native';
+import { FlatList, View, Image, StyleSheet, Text, Pressable } from 'react-native';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import getData from '../../Utils/services/getData';
@@ -8,7 +8,7 @@ import { useState, useContext, useCallback } from 'react';
 import config from '../../config/config';
 
 const Favoritos = (props) => {
-    const [rutinas, setRutinas] = useState();
+    const [rutinas, setRutinas] = useState([]);
     const { token, setToken } = useContext(Context);
     const { idRutina, setIdRutina } = useContext(Context);
 
@@ -40,7 +40,7 @@ const Favoritos = (props) => {
             {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
-                <FlatList
+                {rutinas && rutinas.length > 0 ? <FlatList
                     data={rutinas}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
@@ -57,7 +57,13 @@ const Favoritos = (props) => {
                             }}
                         />
                     )}
-                />
+                /> : <View style={{ marginTop: 35, marginBottom: 15, alignItems: "center" , justifyContent:'center',flex:2 }}>
+                    <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>No tienes ninguna rutina en favoritos ¡ENCUENTRALA!</Text>
+                    <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Buscar")}>
+                        <Text style={styles.textLogin}>Buscar Rutina</Text>
+                    </Pressable>
+                </View>}
+
             </View>
         </View>
     );
@@ -95,6 +101,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
         textAlign: "center"
+    },
+    bottom: {
+        backgroundColor: '#607cff',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderRadius: 10,
+        borderColor: 'black',
+        height: 55,
+        width: 160,
+        alignItems: 'center',
+        marginTop: 5,
+        marginBottom: 10
+
+    },
+    textLogin: {
+        fontSize: 20,
+        color: 'white',
     },
 });
 
