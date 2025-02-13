@@ -79,7 +79,7 @@ const Usuario = (props) => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <HeaderRutina tipo={'user'} />
+            <HeaderRutina tipo={'user'} onAjustes={()=>props.navigation.navigate("Ajustes")}/>
             <Image source={require('../../Assets/img/perfil.png')} style={styles.profileImage} />
             <Text style={styles.name}>{nombre}</Text>
             <Text style={styles.frase}>{frasesMotivadoras.frases[getRandom()]}</Text>

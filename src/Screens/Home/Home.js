@@ -7,7 +7,7 @@ import CalcularMacros from "./CalcularMacros"
 import BuscarNavegacion from "../ListasScreens/BuscarNavegacion";
 import VerRutina from '../VerRutina';
 import VerEjercicio from '../VerEjercicio';
-// import Ajustes from '../VerEjercicio';
+import Ajustes from '../Ajustes';
 
 const Stack = createStackNavigator();
 
@@ -20,7 +20,7 @@ const Home = () => {
             <Stack.Screen name="BuscarNavegacion" component={BuscarNavegacion} options={{ headerShown: false }} />
             <Stack.Screen name="VerRutina" component={VerRutina} options={{ headerShown: false }} />
             <Stack.Screen name="VerEjercicio" component={VerEjercicio} options={{ headerShown: false }} />
-            {/* <Stack.Screen name="Ajustes" component={Ajustes} options={{ headerShown: false }} /> */}
+            <Stack.Screen name="Ajustes" component={Ajustes} options={{ headerShown: false }} /> 
         </Stack.Navigator>);
 };
 

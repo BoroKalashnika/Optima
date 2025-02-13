@@ -81,7 +81,7 @@ const HeaderRutina = (props) => {
         return (
             <View style={estilos.containerRowUser}>
                 <Image source={require('../../Assets/img/logo.png')} style={estilos.image} />
-                <Icon name="setting" size={45} color="#607cff" style={{ marginRight: 10 }} />
+                <Icon name="setting" size={45} color="#607cff" style={{ marginRight: 10 }} onPress={props.onAjustes}/>
             </View>
         );
     }
