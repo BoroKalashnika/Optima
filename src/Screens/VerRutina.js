@@ -36,7 +36,7 @@ const VerRutina = (props) => {
     const { alertTitle, setAlertTitle } = useContext(Context);
     const { idEjercicio, setIdEjercicio } = useContext(Context);
     const [estrellas, setEstrellas] = useState();
-
+    const [email, setEmail] = useState();
     useFocusEffect(
         useCallback(() => {
             loadRutina();
@@ -196,7 +196,7 @@ const VerRutina = (props) => {
                 setEstaGuardada(guardada);
                 const activo = element.rutinaActiva === idRutina;
                 setEstaActiva(activo);
-                setCreador(element.nombre);
+                
             })
             getData(
                 config.API_OPTIMA + 'obtenerRutina?id=' + idRutina + '&token=' + token
@@ -205,6 +205,11 @@ const VerRutina = (props) => {
                 chancheAmbito(response.ambito);
                 chancheColor(response.dificultad);
                 chancheMusculo(response.grupoMuscular);
+                setEmail(response.creador);
+            });
+            getData(config.API_OPTIMA+'obtenerUsuario?token='+token+'&correo='+email).then((response)=>{
+                setCreador(response.nombre);
+                console.log(response);
             });
         } catch (error) {
             console.error('Error fetching rutina:', error);
