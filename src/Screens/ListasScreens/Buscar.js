@@ -1,4 +1,4 @@
-import { FlatList, View, StyleSheet, Text, Modal, TouchableOpacity  } from 'react-native';
+import { FlatList, View, StyleSheet, Text, Modal, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useState, useContext, useCallback, useRef } from 'react';
 import Card from '../../Components/card/Card';
@@ -37,27 +37,28 @@ const Buscar = (props) => {
     const getRutinas = async (currentIndex) => {
         if (loading || !hasMore) return;
         setLoading(true);
-
+    
         try {
             const response = await getData(config.API_OPTIMA + `obtenerRutinas?token=${token}&index=${currentIndex}&offset=4`);
             const newRutinas = response.rutinas;
-
+    
+            setRutinas(currentIndex === 0 ? newRutinas : (prevRutinas) => [...prevRutinas, ...newRutinas]);
+    
             if (newRutinas.length > 0) {
-                setRutinas((prevRutinas) => [...prevRutinas, ...newRutinas]);
                 setIndex(currentIndex + 4);
+                if ((currentIndex + 4) >= response.count) {
+                    setHasMore(false);
+                }
             } else {
                 setHasMore(false);
             }
         } catch (error) {
-            /*
-            setAlertTitle("Error");
-            setAlertMessage("No se pudo cargar las rutinas. Por favor, inténtalo de nuevo.");
-            setModalVisible(true);
-            */
+            console.error(error);
         } finally {
             setLoading(false);
         }
     };
+    
 
     return (
         <View style={styles.container}>
@@ -137,8 +138,8 @@ const Buscar = (props) => {
                         <View>
                             {loading && <Text style={styles.loadingText}>Cargando más rutinas...</Text>}
                             {rutinas.length > 5 && (
-                                <TouchableOpacity 
-                                    style={styles.scrollTopButton} 
+                                <TouchableOpacity
+                                    style={styles.scrollTopButton}
                                     onPress={() => flatListRef.current.scrollToOffset({ animated: true, offset: 0 })}
                                 >
                                     <Text style={styles.scrollTopText}>Volver al principio</Text>
