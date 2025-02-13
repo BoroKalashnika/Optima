@@ -21,15 +21,36 @@ const Ajustes = (props) => {
     const [vistaPrevia, setVistaPrevia] = useState(null);
 
     const [foto, setFoto] = useState();
+
     useEffect(() => {
-            getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
-                setNombre(response.nombre);
-                if(response.fotoPerfil!=""){
-                    setFoto(response.fotoPerfil);
-                }
-                console.log(response);
-            });
+        getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
+            setNombre(response.nombre);
+            if (response.fotoPerfil != "") {
+                setFoto(response.fotoPerfil);
+            }
+            console.log(response);
+        });
     }, []);
+
+    const editarFoto = async () => {
+        setLoading(true);
+
+        const json = {
+            token: token,
+            fotoPerfil: foto
+        };
+        const response = await postData(
+            config.API_OPTIMA + 'registrarFoto',
+            json, setLoading
+        );
+        console.log(response);
+        if (!response.status === 200) {
+            setAlertMessage(response.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+        }
+        setLoading(false);
+    }
 
     const cerrarSesion = async () => {
         setLoading(true);
@@ -51,30 +72,36 @@ const Ajustes = (props) => {
         setLoading(false);
     }
 
-    const cambairFoto = () => {
+    const cambairFoto = async () => {
         const options = {
             mediaType: 'photo',
             includeBase64: false,
             maxWidth: 800,
             maxHeight: 600,
         };
-
-        launchImageLibrary(options, (response) => {
+    
+        launchImageLibrary(options, async (response) => {
             if (response.didCancel) {
                 Alert.alert('Cancelado', 'Seleccionaste cancelar la imagen');
             } else if (response.errorCode) {
                 Alert.alert('Error', 'Ocurrió un error al seleccionar la imagen');
             } else {
-                const format = response.assets[0].type;
-                RNFS.readFile(response.assets[0].uri, 'base64')
-                    .then(base64String => {
-                        setFoto(`data:${format};base64,${base64String}`);
-                    }).catch(err => console.error(err));
+                try {
+                    const format = response.assets[0].type;
+                    const base64String = await RNFS.readFile(response.assets[0].uri, 'base64');
+    
+                    setFoto(`data:${format};base64,${base64String}`);
                     setVistaPrevia(true);
+    
+                    // Esperar a que la imagen se suba antes de continuar
+                    await editarFoto();
+                } catch (err) {
+                    console.error("Error al procesar la imagen:", err);
+                }
             }
         });
-
-    }
+    };
+    
 
     if (loading) {
         return (
