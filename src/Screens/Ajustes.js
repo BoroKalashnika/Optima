@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState, useCallback } from 'react';
 import Context from '../Utils/Context';
-import {  View, Text, Image, ScrollView, StyleSheet, Alert, Pressable} from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Alert, Pressable } from 'react-native';
 import HeaderRutina from '../Components/headerRutina/HeaderRutina';
 import Icon from 'react-native-vector-icons/AntDesign';
 import postData from '../Utils/services/postData';
-import deleteData from '../Utils/services/deleteData';
+import { removeToken } from '../Utils/storage';
 import config from '../config/config';
 import Carga from '../Components/carga/Carga';
 import RNFS from 'react-native-fs';
@@ -13,10 +13,10 @@ import { launchImageLibrary } from 'react-native-image-picker';
 const Ajustes = (props) => {
     const { token, setToken } = useContext(Context);
     const { loading, setLoading } = useContext(Context);
-    const [nombre, setNombre] = useState("nombre");
     const { modalVisible, setModalVisible } = useContext(Context);
     const { alertMessage, setAlertMessage } = useContext(Context);
     const { alertTitle, setAlertTitle } = useContext(Context);
+    const [nombre, setNombre] = useState("nombre");
     const [vistaPrevia, setVistaPrevia] = useState(null);
 
     const cerrarSesion = async () => {
@@ -29,15 +29,17 @@ const Ajustes = (props) => {
             json, setLoading
         );
         if (response.status === 200) {
-            setAlertMessage(response.message);
-            setAlertTitle('Has cerrado sesion');
+            setAlertTitle('Cerrando sesion')
+            setAlertMessage('Se ha deslogueado de la aplicación')
             setModalVisible(true);
+            await removeToken();
+            setToken('');
             props.navigation.navigate('Login');
         }
         setLoading(false);
     }
 
-    const cambairFoto=()=>{
+    const cambairFoto = () => {
         const options = {
             mediaType: 'photo',
             includeBase64: false,
@@ -58,7 +60,7 @@ const Ajustes = (props) => {
                     }).catch(err => console.error(err));
             }
         });
-       
+
     }
 
     if (loading) {
@@ -113,7 +115,7 @@ const styles = StyleSheet.create({
     profileImage: {
         width: 185,
         height: 185,
-        borderRadius: 50,
+        borderRadius: 100,
         marginTop: 10,
     },
     editIcon: {
