@@ -42,7 +42,7 @@ const Buscar = (props) => {
             const response = await getData(config.API_OPTIMA + `obtenerRutinas?token=${token}&index=${currentIndex}&offset=4`);
             const newRutinas = response.rutinas;
     
-            setRutinas(currentIndex === 0 ? newRutinas : (prevRutinas) => [...prevRutinas, ...newRutinas]);
+            setRutinas(currentIndex === 0 ? newRutinas : [...rutinas, ...newRutinas]);
     
             if (newRutinas.length > 0) {
                 setIndex(currentIndex + 4);
