@@ -404,14 +404,20 @@ public class Controller {
 
 				if (!yaValorado) {
 					usuariosValorados.add(valoracionIdusuario);
+					usuario.setPuntuacion(usuario.getPuntuacion() + partes[1]);
 				}
 
-				int sumaValoraciones = 0;
-				for (String valorado : usuariosValorados) {
-					sumaValoraciones += Integer.parseInt(valorado.split("-")[1]);
+				if (usuariosValorados.size() > 0) {
+					int sumaValoraciones = 0;
+					for (String valorado : usuariosValorados) {
+						sumaValoraciones += Integer.parseInt(valorado.split("-")[1]);
+					}
+
+					int nuevaPuntuacionRutina = Math.round((float) sumaValoraciones / usuariosValorados.size());
+					rutina.setValoracion(String.valueOf(nuevaPuntuacionRutina));
+				} else {
+					rutina.setValoracion(partes[1]);
 				}
-				int nuevaPuntuacionRutina = Math.round((float) sumaValoraciones / usuariosValorados.size());
-				rutina.setValoracion(String.valueOf(nuevaPuntuacionRutina));
 
 				rutina.setUsuariosValorados(usuariosValorados);
 				usuarioRepository.save(usuario);
@@ -439,16 +445,20 @@ public class Controller {
 					Rutina rutinaGuardada = rutinaRepository.save(nuevaRutina);
 					Usuario usuario = usuarioBaseDatos.get();
 					usuario.getRutinasCreadas().add(rutinaGuardada.getId());
+
 					usuarioRepository.save(usuario);
 					respuesta.put("idRutina", rutinaGuardada.getId());
 					return ResponseEntity.status(HttpStatus.CREATED).body(respuesta.toString());
 				} else {
 					Usuario usuario = usuarioBaseDatos.get();
 					boolean rutinaEncontrada = false;
+
 					for (String rutinaId : usuario.getRutinasCreadas()) {
 						Optional<Rutina> rutinaListaUsuario = rutinaRepository.findById(rutinaId);
+
 						if (rutinaListaUsuario.isPresent()) {
 							Rutina rutinaFinalizar = rutinaListaUsuario.get();
+
 							if (rutinaFinalizar.getNombreRutina().equals("$$crea$$")) {
 								rutinaFinalizar.setNombreRutina(nuevaRutina.getNombreRutina());
 								rutinaFinalizar.setValoracion(nuevaRutina.getValoracion());
@@ -458,6 +468,8 @@ public class Controller {
 								rutinaFinalizar.setDieta(nuevaRutina.getDieta());
 								rutinaFinalizar.setVistaPrevia(nuevaRutina.getVistaPrevia());
 								rutinaFinalizar.setAmbito(nuevaRutina.getAmbito());
+								rutinaFinalizar.setUsuariosValorados(nuevaRutina.getUsuariosValorados());
+
 								rutinaRepository.save(rutinaFinalizar);
 								respuesta.put("message", "Rutina creada con éxito");
 								rutinaEncontrada = true;
