@@ -55,6 +55,8 @@ const VerRutina = (props) => {
     useEffect(() => {
         if (activo === true) {
             añadirActivo();
+        } else if (activo === false) {
+            eliminarActivo();
         }
     }, [activo]);
 
@@ -85,6 +87,19 @@ const VerRutina = (props) => {
         const response = await postData(
             config.API_OPTIMA + 'rutinaActiva',
             json, setLoading
+        );
+        if (!response.status === 202) {
+            setAlertMessage(response.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+        }
+        setLoading(false);
+    }
+
+    const eliminarActivo = async () => {
+        setLoading(true);
+        const response = await deleteData(
+            config.API_OPTIMA + 'eliminarRutinaActiva?token=' + token + '&id=' + idRutina, setLoading
         );
         if (!response.status === 202) {
             setAlertMessage(response.message);
@@ -127,7 +142,6 @@ const VerRutina = (props) => {
         setLoading(false);
     }
 
-
     const PresStar = (indice) => {
         const newArray = [...stars];
         newArray.push(
@@ -141,7 +155,7 @@ const VerRutina = (props) => {
         );
         setStars(newArray);
         setEstrellas(indice);
-        console.log(idRutina+"-"+token+"-"+estrellas);
+        console.log(idRutina + "-" + token + "-" + estrellas);
         valorar();
     };
     const valorar = async () => {
@@ -150,7 +164,7 @@ const VerRutina = (props) => {
         const json = {
             idRutina: idRutina,
             token: token,
-            valoracion:usuario.id+"-"+estrellas,
+            valoracion: usuario.id + "-" + estrellas,
         };
 
         const response = await postData(

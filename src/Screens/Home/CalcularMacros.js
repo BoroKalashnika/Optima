@@ -89,7 +89,7 @@ const CalcularMacros = (props) => {
 
         const json = {
             token: token,
-            macros: `caloriasTotales:${caloriasTotales.toFixed(0)},carbos:${carbos.toFixed(0)},proteinas:${proteinas.toFixed(0)},grasas:${grasas.toFixed(0)}`,
+            macros: `${caloriasTotales.toFixed(0)}|${carbos.toFixed(0)}|${proteinas.toFixed(0)}|${grasas.toFixed(0)}`,
         }
 
         const response = await postData(config.API_OPTIMA + 'registrarMacros', json, setLoading);
@@ -205,14 +205,7 @@ const CalcularMacros = (props) => {
                         <Text style={styles.result}>Grasas: {macros.grasas} g</Text>
 
                         <PieChart
-                            data={[/*
-                                {
-                                    name: 'Calorías',
-                                    population: parseFloat(macros.caloriasTotales),
-                                    color: '#blue',
-                                    legendFontColor: '#7F7F7F',
-                                    legendFontSize: 15
-                                },*/
+                            data={[
                                 {
                                     name: 'Carbos',
                                     population: parseFloat(macros.carbos),

@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState, useCallback } from 'react';
 import Context from '../../Utils/Context';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, BackHandler } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, BackHandler, Dimensions } from 'react-native';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import getData from '../../Utils/services/getData';
 import frasesMotivadoras from '../../Assets/frasesMotivadoras.json';
 import { useFocusEffect } from '@react-navigation/native';
+import { PieChart } from 'react-native-chart-kit';
 import config from '../../config/config';
 
 const Usuario = (props) => {
@@ -13,6 +14,8 @@ const Usuario = (props) => {
     const { email, setEmail } = useContext(Context);
     const { idRutina, setIdRutina } = useContext(Context);
     const [nombre, setNombre] = useState();
+    const [historialIMC, setHistorialIMC] = useState([]);
+    const [macros, setMacros] = useState([]);
     const [idRutinaActiva, setIdRutinaActiva] = useState();
     const [dificultad, setDificultad] = useState();
     const [ambito, setAmbito] = useState();
@@ -20,6 +23,8 @@ const Usuario = (props) => {
     const [musculo, setMusculo] = useState();
     const [estrellas, setEstrellas] = useState();
     const [titulo, setTitulo] = useState();
+
+    const screenWidth = Dimensions.get('window').width;
 
     useFocusEffect(() => {
         const backAction = () => {
@@ -38,7 +43,13 @@ const Usuario = (props) => {
         useCallback(() => {
             getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
                 setIdRutinaActiva(response.rutinaActiva);
-                setNombre(response.nombre)
+                setNombre(response.nombre);
+                setHistorialIMC(response.historialImc);
+                if (response.macros) {
+                    setMacros(response.macros.split('|'));
+                } else {
+                    setMacros([]);
+                }
             });
         }, [])
     );
@@ -75,7 +86,7 @@ const Usuario = (props) => {
             <View style={styles.containerCard}>
                 {!idRutinaActiva ?
                     <View style={{ marginTop: 35, marginBottom: 15, alignItems: "center" }}>
-                        <Text style={{ color: 'white', fontSize: 18 }}>Todavía no tienes rutina activa</Text>
+                        <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>No tienes todavía ninguna rutina activa ¡ENCUENTRALA!</Text>
                         <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Buscar")}>
                             <Text style={styles.textLogin}>Buscar Rutina</Text>
                         </Pressable>
@@ -96,78 +107,93 @@ const Usuario = (props) => {
             <View style={styles.calculadoraContainer}>
                 <TouchableOpacity style={styles.calcRow} onPress={() => props.navigation.navigate('CalcularIMC')}>
                     <Text style={styles.calcTitle}>IMC</Text>
-                    <Image source={require('../../Assets/img/calculadoraIMC.png')} style={styles.image} />
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image source={require('../../Assets/img/click.png')} style={styles.imageClick} />
+                        <Image source={require('../../Assets/img/calculadoraIMC.png')} style={styles.image} />
+                    </View>
                 </TouchableOpacity>
                 <View style={styles.listContainer}>
                     <ScrollView nestedScrollEnabled={true}>
-                        {/* MAP PARA RECORRER LISTA DE HISTORICO DEL BACK */}
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 1</Text>
+                        {historialIMC && historialIMC.length > 0 ? (historialIMC.slice().reverse().map((element, index) => {
+                            const resultSeparado = element.split('-');
+                            return (
+                                <View key={index.toString()} style={styles.listItem}>
+                                    <Text style={styles.listItemText}>{resultSeparado[0]}</Text>
+                                    <Text style={styles.listItemText}>{resultSeparado[1]}</Text>
+                                </View>
+                            );
+                        })
+                        ) : (<View style={styles.listItem}>
+                            <Text style={styles.listItemText}>No has realizado ningún cálculo</Text>
                         </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 2</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
+                        )}
                     </ScrollView>
                 </View>
                 <TouchableOpacity style={styles.calcRow} onPress={() => props.navigation.navigate('CalcularMacros')}>
                     <Text style={styles.calcTitle}>Macros</Text>
-                    <Image source={require('../../Assets/img/calculadoraMacros.png')} style={styles.image} />
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image source={require('../../Assets/img/click.png')} style={styles.imageClick} />
+                        <Image source={require('../../Assets/img/calculadoraMacros.png')} style={styles.image} />
+                    </View>
                 </TouchableOpacity>
-                <View style={styles.listContainer}>
-                    <ScrollView nestedScrollEnabled={true}>
-                        {/* MAP PARA RECORRER LISTA DE HISTORICO DEL BACK */}
+                <View style={styles.listContainerMacro}>
+                    {macros && macros.length > 0 ? (
                         <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 1</Text>
-                        </View>
+                            <View>
+                            <Text style={styles.result}>Calorías Totales.........................{macros[0]} kcal</Text>
+                            <Text style={styles.result}>Carbohidratos............................{macros[1]} g</Text>
+                            <Text style={styles.result}>Proteínas...................................{macros[2]} g</Text>
+                            <Text style={styles.result}>Grasas.......................................{macros[3]} g</Text>
+                            </View>
+                            <PieChart
+                                data={[
+                                    {
+                                        name: 'Carbos',
+                                        population: parseFloat(macros[1]),
+                                        color: '#FF6347',
+                                        legendFontColor: '#7F7F7F',
+                                        legendFontSize: 12
+                                    },
+                                    {
+                                        name: 'Proteínas',
+                                        population: parseFloat(macros[2]),
+                                        color: '#4CAF50',
+                                        legendFontColor: '#7F7F7F',
+                                        legendFontSize: 12
+                                    },
+                                    {
+                                        name: 'Grasas',
+                                        population: parseFloat(macros[3]),
+                                        color: '#FFD700',
+                                        legendFontColor: '#7F7F7F',
+                                        legendFontSize: 12
+                                    }
+                                ]}
+                                width={screenWidth - 80}
+                                height={80}
+                                chartConfig={{
+                                    backgroundColor: '#ffffff',
+                                    backgroundGradientFrom: '#ffffff',
+                                    backgroundGradientTo: '#ffffff',
+                                    decimalPlaces: 0,
+                                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                }}
+                                accessor="population"
+                                style={{
+                                    borderRadius: 16,
+                                    marginTop:2.5,
+                                }}
+                            />
+                            </View>
+                    ) : (
                         <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 2</Text>
+                            <Text style={styles.listItemText}>No has realizado ningún cálculo</Text>
                         </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                        <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>Registro 3</Text>
-                        </View>
-                    </ScrollView>
+                    )}
                 </View>
             </View>
-        </ScrollView>
+        </ScrollView >
     );
 };
 
@@ -243,23 +269,39 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 10,
     },
+    imageClick: {
+        width: 42,
+        height: 42,
+        borderRadius: 10,
+        transform: [{ scaleX: -1 }]
+    },
     listContainer: {
         width: '90%',
         maxHeight: 180,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
         backgroundColor: '#607cff',
-        marginBottom: 10,
+        marginBottom: 30,
+        alignSelf: 'center',
+    },
+    listContainerMacro: {
+        width: '90%',
+        maxHeight: 180,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        backgroundColor: '#607cff',
         alignSelf: 'center',
     },
     listItem: {
         padding: 10,
         borderTopWidth: 1,
         borderTopColor: '#ffffff55',
+        alignItems:'center',
     },
     listItemText: {
         color: '#fff',
         fontSize: 16,
+        textAlign: 'center'
     },
     frase: {
         marginTop: 30,
@@ -268,7 +310,12 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         color: 'white',
         textAlign: 'center',
-    }
+    },
+    result: {
+        fontSize: 15,
+        color: 'white',
+        fontWeight:'500',
+    },
 });
 
 export default Usuario;

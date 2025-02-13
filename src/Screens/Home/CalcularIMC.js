@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback } from 'react';
+import { useState, useContext, useCallback, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, ScrollView } from 'react-native';
 import { HelperText } from 'react-native-paper';
 import MensajeAlert from '../../Components/mensajeAlert/MensajeAlert';
@@ -7,6 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import config from '../../config/config';
 import getData from '../../Utils/services/getData';
 import postData from '../../Utils/services/postData';
+import deleteData from '../../Utils/services/deleteData';
 import Carga from '../../Components/carga/Carga'
 
 const CalcularIMC = (props) => {
@@ -25,6 +26,10 @@ const CalcularIMC = (props) => {
             getHistorial();
         }, [])
     );
+
+    useEffect(() => {
+        getHistorial();
+    }, [historial]);
 
     const getHistorial = async () => {
         const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
@@ -79,8 +84,7 @@ const CalcularIMC = (props) => {
         setModalVisible(true);
 
         const mensaje = `Peso: ${pesoNum} kg | Altura: ${alturaNum} m | IMC: ${resultadoIMC.toFixed(2)} - ${mensajeResultado}`
-        console.log(resultadoIMC.toFixed(2) + mensaje);
-        
+
         const json = {
             token: token,
             imc: resultadoIMC.toFixed(2),
@@ -89,40 +93,49 @@ const CalcularIMC = (props) => {
 
         try {
             const response = await postData(config.API_OPTIMA + 'registrarImc', json, setLoading);
-            if (response.status == 201) {
+            if (response.status === 200) {
                 setTitulo('Calculado');
-                setMensaje('Cálculo realizado con exito');
+                setMensaje('Cálculo realizado con exito \n' + response.data.message);
                 setModalVisible(true);
-
                 const nuevoHistorial = [
                     ...historial,
                     mensaje
                 ];
                 setHistorial(nuevoHistorial);
-            } else {/*
+            } else {
                 setTitulo('Error');
-                setMensaje(response.data.error);
+                setMensaje(response.data.message);
                 setModalVisible(true);
-                */
             }
-            
         } catch (error) {
-            console.error("Error al registrar el IMC:", error);
+            setTitulo('Error');
+            setMensaje('Error al registrar el IMC');
+            setModalVisible(true);
         }
     };
-    
+
     if (loading) {
         return (
             <Carga />
         );
     }
 
-    const limpiarCampos = () => {
+    const limpiarCampos = async () => {
         setPeso('');
         setAltura('');
         setImc(null);
         setMensaje('');
         setTitulo('');
+        setLoading(true);
+        const response = await deleteData(
+            config.API_OPTIMA + 'eliminarHistorialImc?token=' + token, setLoading
+        );
+        if (!response.status === 200) {
+            setAlertMessage(response.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+        }
+        setLoading(false);
     };
 
     return (
@@ -170,7 +183,7 @@ const CalcularIMC = (props) => {
             <View style={styles.historialContainer}>
                 <Text style={styles.historialTitle}>Historial</Text>
                 <ScrollView style={styles.historial}>
-                    {historial && historial.map((item, index) => (
+                    {historial && historial.slice().reverse().map((item, index) => (
                         <View key={index} style={styles.historialItem}>
                             <Text style={styles.historialText}>
                                 {item}
@@ -221,6 +234,7 @@ const styles = StyleSheet.create({
         color: '#bbdefb',
         marginTop: 15,
         fontWeight: 'bold',
+        textAlign: 'center'
     },
     historialContainer: {
         marginTop: 30,

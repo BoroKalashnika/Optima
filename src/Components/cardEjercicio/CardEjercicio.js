@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Image, Pressable } from 'react-native';
+import { Text, StyleSheet, View, Image, Pressable, Alert } from 'react-native';
 import { useContext } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Context from '../../Utils/Context';
@@ -6,7 +6,6 @@ import deleteData from '../../Utils/services/deleteData';
 import Carga from '../../Components/carga/Carga';
 import config from '../../config/config';
 const CardEjercicio = (props) => {
-    const { idEjercicios, setIdEjercicios } = useContext(Context);
     const { token } = useContext(Context);
     const { nombre, descripcion, imagen, idEjercicio, borrarEnabled, onDelete } = props;
     const { loading, setLoading } = useContext(Context);
@@ -14,7 +13,11 @@ const CardEjercicio = (props) => {
     const borrarEjercicio = async () => {
         setLoading(true);
         const response = await deleteData(config.API_OPTIMA + 'eliminarEjercicio?token=' + token + '&id=' + idEjercicio, setLoading);
-        onDelete();
+        if (response.status === 200) {
+            onDelete();
+        } else {
+            Alert.alert("Error", response.message);
+        }
         setLoading(false);
     }
 
