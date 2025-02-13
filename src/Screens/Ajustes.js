@@ -24,7 +24,7 @@ const Ajustes = (props) => {
     useEffect(() => {
         getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
             setNombre(response.nombre);
-            if (response.fotoPerfil != "") {
+            if (response.fotoPerfil !== "") {
                 setFoto(response.fotoPerfil);
             }
             console.log(response);
