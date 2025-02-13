@@ -4,6 +4,7 @@ import { View, Text, Image, ScrollView, StyleSheet, Alert, Pressable } from 'rea
 import HeaderRutina from '../Components/headerRutina/HeaderRutina';
 import Icon from 'react-native-vector-icons/AntDesign';
 import postData from '../Utils/services/postData';
+import getData from '../Utils/services/getData';
 import { removeToken } from '../Utils/storage';
 import config from '../config/config';
 import Carga from '../Components/carga/Carga';
@@ -18,6 +19,17 @@ const Ajustes = (props) => {
     const { alertTitle, setAlertTitle } = useContext(Context);
     const [nombre, setNombre] = useState("nombre");
     const [vistaPrevia, setVistaPrevia] = useState(null);
+
+    const [foto, setFoto] = useState();
+    useEffect(() => {
+            getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
+                setNombre(response.nombre);
+                if(response.fotoPerfil!=""){
+                    setFoto(response.fotoPerfil);
+                }
+                console.log(response);
+            });
+    }, []);
 
     const cerrarSesion = async () => {
         setLoading(true);
@@ -56,8 +68,9 @@ const Ajustes = (props) => {
                 const format = response.assets[0].type;
                 RNFS.readFile(response.assets[0].uri, 'base64')
                     .then(base64String => {
-                        setVistaPrevia(`data:${format};base64,${base64String}`);
+                        setFoto(`data:${format};base64,${base64String}`);
                     }).catch(err => console.error(err));
+                    setVistaPrevia(true);
             }
         });
 
@@ -73,7 +86,7 @@ const Ajustes = (props) => {
             <HeaderRutina tipo={'user'} />
             <View style={styles.profileContainer}>
                 <Pressable onPress={() => cambairFoto()}>
-                    {vistaPrevia ? <Image source={{ uri: vistaPrevia }} style={styles.profileImage} /> : (
+                    {vistaPrevia ? <Image source={{ uri: foto }} style={styles.profileImage} /> : (
                         <>
                             <Image source={require('../Assets/img/perfil.png')} style={styles.profileImage} />
                             <View style={styles.editIcon}>
