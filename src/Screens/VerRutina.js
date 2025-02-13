@@ -27,6 +27,7 @@ const VerRutina = (props) => {
     const [ambitoImg, setAmbitoImg] = useState('');
     const [musculoImg, setMusculoImg] = useState('');
     const [favorito, setFavorito] = useState();
+    const [estrellas, setEstrellas] = useState(0);
     const [activo, setActivo] = useState();
     const [estaGuardada, setEstaGuardada] = useState(false);
     const [estaActiva, setEstaActiva] = useState(false);
@@ -35,7 +36,7 @@ const VerRutina = (props) => {
     const { alertMessage, setAlertMessage } = useContext(Context);
     const { alertTitle, setAlertTitle } = useContext(Context);
     const { idEjercicio, setIdEjercicio } = useContext(Context);
-    const [estrellas, setEstrellas] = useState();
+
     useFocusEffect(
         useCallback(() => {
             loadRutina();
@@ -70,17 +71,9 @@ const VerRutina = (props) => {
         setActivo(estado);
     };
 
-    const [stars, setStars] = useState([
-        { id: 1, icon: 'staro' },
-        { id: 2, icon: 'staro' },
-        { id: 3, icon: 'staro' },
-        { id: 4, icon: 'staro' },
-        { id: 5, icon: 'staro' },
-    ]);
-
     const getValorado = async () => {
         const valoracion = await getData(config.API_OPTIMA + 'obtenerRutinaValoracion?token=' + token + '&id=' + idRutina);
-        pressStar(valoracion);
+        setEstrellas(valoracion);
     }
 
     const añadirActivo = async () => {
@@ -147,21 +140,9 @@ const VerRutina = (props) => {
         setLoading(false);
     }
 
-    const pressStar = (indice) => {
-        const newArray = [...stars];
-        newArray.push(
-            stars.map((value, index) => {
-                if (value.id <= indice) {
-                    stars[index].icon = 'star';
-                } else if (value.id > indice) {
-                    stars[index].icon = 'staro';
-                }
-            })
-        );
-        setStars(newArray);
-        setEstrellas(indice);
-        console.log(idRutina + "-" + token + "-" + estrellas);
-        valorar(indice);
+    const pressStar = (puntuacion) => {
+        setEstrellas(puntuacion);
+        valorar(puntuacion);
     };
 
     const valorar = async (estrellas) => {
@@ -178,7 +159,6 @@ const VerRutina = (props) => {
             json, setLoading
         );
 
-        console.log(response);
         if (!response.status === 202) {
             setAlertMessage(response.message);
             setAlertTitle('ERROR');
@@ -299,12 +279,13 @@ const VerRutina = (props) => {
             <View style={styles.containerRow}>
                 <Text style={styles.textLogin}>Valorar</Text>
                 <View style={styles.containerStars}>
-                    {stars.map((value) => (
+                    {[1, 2, 3, 4, 5].map((value) => (
                         <Icon
-                            name={value.icon}
+                            key={value}
+                            name={value <= estrellas ? 'star' : 'staro'}
                             size={25}
                             color="yellow"
-                            onPress={() => pressStar(value.id)}
+                            onPress={() => pressStar(value)}
                         />
                     ))}
                 </View>
