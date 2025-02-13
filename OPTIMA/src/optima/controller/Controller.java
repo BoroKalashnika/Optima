@@ -256,11 +256,9 @@ public class Controller {
 
 		if (usuarioBaseDatos.isPresent()) {
 			Usuario usuario = usuarioBaseDatos.get();
-
 			usuario.setFotoPerfil(jsonObject.getString("fotoPerfil"));
-
 			usuarioRepository.save(usuario);
-			response.put("message", "Macros registrados");
+			response.put("message", "Foto cambiada");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
 			response.put("message", "Token inválido");
