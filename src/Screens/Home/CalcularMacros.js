@@ -94,7 +94,7 @@ const CalcularMacros = (props) => {
 
         const response = await postData(config.API_OPTIMA + 'registrarMacros', json, setLoading);
 
-        if (response.status == 200) {
+        if (response.status === 200) {
             setTitulo('Calculado');
             setMensaje(response.data.message);
             setModalVisible(true);

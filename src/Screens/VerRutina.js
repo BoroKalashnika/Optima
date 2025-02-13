@@ -86,7 +86,7 @@ const VerRutina = (props) => {
             config.API_OPTIMA + 'rutinaActiva',
             json, setLoading
         );
-        if (!response.status === 202) {
+        if (response.status !== 202) {
             setAlertMessage(response.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
@@ -99,7 +99,7 @@ const VerRutina = (props) => {
         const response = await deleteData(
             config.API_OPTIMA + 'eliminarRutinaActiva?token=' + token + '&id=' + idRutina, setLoading
         );
-        if (!response.status === 202) {
+        if (response.status !== 202) {
             setAlertMessage(response.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
@@ -118,7 +118,7 @@ const VerRutina = (props) => {
             config.API_OPTIMA + 'favoritoRutina',
             json, setLoading
         );
-        if (!response.status === 202) {
+        if (response.status !== 202) {
             setAlertMessage(response.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
@@ -132,7 +132,7 @@ const VerRutina = (props) => {
         const response = await deleteData(
             config.API_OPTIMA + 'deleteFavoritoRutina?token=' + token + '&id=' + idRutina, setLoading
         );
-        if (!response.status === 200) {
+        if (response.status !== 200) {
             setAlertMessage(response.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
@@ -159,7 +159,7 @@ const VerRutina = (props) => {
             json, setLoading
         );
 
-        if (!response.status === 202) {
+        if (response.status !== 202) {
             setAlertMessage(response.message);
             setAlertTitle('ERROR');
             setModalVisible(true);

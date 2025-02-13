@@ -130,7 +130,7 @@ const CalcularIMC = (props) => {
         const response = await deleteData(
             config.API_OPTIMA + 'eliminarHistorialImc?token=' + token, setLoading
         );
-        if (!response.status === 200) {
+        if (response.status !== 200) {
             setAlertMessage(response.message);
             setAlertTitle('ERROR');
             setModalVisible(true);

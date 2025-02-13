@@ -156,7 +156,7 @@ const CrearRutina = (props) => {
                 config.API_OPTIMA + 'sumarEjerciciosRutina',
                 json, setLoading
             );
-            if (!response.status === 200) {
+            if (response.status !== 200) {
                 setAlertMessage(response.data.message);
                 setAlertTitle('ERROR');
                 setModalVisible(true);

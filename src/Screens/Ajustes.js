@@ -19,7 +19,6 @@ const Ajustes = (props) => {
     const { alertTitle, setAlertTitle } = useContext(Context);
     const [nombre, setNombre] = useState("nombre");
     const [vistaPrevia, setVistaPrevia] = useState(null);
-
     const [foto, setFoto] = useState();
 
     useEffect(() => {
@@ -32,25 +31,33 @@ const Ajustes = (props) => {
         });
     }, []);
 
-    const editarFoto = async () => {
-        setLoading(true);
-
-        const json = {
-            token: token,
-            fotoPerfil: foto
+    useEffect(() => {
+        const actualizarFoto = async () => {
+            if (foto) {
+                setLoading(true);
+                const json = {
+                    token: token,
+                    fotoPerfil: foto
+                };
+                try {
+                    const response = await postData(config.API_OPTIMA + 'registrarFoto', json, setLoading);
+                    console.log(response);
+                    if (response.status !== 200) {
+                        setAlertMessage(response.message);
+                        setAlertTitle('ERROR');
+                        setModalVisible(true);
+                    }
+                } catch (error) {
+                    console.error("Error al subir la foto:", error);
+                }
+                setLoading(false);
+                setVistaPrevia(true);
+            }
         };
-        const response = await postData(
-            config.API_OPTIMA + 'registrarFoto',
-            json, setLoading
-        );
-        console.log(response);
-        if (!response.status === 200) {
-            setAlertMessage(response.message);
-            setAlertTitle('ERROR');
-            setModalVisible(true);
-        }
-        setLoading(false);
-    }
+    
+        actualizarFoto();
+    }, [foto]);
+    
 
     const cerrarSesion = async () => {
         setLoading(true);
@@ -79,7 +86,7 @@ const Ajustes = (props) => {
             maxWidth: 800,
             maxHeight: 600,
         };
-    
+
         launchImageLibrary(options, async (response) => {
             if (response.didCancel) {
                 Alert.alert('Cancelado', 'Seleccionaste cancelar la imagen');
@@ -89,19 +96,16 @@ const Ajustes = (props) => {
                 try {
                     const format = response.assets[0].type;
                     const base64String = await RNFS.readFile(response.assets[0].uri, 'base64');
-    
+
                     setFoto(`data:${format};base64,${base64String}`);
-                    setVistaPrevia(true);
-    
-                    // Esperar a que la imagen se suba antes de continuar
-                    await editarFoto();
+                    console.log(foto);
                 } catch (err) {
                     console.error("Error al procesar la imagen:", err);
                 }
             }
         });
     };
-    
+
 
     if (loading) {
         return (
