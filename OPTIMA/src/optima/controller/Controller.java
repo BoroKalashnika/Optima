@@ -283,45 +283,6 @@ public class Controller {
 	}
 
 	// ACCIONES RUITNAS
-//	@GetMapping("/optima/obtenerRutinas")
-//	public ResponseEntity<Object> obtenerRutinas(@RequestParam(value = "token") String token) {
-//		// @RequestParam(value = "index") int index, @RequestParam(value = "offset") int
-//		// offset) {
-//		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
-//		JSONObject response = new JSONObject();
-//		if (usuarioBaseDatos.isPresent()) {
-//			List<Rutina> rutinasBaseDatos = rutinaRepository.findAll();
-//			if (rutinasBaseDatos.size() < 1) {
-//				response.put("count", "0");
-//				response.put("rutinas", "no hay rutinas");
-//				return ResponseEntity.ok(response.toString());
-//			} else {
-//				int count = 0;
-//				List<Rutina> RutinasBuscar = new ArrayList<Rutina>();
-//				for (int i = 0; i < rutinasBaseDatos.size(); i++) {
-//					if (!rutinasBaseDatos.get(i).getNombreRutina().equals("$$crea$$")) {
-//						RutinasBuscar.add(rutinasBaseDatos.get(i));
-//						count++;
-//					}
-//				}
-//				response.put("count", count);
-//				response.put("rutinas", RutinasBuscar);
-//				return ResponseEntity.ok(response.toString());
-//			}
-//		} else {
-//			response.put("message", "Token inválido");
-//			return ResponseEntity.ok(response.toString());
-//		}
-//
-////		int end = Math.min(index + offset, rutinas.size());
-////		if (index < 0 || index >= rutinas.size()) {
-////			response.put("error", "Rango de índices inválido");
-////			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
-////		}
-////
-////		List<Rutina> rutinasIndex = new ArrayList<>(rutinas.subList(index, end));
-//	}
-
 	@GetMapping("/optima/obtenerRutinas")
 	public ResponseEntity<Object> obtenerRutinas(@RequestParam("token") String token, @RequestParam("index") int index,
 			@RequestParam("offset") int offset, @RequestParam(value = "dificultad", required = false) String dificultad,
@@ -343,6 +304,12 @@ public class Controller {
 				.filter(r -> ambito == null || r.getAmbito().equalsIgnoreCase(ambito)).collect(Collectors.toList());
 
 		int totalRutinas = rutinasFiltradas.size();
+
+		if (totalRutinas == 0) {
+			response.put("count", totalRutinas);
+			response.put("message", "No hay rutinas.");
+			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
+		}
 
 		if (index < 0 || index >= totalRutinas) {
 			response.put("error", "Rango de índices inválido");
