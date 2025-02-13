@@ -68,7 +68,7 @@ const Usuario = (props) => {
             setDificultad(response.dificultad);
             setImagen(response.vistaPrevia);
             setTitulo(response.nombreRutina);
-            setEstrellas(response.valoricion);
+            setEstrellas(response.valoracion);
             setMusculo(response.grupoMuscular);
         })
     }, [idRutinaActiva]);
