@@ -74,7 +74,7 @@ const Registro = (props) => {
                 altura: altura,
                 historialImc: [],
                 macros: "",
-                valoracion: "",
+                puntuacion: "0",
                 verificado: false
             };
 

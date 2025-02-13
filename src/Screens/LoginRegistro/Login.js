@@ -39,7 +39,7 @@ const Login = (props) => {
 
     useEffect(() => {
         const checkToken = async () => {
-            setLoading(true);
+            //setLoading(true);
             const tokenCache = await getToken();
             if (!tokenCache) return;
             try {

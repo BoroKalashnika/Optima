@@ -41,6 +41,7 @@ const VerRutina = (props) => {
         useCallback(() => {
             loadRutina();
             loadEjercicios();
+            getValorado();
         }, [])
     );
 
@@ -77,6 +78,11 @@ const VerRutina = (props) => {
         { id: 4, icon: 'staro' },
         { id: 5, icon: 'staro' },
     ]);
+
+    const getValorado = async () => {
+        const valoracion = await getData(config.API_OPTIMA + 'obtenerRutinaValoracion?token=' + token + '&id=' + idRutina);
+        pressStar(valoracion);
+    }
 
     const añadirActivo = async () => {
         setLoading(true);
@@ -142,7 +148,7 @@ const VerRutina = (props) => {
         setLoading(false);
     }
 
-    const PresStar = (indice) => {
+    const pressStar = (indice) => {
         const newArray = [...stars];
         newArray.push(
             stars.map((value, index) => {
@@ -156,9 +162,10 @@ const VerRutina = (props) => {
         setStars(newArray);
         setEstrellas(indice);
         console.log(idRutina + "-" + token + "-" + estrellas);
-        valorar();
+        valorar(indice);
     };
-    const valorar = async () => {
+
+    const valorar = async (estrellas) => {
         setLoading(true);
         const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
         const json = {
@@ -179,7 +186,6 @@ const VerRutina = (props) => {
             setModalVisible(true);
         }
         setLoading(false);
-
     }
 
 
@@ -295,7 +301,7 @@ const VerRutina = (props) => {
                             name={value.icon}
                             size={25}
                             color="yellow"
-                            onPress={() => PresStar(value.id)}
+                            onPress={() => pressStar(value.id)}
                         />
                     ))}
                 </View>

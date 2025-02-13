@@ -181,6 +181,7 @@ const CrearRutina = (props) => {
             ejercicios: idEjercicios,
             dieta: dieta,
             vistaPrevia: vistaPrevia,
+            usuariosValorados: [],
             token: token,
         };
 
