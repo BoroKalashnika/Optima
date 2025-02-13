@@ -246,6 +246,28 @@ public class Controller {
 		}
 	}
 
+	@PostMapping("/optima/registrarFoto")
+	ResponseEntity<Object> registrarFoto(@RequestBody String requestBody) {
+		JSONObject jsonObject = new JSONObject(requestBody);
+		JSONObject response = new JSONObject();
+
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(jsonObject.getString("token"));
+		jsonObject.remove("token");
+
+		if (usuarioBaseDatos.isPresent()) {
+			Usuario usuario = usuarioBaseDatos.get();
+
+			usuario.setFotoPerfil(jsonObject.getString("fotoPerfil"));
+
+			usuarioRepository.save(usuario);
+			response.put("message", "Macros registrados");
+			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
+		} else {
+			response.put("message", "Token inválido");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
+		}
+	}
+
 	@DeleteMapping("/optima/eliminarHistorialImc")
 	ResponseEntity<Object> eliminarHistorialImc(@RequestParam(value = "token") String token) {
 		JSONObject response = new JSONObject();
