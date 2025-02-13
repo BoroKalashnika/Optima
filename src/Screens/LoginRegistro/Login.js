@@ -39,6 +39,7 @@ const Login = (props) => {
 
     useEffect(() => {
         const checkToken = async () => {
+            setLoading(true);
             const tokenCache = await getToken();
             if (!tokenCache) return;
             try {
@@ -86,6 +87,7 @@ const Login = (props) => {
                     }
                 ]);
             }
+            setLoading(false);
         };
         checkToken();
     }, []);
@@ -120,7 +122,7 @@ const Login = (props) => {
                     }
                 ]);
             }
-        }, 60000); // Cada 60 segundos (1 minuto)
+        }, 60000); // Cada 1 minuto
     };
 
     const loginUsuario = async () => {

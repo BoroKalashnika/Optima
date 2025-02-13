@@ -5,6 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import postData from '../../Utils/services/postData';
+import deleteData from '../../Utils/services/deleteData';
 import getData from '../../Utils/services/getData';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Context from '../../Utils/Context';
@@ -54,6 +55,12 @@ const CrearRutina = (props) => {
         idRutina && getEjercicios();
     }, []);
 
+    useEffect(() => {
+        if (idEjercicios && idEjercicios.length > 0) {
+            sumarEjercicios();
+        }
+    }, [idEjercicios]);
+
     const getIdRutina = async () => {
         const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
         const rutinas = await getData(config.API_OPTIMA + 'obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
@@ -92,7 +99,7 @@ const CrearRutina = (props) => {
             setIdEjercicios([]);
             setDraft('');
         }
-    },[token,setIdEjercicios]);
+    }, [token, setIdEjercicios]);
 
     const crearRutinaId = async () => {
         setLoading(true);
@@ -132,6 +139,37 @@ const CrearRutina = (props) => {
         );
     }
 
+    const sumarEjercicios = async () => {
+        if (!idRutina || !idEjercicios || idEjercicios.length === 0) {
+            console.log("No hay ejercicios para agregar o la rutina no está definida.");
+            return;
+        }
+        setLoading(true);
+        const json = {
+            id: idRutina,
+            ejercicios: idEjercicios,
+            token: token,
+        };
+
+        try {
+            const response = await postData(
+                config.API_OPTIMA + 'sumarEjerciciosRutina',
+                json, setLoading
+            );
+            if (!response.status === 200) {
+                setAlertMessage(response.data.message);
+                setAlertTitle('ERROR');
+                setModalVisible(true);
+            }
+
+        } catch (error) {
+            setAlertMessage(error);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+        }
+        setLoading(false);
+    };
+
     const registrarRutina = async () => {
         setLoading(true);
         const json = {
@@ -150,8 +188,6 @@ const CrearRutina = (props) => {
             config.API_OPTIMA + 'crearRutina',
             json, setLoading
         );
-        console.log(response);
-        console.log(json);
         if (response.status === 201) {
             setAlertMessage('Rutina creada correctamente.');
             setAlertTitle('Éxito');
@@ -202,12 +238,21 @@ const CrearRutina = (props) => {
         setEjerciciosRutina([]);
     };
 
-    const cancelarPress = () => {
-        setAlertMessage('Creación de rutina cancelada');
-        setAlertTitle('Cancelado');
-        setModalVisible(true);
-        limpiarCampos();
-        props.navigation.goBack();
+    const cancelarPress = async () => {
+        setLoading(true);
+        const response = await deleteData(config.API_OPTIMA + 'eliminarRutina?token=' + token + '&id=' + idRutina, setLoading);
+        setLoading(false);
+        if (response.status === 200) {
+            setAlertMessage('Creación de rutina cancelada');
+            setAlertTitle('Cancelado');
+            setModalVisible(true);
+            limpiarCampos();
+            props.navigation.goBack();
+        } else {
+            setAlertMessage(response.data.message);
+            setAlertTitle('ERROR');
+            setModalVisible(true);
+        }
     }
 
     const validarCampos = () => {
