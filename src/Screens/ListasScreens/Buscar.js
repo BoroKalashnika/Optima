@@ -1,9 +1,8 @@
-import { FlatList, View, StyleSheet, Text, Pressable, Modal } from 'react-native';
+import { FlatList, View, StyleSheet, Text, Modal } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useState, useContext, useCallback } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
-import Icon from 'react-native-vector-icons/Ionicons';
 import getData from '../../Utils/services/getData';
 import Context from '../../Utils/Context';
 import { Picker } from '@react-native-picker/picker';
@@ -15,59 +14,53 @@ const Buscar = (props) => {
     const { modalVisible, setModalVisible } = useContext(Context);
     const { alertMessage, setAlertMessage } = useContext(Context);
     const { alertTitle, setAlertTitle } = useContext(Context);
-    const [rutinas, setRutinas] = useState([]);
-    const [paginasTotal, setPaginasTotal] = useState();
-    const [paginActual, setPaginActual] = useState(0);
-    const [indiceActual, setIndiceActual] = useState(0);
+    const { idRutina, setIdRutina } = useContext(Context);
     const [filtro, setFiltro] = useState(false);
     const [dificultad, setDificultad] = useState('Principiante');
     const [musculo, setMusculo] = useState('Biceps');
     const [ambito, setAmbito] = useState('Gimnasio');
-    const { idRutina, setIdRutina } = useContext(Context);
+    const [rutinas, setRutinas] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [index, setIndex] = useState(0);
 
     useFocusEffect(
         useCallback(() => {
-            setPaginActual(0);
-            setIndiceActual(0);
-            getRutinas();
+            setIndex(0);
+            setRutinas([]);
+            setHasMore(true);
+            getRutinas(0);
         }, [])
     );
 
-    const getRutinas = async () => {
+    const getRutinas = async (currentIndex) => {
+        if (loading || !hasMore) return;
+        setLoading(true);
+
         try {
-            const response = await getData(config.API_OPTIMA + 'obtenerRutinas?token=' + token);
-            const totalRutinas = response.count;
-            setPaginasTotal(Math.ceil(totalRutinas / 4));
-            const newArray = [];
-            response.rutinas.map((element) => {
-                newArray.push(element);
-            })
-            setRutinas(newArray);
+            const response = await getData(config.API_OPTIMA + `obtenerRutinas?token=${token}&index=${currentIndex}&offset=5`);
+            const newRutinas = response.rutinas;
+
+            if (newRutinas.length > 0) {
+                setRutinas((prevRutinas) => [...prevRutinas, ...newRutinas]);
+                setIndex(currentIndex + 4);
+            } else {
+                setHasMore(false);
+            }
         } catch (error) {
+            /*
             setAlertTitle("Error");
             setAlertMessage("No se pudo cargar las rutinas. Por favor, inténtalo de nuevo.");
             setModalVisible(true);
+            */
+        } finally {
+            setLoading(false);
         }
     };
-
-    const handleNext = () => {
-        if (paginActual < paginasTotal - 1) {
-            setPaginActual(paginActual + 1);
-        }
-    };
-
-    const handlePrevious = () => {
-        if (paginActual > 0) {
-            setPaginActual(paginActual - 1);
-        }
-    };
-
-    const paginatedRutinas = rutinas.slice(paginActual * 4, (paginActual + 1) * 4);
 
     return (
         <View style={styles.container}>
             <HeaderRutina tipo={'ajustes'} titulo={'Buscar Rutinas'} />
-            {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
 
             {filtro ? (
                 <View style={styles.ContainerFiltro}>
@@ -120,8 +113,8 @@ const Buscar = (props) => {
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
                 <FlatList
-                    data={paginatedRutinas}
-                    keyExtractor={(item) => item.id}
+                    data={rutinas}
+                    keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
                         <Card
                             dificultad={item.dificultad}
@@ -136,29 +129,18 @@ const Buscar = (props) => {
                             }}
                         />
                     )}
+                    onEndReached={() => getRutinas(index)}
+                    onEndReachedThreshold={0.01}
+                    ListFooterComponent={loading && <Text style={styles.loadingText}>Cargando más rutinas...</Text>}
                 />
             </View>
-            <View style={styles.subContainer}>
-                {paginActual > 0 && (
-                    <Pressable
-                        style={[styles.bottom, { marginRight: 5 }]}
-                        onPress={() => handlePrevious()}>
-                        <Text style={styles.resetPasswordText}>Atras</Text>
-                    </Pressable>
-                )}
-                {paginActual < paginasTotal - 1 && (
-                    <Pressable
-                        style={[styles.bottom, { marginLeft: 5 }]}
-                        onPress={() => handleNext()}>
-                        <Text style={styles.resetPasswordText}>Siguiente</Text>
-                    </Pressable>
-                )}
-            </View>
+
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}>
+                onRequestClose={() => setModalVisible(false)}
+            >
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>{alertTitle}</Text>
@@ -171,7 +153,7 @@ const Buscar = (props) => {
             </Modal>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -192,6 +174,11 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 10,
         padding: 5
+    },
+    loadingText: {
+        textAlign: 'center',
+        color: 'white',
+        marginVertical: 10
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -284,16 +271,16 @@ const styles = StyleSheet.create({
         flex: 1
     },
     ContainerFiltro: {
-        width: '90%', // Ocupa el 90% del ancho
+        width: '90%',
         marginTop: 15,
         marginBottom: 10,
         padding: 5,
-        justifyContent: 'center', // Centra los elementos verticalmente
-        alignItems: 'center', // Centra los elementos horizontalmente
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     pickerContainer: {
-        width: '100%', // Ocupa el 100% del ancho del contenedor padre (90% del total)
+        width: '100%',
         marginBottom: 10,
         backgroundColor: '#374151',
         color: '#F9FAFB',
@@ -303,7 +290,7 @@ const styles = StyleSheet.create({
     },
 
     imagePickerButton: {
-        width: '100%', // Ocupa el 100% del ancho del contenedor padre (90% del total)
+        width: '100%',
         backgroundColor: '#607cff',
         justifyContent: 'center',
         borderWidth: 2,
