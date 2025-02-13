@@ -29,12 +29,12 @@ const Ajustes = (props) => {
             json, setLoading
         );
         if (response.status === 200) {
-            setAlertTitle('Cerrando sesion')
-            setAlertMessage('Se ha deslogueado de la aplicación')
-            setModalVisible(true);
             await removeToken();
             setToken('');
-            props.navigation.navigate('Login');
+            Alert.alert("Cerrando sesión", 'Se ha deslogueado correctamente');
+            props.navigation.navigate('Login')
+        } else {
+            Alert.alert("ERROR", 'No se ha podido cerrar la sesión');
         }
         setLoading(false);
     }
