@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     image: {
         width: 130,
         height: 130,
+        borderRadius:10
 
     },
     icono: {
