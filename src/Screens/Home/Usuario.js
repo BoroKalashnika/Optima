@@ -23,7 +23,8 @@ const Usuario = (props) => {
     const [musculo, setMusculo] = useState();
     const [estrellas, setEstrellas] = useState();
     const [titulo, setTitulo] = useState();
-
+    const [vistaPrevia, setVistaPrevia] = useState(null);
+    const [foto, setFoto] = useState();
     const screenWidth = Dimensions.get('window').width;
 
     useFocusEffect(() => {
@@ -49,6 +50,10 @@ const Usuario = (props) => {
                     setMacros(response.macros.split('|'));
                 } else {
                     setMacros([]);
+                }
+                if (response.fotoPerfil != "") {
+                    setFoto(response.fotoPerfil);
+                    setVistaPrevia(true);
                 }
             });
         }, [])
@@ -79,8 +84,10 @@ const Usuario = (props) => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <HeaderRutina tipo={'user'} onAjustes={()=>props.navigation.navigate("Ajustes")}/>
-            <Image source={require('../../Assets/img/perfil.png')} style={styles.profileImage} />
+            <HeaderRutina tipo={'user'} onAjustes={() => props.navigation.navigate("Ajustes")} />
+            {vistaPrevia ? <Image source={{ uri: foto }} style={styles.profileImage} /> :
+                <Image source={require('../../Assets/img/perfil.png')} style={styles.profileImage} />
+            }
             <Text style={styles.name}>{nombre}</Text>
             <Text style={styles.frase}>{frasesMotivadoras.frases[getRandom()]}</Text>
             <View style={styles.containerCard}>
@@ -140,10 +147,10 @@ const Usuario = (props) => {
                     {macros && macros.length > 0 ? (
                         <View style={styles.listItem}>
                             <View>
-                            <Text style={styles.result}>Calorías Totales.........................{macros[0]} kcal</Text>
-                            <Text style={styles.result}>Carbohidratos............................{macros[1]} g</Text>
-                            <Text style={styles.result}>Proteínas...................................{macros[2]} g</Text>
-                            <Text style={styles.result}>Grasas.......................................{macros[3]} g</Text>
+                                <Text style={styles.result}>Calorías Totales.........................{macros[0]} kcal</Text>
+                                <Text style={styles.result}>Carbohidratos............................{macros[1]} g</Text>
+                                <Text style={styles.result}>Proteínas...................................{macros[2]} g</Text>
+                                <Text style={styles.result}>Grasas.......................................{macros[3]} g</Text>
                             </View>
                             <PieChart
                                 data={[
@@ -182,10 +189,10 @@ const Usuario = (props) => {
                                 accessor="population"
                                 style={{
                                     borderRadius: 16,
-                                    marginTop:2.5,
+                                    marginTop: 2.5,
                                 }}
                             />
-                            </View>
+                        </View>
                     ) : (
                         <View style={styles.listItem}>
                             <Text style={styles.listItemText}>No has realizado ningún cálculo</Text>
@@ -214,7 +221,7 @@ const styles = StyleSheet.create({
     profileImage: {
         width: 185,
         height: 185,
-        borderRadius: 50,
+        borderRadius: 100,
         marginTop: 10,
     },
     name: {
@@ -296,7 +303,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderTopWidth: 1,
         borderTopColor: '#ffffff55',
-        alignItems:'center',
+        alignItems: 'center',
     },
     listItemText: {
         color: '#fff',
@@ -314,7 +321,7 @@ const styles = StyleSheet.create({
     result: {
         fontSize: 15,
         color: 'white',
-        fontWeight:'500',
+        fontWeight: '500',
     },
 });
 
