@@ -17,7 +17,7 @@ const Ajustes = (props) => {
     const { modalVisible, setModalVisible } = useContext(Context);
     const { alertMessage, setAlertMessage } = useContext(Context);
     const { alertTitle, setAlertTitle } = useContext(Context);
-    const [modificar, setModificar] = useState(false);
+    const [vistaPrevia, setVistaPrevia] = useState(null);
 
     const cerrarSesion = async () => {
         setLoading(true);
@@ -58,7 +58,7 @@ const Ajustes = (props) => {
                     }).catch(err => console.error(err));
             }
         });
-        setModificar(true);
+       
     }
 
     if (loading) {
@@ -71,7 +71,7 @@ const Ajustes = (props) => {
             <HeaderRutina tipo={'user'} />
             <View style={styles.profileContainer}>
                 <Pressable onPress={() => cambairFoto()}>
-                    {modificar ? <Image source={require('../Assets/img/perfil.png')} style={styles.profileImage} /> : (
+                    {vistaPrevia ? <Image source={{ uri: vistaPrevia }} style={styles.profileImage} /> : (
                         <>
                             <Image source={require('../Assets/img/perfil.png')} style={styles.profileImage} />
                             <View style={styles.editIcon}>
