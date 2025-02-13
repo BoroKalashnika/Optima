@@ -647,15 +647,36 @@ public class Controller {
 			@RequestParam(value = "id") String id) {
 		JSONObject respuesta = new JSONObject();
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
-		if (usuarioBaseDatos.isPresent()) {
-			Optional<Ejercicio> ej = ejercicioRepository.findById(id);
-			cloudinaryService.deleteVideo(ej.get().getVideo());
-			ejercicioRepository.deleteById(id);
-			respuesta.put("message", "Ejercicio eliminada de la rutina");
-			return ResponseEntity.status(HttpStatus.OK).body(respuesta.toString());
+
+		if (!usuarioBaseDatos.isPresent()) {
+			respuesta.put("message", "Token expirado.");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respuesta.toString());
 		}
-		respuesta.put("message", "Token expirado.");
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respuesta.toString());
+
+		Usuario usuario = usuarioBaseDatos.get();
+		Optional<Ejercicio> ej = ejercicioRepository.findById(id);
+
+		if (!ej.isPresent()) {
+			respuesta.put("message", "Ejercicio no encontrado.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta.toString());
+		}
+
+		cloudinaryService.deleteVideo(ej.get().getVideo());
+		ejercicioRepository.deleteById(id);
+
+		List<Rutina> rutinas = rutinaRepository.findByIdUsuario(usuario.getId());
+
+		for (Rutina rutina : rutinas) {
+			if (rutina.getNombreRutina().equals("$$crea$$")) {
+				List<String> ejercicios = rutina.getEjercicios();
+				if (ejercicios.remove(id)) {
+					rutinaRepository.save(rutina);
+				}
+			}
+		}
+
+		respuesta.put("message", "Ejercicio eliminado de la rutina.");
+		return ResponseEntity.status(HttpStatus.OK).body(respuesta.toString());
 	}
 
 	// API
