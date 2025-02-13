@@ -1,6 +1,6 @@
 import { FlatList, View, StyleSheet, Text, Modal, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useState, useContext, useCallback, useRef } from 'react';
+import { useState, useContext, useCallback, useRef, useEffect } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import getData from '../../Utils/services/getData';
@@ -16,14 +16,16 @@ const Buscar = (props) => {
     const { alertTitle, setAlertTitle } = useContext(Context);
     const { idRutina, setIdRutina } = useContext(Context);
     const [filtro, setFiltro] = useState(false);
-    const [dificultad, setDificultad] = useState('Principiante');
-    const [musculo, setMusculo] = useState('Biceps');
-    const [ambito, setAmbito] = useState('Gimnasio');
+    const [dificultad, setDificultad] = useState(null);
+    const [musculo, setMusculo] = useState(null);
+    const [ambito, setAmbito] = useState(null);
     const [rutinas, setRutinas] = useState([]);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
     const [index, setIndex] = useState(0);
     const flatListRef = useRef(null);
+    const isFetching = useRef(false);
+    const [buscar, setBuscar] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -34,16 +36,38 @@ const Buscar = (props) => {
         }, [])
     );
 
+    useEffect(() => {
+        if (buscar) {
+            setIndex(0);
+            setRutinas([]);
+            setHasMore(true);
+            getRutinas(0);
+            setBuscar(false);
+        }
+    }, [buscar]);
+
     const getRutinas = async (currentIndex) => {
-        if (loading || !hasMore) return;
+        if (loading || !hasMore || isFetching.current) return;
+        isFetching.current = true;
         setLoading(true);
-    
+
         try {
-            const response = await getData(config.API_OPTIMA + `obtenerRutinas?token=${token}&index=${currentIndex}&offset=4`);
+            let url = `${config.API_OPTIMA}obtenerRutinas?token=${token}&index=${currentIndex}&offset=4`;
+
+            if (dificultad) url += `&dificultad=${dificultad}`;
+            if (ambito) url += `&ambito=${ambito}`;
+            if (musculo) url += `&grupoMuscular=${musculo}`;
+
+            const response = await getData(url);
+            console.log(response);
+            if (response.count === 0 || !response.count) {
+                setHasMore(false);
+                return;
+            }
             const newRutinas = response.rutinas;
-    
-            setRutinas(currentIndex === 0 ? newRutinas : [...rutinas, ...newRutinas]);
-    
+
+            setRutinas(prevRutinas => currentIndex === 0 ? newRutinas : [...prevRutinas, ...newRutinas]);
+
             if (newRutinas.length > 0) {
                 setIndex(currentIndex + 4);
                 if ((currentIndex + 4) >= response.count) {
@@ -56,9 +80,9 @@ const Buscar = (props) => {
             console.error(error);
         } finally {
             setLoading(false);
+            isFetching.current = false;
         }
     };
-    
 
     return (
         <View style={styles.container}>
@@ -71,6 +95,7 @@ const Buscar = (props) => {
                             selectedValue={dificultad}
                             onValueChange={(itemValue) => setDificultad(itemValue)}
                             style={styles.picker}>
+                            <Picker.Item label="Selecciona dificultad..." value={null} style={styles.pickerItem} />
                             <Picker.Item label="Principiante" value="Principiante" style={styles.pickerItem} />
                             <Picker.Item label="Intermedio" value="Intermedio" style={styles.pickerItem} />
                             <Picker.Item label="Experto" value="Experto" style={styles.pickerItem} />
@@ -82,6 +107,7 @@ const Buscar = (props) => {
                             selectedValue={ambito}
                             onValueChange={(itemValue) => setAmbito(itemValue)}
                             style={styles.picker}>
+                            <Picker.Item label="Selecciona ambito..." value={null} style={styles.pickerItem} />
                             <Picker.Item label="Gimnasio" value="Gimnasio" style={styles.pickerItem} />
                             <Picker.Item label="Calistenia" value="Calistenia" style={styles.pickerItem} />
                             <Picker.Item label="Casa" value="Casa" style={styles.pickerItem} />
@@ -93,6 +119,7 @@ const Buscar = (props) => {
                             selectedValue={musculo}
                             onValueChange={(itemValue) => setMusculo(itemValue)}
                             style={styles.picker}>
+                            <Picker.Item label="Selecciona musculo..." value={null} style={styles.pickerItem} />
                             <Picker.Item label="Biceps" value="Biceps" style={styles.pickerItem} />
                             <Picker.Item label="Triceps" value="Triceps" style={styles.pickerItem} />
                             <Picker.Item label="Pecho" value="Pecho" style={styles.pickerItem} />
@@ -100,15 +127,37 @@ const Buscar = (props) => {
                             <Picker.Item label="Pierna" value="Pierna" style={styles.pickerItem} />
                         </Picker>
                     </View>
-                    <Button mode="contained" style={styles.imagePickerButton} onPress={() => { setFiltro(false) }}>
+                    <Button
+                        mode="contained"
+                        style={styles.imagePickerButton}
+                        onPress={() => {
+
+                            setIndex(0); // Reinicia la paginación
+                            getRutinas(0); // Llama a la función para buscar con filtros
+                            setFiltro(false);
+                            setHasMore(true); // Permite más peticiones
+                            setBuscar(true);
+                        }}>
                         Buscar
                     </Button>
                 </View>
             ) : (
-                <View style={styles.buttonContainer}>
-                    <Button mode="contained" style={styles.imagePickerButton} onPress={() => { setFiltro(true) }}>
+                <View style={styles.ContainerFiltro}>
+                    <Button
+                        mode="contained"
+                        style={styles.imagePickerButton}
+                        onPress={() => {
+                            setFiltro(true);
+                            setRutinas([]);  // Vacía la lista
+                            setHasMore(false); // Detiene la carga de más rutinas
+                            setDificultad(null);
+                            setMusculo(null);
+                            setAmbito(null);
+                            setIndex(0); // Reinicia la paginación
+                        }}>
                         Filtrar
                     </Button>
+
                 </View>
             )}
 
@@ -133,7 +182,7 @@ const Buscar = (props) => {
                         />
                     )}
                     onEndReached={() => getRutinas(index)}
-                    onEndReachedThreshold={0.5}
+                    onEndReachedThreshold={0.1}
                     ListFooterComponent={
                         <View>
                             {loading && <Text style={styles.loadingText}>Cargando más rutinas...</Text>}
