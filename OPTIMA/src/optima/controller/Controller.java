@@ -440,7 +440,8 @@ public class Controller {
 
 				if (!yaValorado) {
 					usuariosValorados.add(valoracionIdusuario);
-					usuario.setPuntuacion(usuario.getPuntuacion() + partes[1]);
+					int valoracion = Integer.parseInt(usuario.getPuntuacion()) + Integer.parseInt(partes[1]);
+					usuario.setPuntuacion(valoracion + "");
 				}
 
 				if (usuariosValorados.size() > 0) {
