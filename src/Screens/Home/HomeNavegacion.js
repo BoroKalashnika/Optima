@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Home from './Home';
-import Buscar from '../ListasScreens/BuscarNavegacion';
+import Buscar from '../ListasScreens/Buscar';
 import CrearRutinaNavegacion from '../CrearRutina/CrearRutinaNavegacion';
-import FavoritosNavegacion from '../ListasScreens/FavoritosNavegacion';
+import Favoritos from '../ListasScreens/Favoritos';
 import { PaperProvider } from 'react-native-paper';
 
 const Tab = createBottomTabNavigator();
@@ -44,7 +44,7 @@ const HomeNavegacion = (props) => {
 
                 />
                 <Tab.Screen
-                    name="Favoritos" component={FavoritosNavegacion} options={{
+                    name="Favoritos" component={Favoritos} options={{
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="heart" size={size} color={color} />
                         ),

@@ -87,7 +87,7 @@ const Usuario = (props) => {
                 {!idRutinaActiva ?
                     <View style={{ marginTop: 35, marginBottom: 15, alignItems: "center" }}>
                         <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>No tienes todavía ninguna rutina activa ¡ENCUENTRALA!</Text>
-                        <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("BuscarNavegacion")}>
+                        <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Buscar")}>
                             <Text style={styles.textLogin}>Buscar Rutina</Text>
                         </Pressable>
                     </View> :
