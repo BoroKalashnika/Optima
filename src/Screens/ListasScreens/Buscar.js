@@ -1,6 +1,6 @@
-import { FlatList, View, StyleSheet, Text, Modal } from 'react-native';
+import { FlatList, View, StyleSheet, Text, Modal, TouchableOpacity  } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useState, useContext, useCallback } from 'react';
+import { useState, useContext, useCallback, useRef } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import getData from '../../Utils/services/getData';
@@ -23,6 +23,7 @@ const Buscar = (props) => {
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
     const [index, setIndex] = useState(0);
+    const flatListRef = useRef(null);
 
     useFocusEffect(
         useCallback(() => {
@@ -38,7 +39,7 @@ const Buscar = (props) => {
         setLoading(true);
 
         try {
-            const response = await getData(config.API_OPTIMA + `obtenerRutinas?token=${token}&index=${currentIndex}&offset=5`);
+            const response = await getData(config.API_OPTIMA + `obtenerRutinas?token=${token}&index=${currentIndex}&offset=4`);
             const newRutinas = response.rutinas;
 
             if (newRutinas.length > 0) {
@@ -113,6 +114,7 @@ const Buscar = (props) => {
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
                 <FlatList
+                    ref={flatListRef}
                     data={rutinas}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
@@ -130,8 +132,20 @@ const Buscar = (props) => {
                         />
                     )}
                     onEndReached={() => getRutinas(index)}
-                    onEndReachedThreshold={0.01}
-                    ListFooterComponent={loading && <Text style={styles.loadingText}>Cargando más rutinas...</Text>}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={
+                        <View>
+                            {loading && <Text style={styles.loadingText}>Cargando más rutinas...</Text>}
+                            {rutinas.length > 5 && (
+                                <TouchableOpacity 
+                                    style={styles.scrollTopButton} 
+                                    onPress={() => flatListRef.current.scrollToOffset({ animated: true, offset: 0 })}
+                                >
+                                    <Text style={styles.scrollTopText}>Volver al principio</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    }
                 />
             </View>
 
@@ -174,6 +188,19 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 10,
         padding: 5
+    },
+    scrollTopButton: {
+        backgroundColor: '#607cff',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+        alignSelf: 'center',
+        marginVertical: 15,
+    },
+    scrollTopText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     loadingText: {
         textAlign: 'center',
