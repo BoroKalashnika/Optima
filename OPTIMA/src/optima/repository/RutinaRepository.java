@@ -1,6 +1,8 @@
 package optima.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+
 import optima.model.Rutina;
 
 import java.util.List;
@@ -17,4 +19,7 @@ public interface RutinaRepository extends MongoRepository<Rutina, String> {
     void deleteById(String id);
     
     List<Rutina> findByIdUsuario(String idUsuario);
+    
+    @Query("{ 'dificultad': ?0, 'grupoMuscular': ?1, 'ambito': ?2 }")
+    List<Rutina> findByFilters(String dificultad, String grupoMuscular, String ambito);
 }

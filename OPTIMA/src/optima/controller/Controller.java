@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -263,43 +263,79 @@ public class Controller {
 	}
 
 	// ACCIONES RUITNAS
+//	@GetMapping("/optima/obtenerRutinas")
+//	public ResponseEntity<Object> obtenerRutinas(@RequestParam(value = "token") String token) {
+//		// @RequestParam(value = "index") int index, @RequestParam(value = "offset") int
+//		// offset) {
+//		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
+//		JSONObject response = new JSONObject();
+//		if (usuarioBaseDatos.isPresent()) {
+//			List<Rutina> rutinasBaseDatos = rutinaRepository.findAll();
+//			if (rutinasBaseDatos.size() < 1) {
+//				response.put("count", "0");
+//				response.put("rutinas", "no hay rutinas");
+//				return ResponseEntity.ok(response.toString());
+//			} else {
+//				int count = 0;
+//				List<Rutina> RutinasBuscar = new ArrayList<Rutina>();
+//				for (int i = 0; i < rutinasBaseDatos.size(); i++) {
+//					if (!rutinasBaseDatos.get(i).getNombreRutina().equals("$$crea$$")) {
+//						RutinasBuscar.add(rutinasBaseDatos.get(i));
+//						count++;
+//					}
+//				}
+//				response.put("count", count);
+//				response.put("rutinas", RutinasBuscar);
+//				return ResponseEntity.ok(response.toString());
+//			}
+//		} else {
+//			response.put("message", "Token inválido");
+//			return ResponseEntity.ok(response.toString());
+//		}
+//
+////		int end = Math.min(index + offset, rutinas.size());
+////		if (index < 0 || index >= rutinas.size()) {
+////			response.put("error", "Rango de índices inválido");
+////			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
+////		}
+////
+////		List<Rutina> rutinasIndex = new ArrayList<>(rutinas.subList(index, end));
+//	}
+
 	@GetMapping("/optima/obtenerRutinas")
-	public ResponseEntity<Object> obtenerRutinas(@RequestParam(value = "token") String token) {
-		// @RequestParam(value = "index") int index, @RequestParam(value = "offset") int
-		// offset) {
+	public ResponseEntity<Object> obtenerRutinas(@RequestParam("token") String token, @RequestParam("index") int index,
+			@RequestParam("offset") int offset, @RequestParam(value = "dificultad", required = false) String dificultad,
+			@RequestParam(value = "grupoMuscular", required = false) String grupoMuscular,
+			@RequestParam(value = "ambito", required = false) String ambito) {
+
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		JSONObject response = new JSONObject();
-		if (usuarioBaseDatos.isPresent()) {
-			List<Rutina> rutinasBaseDatos = rutinaRepository.findAll();
-			if (rutinasBaseDatos.size() < 1) {
-				response.put("count", "0");
-				response.put("rutinas", "no hay rutinas");
-				return ResponseEntity.ok(response.toString());
-			} else {
-				int count = 0;
-				List<Rutina> RutinasBuscar = new ArrayList<Rutina>();
-				for (int i = 0; i < rutinasBaseDatos.size(); i++) {
-					if (!rutinasBaseDatos.get(i).getNombreRutina().equals("$$crea$$")) {
-						RutinasBuscar.add(rutinasBaseDatos.get(i));
-						count++;
-					}
-				}
-				response.put("count", count);
-				response.put("rutinas", RutinasBuscar);
-				return ResponseEntity.ok(response.toString());
-			}
-		} else {
+
+		if (!usuarioBaseDatos.isPresent()) {
 			response.put("message", "Token inválido");
 			return ResponseEntity.ok(response.toString());
 		}
 
-//		int end = Math.min(index + offset, rutinas.size());
-//		if (index < 0 || index >= rutinas.size()) {
-//			response.put("error", "Rango de índices inválido");
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
-//		}
-//
-//		List<Rutina> rutinasIndex = new ArrayList<>(rutinas.subList(index, end));
+		List<Rutina> rutinasBaseDatos = rutinaRepository.findAll();
+		List<Rutina> rutinasFiltradas = rutinasBaseDatos.stream().filter(r -> !r.getNombreRutina().equals("$$crea$$"))
+				.filter(r -> dificultad == null || r.getDificultad().equalsIgnoreCase(dificultad))
+				.filter(r -> grupoMuscular == null || r.getGrupoMuscular().equalsIgnoreCase(grupoMuscular))
+				.filter(r -> ambito == null || r.getAmbito().equalsIgnoreCase(ambito)).collect(Collectors.toList());
+
+		int totalRutinas = rutinasFiltradas.size();
+
+		if (index < 0 || index >= totalRutinas) {
+			response.put("error", "Rango de índices inválido");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
+		}
+
+		int end = Math.min(index + offset, totalRutinas);
+		List<Rutina> rutinasPaginadas = rutinasFiltradas.subList(index, end);
+
+		response.put("count", totalRutinas);
+		response.put("rutinas", rutinasPaginadas);
+
+		return ResponseEntity.ok(response.toString());
 	}
 
 	@GetMapping("/optima/obtenerRutinasCreadas")
