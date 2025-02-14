@@ -175,6 +175,7 @@ const Ajustes = (props) => {
                             style={[styles.input, isDarkMode ? styles.darkInput : styles.lightInput]}
                             value={nuevoNombre}
                             onChangeText={setNuevoNombre}
+                            maxLength={15}
                         />
                     ) : (
                         <Text style={[styles.name, isDarkMode ? styles.darkText : styles.lightText]}>{nombre}</Text>
