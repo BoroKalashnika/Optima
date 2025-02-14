@@ -269,6 +269,25 @@ public class Controller {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
+	
+	@PostMapping("/optima/cambiarNombre")
+	ResponseEntity<Object> cambiarNombre(@RequestBody String requestBody) {
+		JSONObject jsonObject = new JSONObject(requestBody);
+		JSONObject response = new JSONObject();
+
+		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(jsonObject.getString("token"));
+		jsonObject.remove("token");
+		if (usuarioBaseDatos.isPresent()) {
+			Usuario usuario = usuarioBaseDatos.get();
+			usuario.setNombre(jsonObject.getString("nuevoNombre"));
+			usuarioRepository.save(usuario);
+			response.put("message", "Nombre cambiada");
+			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
+		} else {
+			response.put("message", "Token inválido");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
+		}
+	}
 
 	@DeleteMapping("/optima/eliminarHistorialImc")
 	ResponseEntity<Object> eliminarHistorialImc(@RequestParam(value = "token") String token) {
