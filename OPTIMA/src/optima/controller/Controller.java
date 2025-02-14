@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -289,6 +290,8 @@ public class Controller {
 			@RequestParam(value = "grupoMuscular", required = false) String grupoMuscular,
 			@RequestParam(value = "ambito", required = false) String ambito) {
 
+		final String clave;
+
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		JSONObject response = new JSONObject();
 
@@ -297,11 +300,19 @@ public class Controller {
 			return ResponseEntity.ok(response.toString());
 		}
 
+		try {
+			clave = claveRutina();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener clave de la rutina");
+		}
+
 		List<Rutina> rutinasBaseDatos = rutinaRepository.findAll();
-		List<Rutina> rutinasFiltradas = rutinasBaseDatos.stream().filter(r -> !r.getNombreRutina().equals("$$crea$$"))
+		List<Rutina> rutinasFiltradas = rutinasBaseDatos.stream().filter(r -> !r.getNombreRutina().equals(clave))
 				.filter(r -> dificultad == null || r.getDificultad().equalsIgnoreCase(dificultad))
 				.filter(r -> grupoMuscular == null || r.getGrupoMuscular().equalsIgnoreCase(grupoMuscular))
-				.filter(r -> ambito == null || r.getAmbito().equalsIgnoreCase(ambito)).collect(Collectors.toList());
+				.filter(r -> ambito == null || r.getAmbito().equalsIgnoreCase(ambito))
+				.sorted(Comparator.comparing(Rutina::getValoracion).reversed()).collect(Collectors.toList());
 
 		int totalRutinas = rutinasFiltradas.size();
 
@@ -465,7 +476,7 @@ public class Controller {
 			Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(nuevaRutina.getToken());
 			if (usuarioBaseDatos.isPresent()) {
 				nuevaRutina.setToken(null);
-				if (nuevaRutina.getNombreRutina().equals("$$crea$$")) {
+				if (nuevaRutina.getNombreRutina().equals(claveRutina())) {
 					Rutina rutinaGuardada = rutinaRepository.save(nuevaRutina);
 					Usuario usuario = usuarioBaseDatos.get();
 					usuario.getRutinasCreadas().add(rutinaGuardada.getId());
@@ -483,7 +494,7 @@ public class Controller {
 						if (rutinaListaUsuario.isPresent()) {
 							Rutina rutinaFinalizar = rutinaListaUsuario.get();
 
-							if (rutinaFinalizar.getNombreRutina().equals("$$crea$$")) {
+							if (rutinaFinalizar.getNombreRutina().equals(claveRutina())) {
 								rutinaFinalizar.setNombreRutina(nuevaRutina.getNombreRutina());
 								rutinaFinalizar.setValoracion(nuevaRutina.getValoracion());
 								rutinaFinalizar.setDificultad(nuevaRutina.getDificultad());
@@ -680,7 +691,7 @@ public class Controller {
 
 	@DeleteMapping("/optima/eliminarEjercicio")
 	public ResponseEntity<Object> eliminarEjercicio(@RequestParam(value = "token") String token,
-			@RequestParam(value = "id") String id) {
+			@RequestParam(value = "id") String id) throws IOException {
 		JSONObject respuesta = new JSONObject();
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 
@@ -703,7 +714,7 @@ public class Controller {
 		List<Rutina> rutinas = rutinaRepository.findByIdUsuario(usuario.getId());
 
 		for (Rutina rutina : rutinas) {
-			if (rutina.getNombreRutina().equals("$$crea$$")) {
+			if (rutina.getNombreRutina().equals(claveRutina())) {
 				List<String> ejercicios = rutina.getEjercicios();
 				if (ejercicios.remove(id)) {
 					rutinaRepository.save(rutina);
@@ -715,7 +726,7 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.OK).body(respuesta.toString());
 	}
 
-	// API
+	// RESOURCES
 	public String ipAPI() throws IOException {
 		String api;
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("IP_API.txt");
@@ -723,5 +734,14 @@ public class Controller {
 		api = br.readLine();
 		br.close();
 		return api;
+	}
+
+	public String claveRutina() throws IOException {
+		String clave;
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("RUTINA_KEY.txt");
+		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+		clave = br.readLine();
+		br.close();
+		return clave;
 	}
 }
