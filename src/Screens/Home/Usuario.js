@@ -131,7 +131,7 @@ const Usuario = (props) => {
                             );
                         })
                         ) : (<View style={styles.listItem}>
-                            <Text style={styles.listItemText}>No has realizado ningún cálculo</Text>
+                            <Text style={styles.listItemText}>You have not made any calculations</Text>
                         </View>
                         )}
                     </ScrollView>

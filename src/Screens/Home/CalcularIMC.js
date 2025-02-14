@@ -55,12 +55,12 @@ const CalcularIMC = (props) => {
 
         if (!pesoNum || !alturaNum || alturaNum <= 0 || pesoNum <= 0) {
             setTitulo('Error')
-            setMensaje('Por favor, ingrese valores válidos.');
+            setMensaje('Please enter valid values.');
             setModalVisible(true);
             return;
         } else if (alturaHasErrors() || pesoHasErrors()) {
             setTitulo('Error')
-            setMensaje('Por favor, ingrese valores válidos.');
+            setMensaje('Please enter valid values.');
             setModalVisible(true);
             return;
         }
@@ -71,19 +71,19 @@ const CalcularIMC = (props) => {
 
         let mensajeResultado = '';
         if (resultadoIMC < 18.5) {
-            mensajeResultado = 'Bajo peso';
+            mensajeResultado = 'Underweight';
         } else if (resultadoIMC >= 18.5 && resultadoIMC < 24.9) {
-            mensajeResultado = 'Peso normal';
+            mensajeResultado = 'Normal weight';
         } else if (resultadoIMC >= 25 && resultadoIMC < 29.9) {
-            mensajeResultado = 'Sobrepeso';
+            mensajeResultado = 'Overweight';
         } else {
-            mensajeResultado = 'Obesidad';
+            mensajeResultado = 'Obesity';
         }
         setTitulo('Resultado')
         setMensaje(mensajeResultado);
         setModalVisible(true);
 
-        const mensaje = `Peso: ${pesoNum} kg | Altura: ${alturaNum} m | IMC: ${resultadoIMC.toFixed(2)} - ${mensajeResultado}`
+        const mensaje = `Weight: ${pesoNum} kg | Height: ${alturaNum} m | IMC: ${resultadoIMC.toFixed(2)} - ${mensajeResultado}`
 
         const json = {
             token: token,
@@ -94,8 +94,8 @@ const CalcularIMC = (props) => {
         try {
             const response = await postData(config.API_OPTIMA + 'registrarImc', json, setLoading);
             if (response.status === 200) {
-                setTitulo('Calculado');
-                setMensaje('Cálculo realizado con exito \n' + response.data.message);
+                setTitulo('Calculated');
+                setMensaje('Calculation performed successfully \n' + response.data.message);
                 setModalVisible(true);
                 const nuevoHistorial = [
                     ...historial,
@@ -109,7 +109,7 @@ const CalcularIMC = (props) => {
             }
         } catch (error) {
             setTitulo('Error');
-            setMensaje('Error al registrar el IMC');
+            setMensaje('Error when registering IMC');
             setModalVisible(true);
         }
     };
@@ -140,7 +140,7 @@ const CalcularIMC = (props) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Calculadora de IMC</Text>
+            <Text style={styles.title}>Calculator IMC</Text>
             {(peso != '' && pesoHasErrors()) && (
                 <HelperText type="error">
                     Peso en kilogramos
@@ -148,7 +148,7 @@ const CalcularIMC = (props) => {
             )}
             <TextInput
                 style={styles.input}
-                placeholder="Peso (kg)"
+                placeholder="Weight (kg)"
                 placeholderTextColor="#90caf9"
                 keyboardType="numeric"
                 value={peso}
@@ -161,7 +161,7 @@ const CalcularIMC = (props) => {
             )}
             <TextInput
                 style={styles.input}
-                placeholder="Altura (m)"
+                placeholder="Height (m)"
                 placeholderTextColor="#90caf9"
                 keyboardType="numeric"
                 value={altura}
@@ -169,9 +169,9 @@ const CalcularIMC = (props) => {
             />
 
             <View style={styles.buttonContainer}>
-                <Button title="Calcular IMC" onPress={() => calcularIMC()} color="#607cff" />
-                <Button title="Limpiar" onPress={() => limpiarCampos()} color="#607cff" />
-                <Button title="Volver" onPress={() => props.navigation.goBack()} color="#607cff" />
+                <Button title="Calculate IMC" onPress={() => calcularIMC()} color="#607cff" />
+                <Button title="Clean" onPress={() => limpiarCampos()} color="#607cff" />
+                <Button title="Return" onPress={() => props.navigation.goBack()} color="#607cff" />
             </View>
 
             {imc && (
@@ -181,7 +181,7 @@ const CalcularIMC = (props) => {
             )}
 
             <View style={styles.historialContainer}>
-                <Text style={styles.historialTitle}>Historial</Text>
+                <Text style={styles.historialTitle}>Record</Text>
                 <ScrollView style={styles.historial}>
                     {historial && historial.slice().reverse().map((item, index) => (
                         <View key={index} style={styles.historialItem}>
