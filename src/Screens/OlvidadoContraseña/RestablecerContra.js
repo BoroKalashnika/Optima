@@ -15,6 +15,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { HelperText } from 'react-native-paper';
 import Carga from '../../Components/carga/Carga';
 import postData from '../../Utils/services/postData';
+import config from '../../config/config';
+
 const RestablecerContra = (props) => {
     const { loading, setLoading } = useContext(Context);
     const { email, setEmail } = useContext(Context);
@@ -66,7 +68,7 @@ const RestablecerContra = (props) => {
                 codigo: codigo
             };
 
-            const response = await postData('http://13.216.205.228:8080/optima/cambiarContrasenya', json, setLoading);
+            const response = await postData(config.API_OPTIMA + 'cambiarContrasenya', json, setLoading);
 
             if (response.status === 200) {
                 Alert.alert("CONTRASEÑA CAMBIADA", response.data.message);

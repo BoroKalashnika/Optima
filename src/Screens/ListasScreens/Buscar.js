@@ -10,11 +10,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import config from '../../config/config';
 
 const Buscar = (props) => {
-    const { token, setToken } = useContext(Context);
+    const { token } = useContext(Context);
     const { modalVisible, setModalVisible } = useContext(Context);
-    const { alertMessage, setAlertMessage } = useContext(Context);
-    const { alertTitle, setAlertTitle } = useContext(Context);
-    const { idRutina, setIdRutina } = useContext(Context);
+    const { alertMessage } = useContext(Context);
+    const { alertTitle } = useContext(Context);
+    const { setIdRutina } = useContext(Context);
     const [filtro, setFiltro] = useState(false);
     const [dificultad, setDificultad] = useState(null);
     const [musculo, setMusculo] = useState(null);
@@ -131,11 +131,10 @@ const Buscar = (props) => {
                         mode="contained"
                         style={styles.imagePickerButton}
                         onPress={() => {
-
-                            setIndex(0); // Reinicia la paginación
-                            getRutinas(0); // Llama a la función para buscar con filtros
+                            setIndex(0);
+                            getRutinas(0);
                             setFiltro(false);
-                            setHasMore(true); // Permite más peticiones
+                            setHasMore(true);
                             setBuscar(true);
                         }}>
                         Buscar
@@ -148,12 +147,12 @@ const Buscar = (props) => {
                         style={styles.imagePickerButton}
                         onPress={() => {
                             setFiltro(true);
-                            setRutinas([]);  // Vacía la lista
-                            setHasMore(false); // Detiene la carga de más rutinas
+                            setRutinas([]);
+                            setHasMore(false);
                             setDificultad(null);
                             setMusculo(null);
                             setAmbito(null);
-                            setIndex(0); // Reinicia la paginación
+                            setIndex(0);
                         }}>
                         Filtrar
                     </Button>

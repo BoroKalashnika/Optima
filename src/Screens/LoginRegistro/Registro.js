@@ -14,6 +14,8 @@ import { HelperText } from 'react-native-paper';
 import { SelectList } from 'react-native-dropdown-select-list';
 import postData from '../../Utils/services/postData';
 import Carga from '../../Components/carga/Carga';
+import config from '../../config/config';
+
 const Registro = (props) => {
     const { loading, setLoading } = useContext(Context);
     const [email, setEmail] = useState('');
@@ -78,7 +80,7 @@ const Registro = (props) => {
                 verificado: false
             };
 
-            const response = await postData('http://13.216.205.228:8080/optima/registrar', json, setLoading);
+            const response = await postData(config.API_OPTIMA + 'registrar', json, setLoading);
 
             if (response.status === 201) {
                 Alert.alert("USUARIO REGISTRADO", response.data.message);

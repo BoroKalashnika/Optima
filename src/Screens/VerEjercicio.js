@@ -3,23 +3,24 @@ import {
     Text,
     StyleSheet,
 } from 'react-native';
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import getData from '../Utils/services/getData';
 import Context from '../Utils/Context';
 import config from '../config/config';
 import Video from 'react-native-video';
+
 const VerEjercicio = (props) => {
     const [nombre, setNombre] = useState();
-    const { token, setToken } = useContext(Context);
-    const { idRutina, setIdRutina } = useContext(Context);
-    const { idEjercicio, setIdEjercicio } = useContext(Context);
+    const { token } = useContext(Context);
+    const { idEjercicio } = useContext(Context);
     const [descripcion, setDescripcion] = useState();
     const [grupoMuscular, setGrupoMuscular] = useState();
     const [dificultad, setDificultad] = useState();
     const [video, setVideo] = useState();
-    useEffect(()=>{
+
+    useEffect(() => {
         getEjercicios();
-    },[])
+    }, [])
 
     const getEjercicios = async () => {
         try {
@@ -44,12 +45,12 @@ const VerEjercicio = (props) => {
                 <Text style={styles.title}>{nombre}</Text>
             </View>
             <View style={styles.containerVideo}>
-                    <Video
-                        style={styles.video}
-                        source={{ uri: video }}
-                        useNativeControls
-                    // shouldPlay
-                    />
+                <Video
+                    style={styles.video}
+                    source={{ uri: video }}
+                    useNativeControls
+                // shouldPlay
+                />
             </View>
             <View style={styles.containerDescripcion}>
                 <Text style={styles.textLogin}>{descripcion}</Text>
@@ -76,17 +77,17 @@ const styles = StyleSheet.create({
         borderColor: '#607cff',
         marginTop: 10,
         backgroundColor: '#003247',
-        padding:20
+        padding: 20
     },
     containerVideo: {
         flex: 4,
-        width:'100%',
+        width: '100%',
         borderWidth: 2,
         borderRadius: 10,
         borderColor: '#607cff',
         marginTop: 10,
-        padding:10,
-        justifyContent:"center"
+        padding: 10,
+        justifyContent: "center"
     },
     containerRow: {
         flex: 1,

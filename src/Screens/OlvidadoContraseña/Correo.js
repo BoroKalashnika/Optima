@@ -12,9 +12,11 @@ import {
 import { HelperText } from 'react-native-paper';
 import postData from '../../Utils/services/postData';
 import Carga from '../../Components/carga/Carga';
+import config from '../../config/config';
+
 const Correo = (props) => {
     const { loading, setLoading } = useContext(Context);
-    const { email, setEmail } = useContext(Context);
+    const { setEmail } = useContext(Context);
     const [correo, setCorreo] = useState('');
 
     const emailHasErrors = () => {
@@ -45,7 +47,7 @@ const Correo = (props) => {
                 verificado: false
             };
 
-            const response = await postData('http://13.216.205.228:8080/optima/restablecerContrasenya', json, setLoading);
+            const response = await postData(config.API_OPTIMA + 'restablecerContrasenya', json, setLoading);
 
             if (response.status === 200) {
                 setEmail(correo);

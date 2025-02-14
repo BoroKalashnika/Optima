@@ -5,6 +5,7 @@ import Context from '../../Utils/Context';
 import deleteData from '../../Utils/services/deleteData';
 import Carga from '../../Components/carga/Carga';
 import config from '../../config/config';
+
 const CardEjercicio = (props) => {
     const { token } = useContext(Context);
     const { nombre, descripcion, imagen, idEjercicio, borrarEnabled, onDelete } = props;
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 10,
         paddingRight: 5,
-        marginBottom: 10, // Espacio entre las cards
+        marginBottom: 10,
     },
     containerDescripcion: {
         flex: 2,

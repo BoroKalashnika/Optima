@@ -1,4 +1,4 @@
-import { FlatList, View, Image, StyleSheet, Text, Pressable } from 'react-native';
+import { FlatList, View, StyleSheet, Text, Pressable } from 'react-native';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import getData from '../../Utils/services/getData';
@@ -9,8 +9,8 @@ import config from '../../config/config';
 
 const Favoritos = (props) => {
     const [rutinas, setRutinas] = useState([]);
-    const { token, setToken } = useContext(Context);
-    const { idRutina, setIdRutina } = useContext(Context);
+    const { token } = useContext(Context);
+    const { setIdRutina } = useContext(Context);
 
     useFocusEffect(
         useCallback(() => {
@@ -57,7 +57,7 @@ const Favoritos = (props) => {
                             }}
                         />
                     )}
-                /> : <View style={{ marginTop: 35, marginBottom: 15, alignItems: "center" , justifyContent:'center',flex:2 }}>
+                /> : <View style={{ marginTop: 35, marginBottom: 15, alignItems: "center", justifyContent: 'center', flex: 2 }}>
                     <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>No tienes ninguna rutina en favoritos ¡ENCUENTRALA!</Text>
                     <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Buscar")}>
                         <Text style={styles.textLogin}>Buscar Rutina</Text>
@@ -72,7 +72,7 @@ const Favoritos = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1F2937', // bg-gray-950
+        backgroundColor: '#1F2937',
         alignItems: "center"
     },
     containerRow: {

@@ -1,6 +1,6 @@
-import { FlatList, View, Image, StyleSheet, Text, Pressable, Modal } from 'react-native';
+import { FlatList, View, StyleSheet, Text, Pressable, Modal } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useState, useContext, useEffect, useCallback } from 'react';
+import { useState, useContext, useCallback } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -10,11 +10,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import config from '../../config/config';
 
 const Buscar = (props) => {
-    const { token, setToken } = useContext(Context);
+    const { token } = useContext(Context);
     const { modalVisible, setModalVisible } = useContext(Context);
-    const { alertMessage, setAlertMessage } = useContext(Context);
-    const { alertTitle, setAlertTitle } = useContext(Context);
-    const { idRutina, setIdRutina } = useContext(Context);
+    const { alertMessage } = useContext(Context);
+    const { alertTitle } = useContext(Context);
+    const { setIdRutina } = useContext(Context);
     const [rutinas, setRutinas] = useState([]);
 
     useFocusEffect(
@@ -26,7 +26,7 @@ const Buscar = (props) => {
     const getRutinas = async () => {
         const usuario = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
         const response = await getData(config.API_OPTIMA + 'obtenerRutinasCreadas?token=' + token + "&idUsuario=" + usuario.id);
-        setRutinas(response.rutinas.filter(rutina => rutina.nombreRutina !== "$$crea$$"));
+        setRutinas(response.rutinas.filter(rutina => rutina.nombreRutina !== config.CREA_RUTINA));
     }
 
     return (

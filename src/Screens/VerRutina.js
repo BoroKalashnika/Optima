@@ -1,11 +1,5 @@
 import { useState, useEffect, useContext, useCallback } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    Image
-} from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import CardEjercicio from '../Components/cardEjercicio/CardEjercicio';
 import Icon from 'react-native-vector-icons/AntDesign';
 import HeaderRutina from '../Components/headerRutina/HeaderRutina';
@@ -19,8 +13,8 @@ import Carga from '../Components/carga/Carga';
 
 const VerRutina = (props) => {
     const [nombre, setNombre] = useState();
-    const { token, setToken } = useContext(Context);
-    const { idRutina, setIdRutina } = useContext(Context);
+    const { token } = useContext(Context);
+    const { idRutina } = useContext(Context);
     const [creador, setCreador] = useState();
     const [ejercicios, setEjercicios] = useState([]);
     const [color, setColor] = useState('red');
@@ -32,10 +26,10 @@ const VerRutina = (props) => {
     const [estaGuardada, setEstaGuardada] = useState(false);
     const [estaActiva, setEstaActiva] = useState(false);
     const { loading, setLoading } = useContext(Context);
-    const { modalVisible, setModalVisible } = useContext(Context);
-    const { alertMessage, setAlertMessage } = useContext(Context);
-    const { alertTitle, setAlertTitle } = useContext(Context);
-    const { idEjercicio, setIdEjercicio } = useContext(Context);
+    const { setModalVisible } = useContext(Context);
+    const { setAlertMessage } = useContext(Context);
+    const { setAlertTitle } = useContext(Context);
+    const { setIdEjercicio } = useContext(Context);
 
     useFocusEffect(
         useCallback(() => {

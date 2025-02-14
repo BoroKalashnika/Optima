@@ -23,9 +23,9 @@ const CrearRutina = (props) => {
     const [vistaPrevia, setVistaPrevia] = useState(null);
     const [ejerciciosRutina, setEjerciciosRutina] = useState([]);
     const [draft, setDraft] = useState('');
-    const { modalVisible, setModalVisible } = useContext(Context);
-    const { alertMessage, setAlertMessage } = useContext(Context);
-    const { alertTitle, setAlertTitle } = useContext(Context);
+    const { setModalVisible } = useContext(Context);
+    const { setAlertMessage } = useContext(Context);
+    const { setAlertTitle } = useContext(Context);
     const { token } = useContext(Context);
     const { email } = useContext(Context);
     const { idRutina, setIdRutina } = useContext(Context);
@@ -66,7 +66,7 @@ const CrearRutina = (props) => {
         const rutinas = await getData(config.API_OPTIMA + 'obtenerRutinasCreadas?token=' + token + '&idUsuario=' + usuario.id);
 
         rutinas.rutinas.forEach(element => {
-            if (element.nombreRutina == "$$crea$$") {
+            if (element.nombreRutina == config.CREA_RUTINA) {
                 setIdRutina(element.id);
                 return element.id;
             }
@@ -79,7 +79,7 @@ const CrearRutina = (props) => {
         let rutinaId;
 
         rutinas.rutinas.forEach(element => {
-            if (element.nombreRutina == "$$crea$$") {
+            if (element.nombreRutina == config.CREA_RUTINA) {
                 rutinaId = element.id;
             }
         });
@@ -108,7 +108,7 @@ const CrearRutina = (props) => {
         let existe = false;
 
         rutinas.rutinas.forEach(element => {
-            if (element.nombreRutina == "$$crea$$") {
+            if (element.nombreRutina == config.CREA_RUTINA) {
                 existe = true;
             }
         });
@@ -119,7 +119,7 @@ const CrearRutina = (props) => {
             const fechaFormateada = date.toLocaleString("es-ES", opciones);
 
             const json = {
-                nombreRutina: "$$crea$$",
+                nombreRutina: config.CREA_RUTINA,
                 creador: email,
                 token: token,
                 idUsuario: usuario.id,

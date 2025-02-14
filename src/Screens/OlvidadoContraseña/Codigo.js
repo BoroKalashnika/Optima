@@ -1,4 +1,4 @@
-import {useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import Context from '../../Utils/Context';
 import {
     View,
@@ -10,15 +10,17 @@ import {
     Image,
 } from 'react-native';
 import getData from "../../Utils/services/getData";
+import config from '../../config/config';
+
 const Codigo = (props) => {
-    const [codigoEscrito,setCodigoEscrito] = useState('');
-    const { codigo, setCodigo } = useContext(Context);
+    const [codigoEscrito, setCodigoEscrito] = useState('');
+    const { setCodigo } = useContext(Context);
 
     const handleOnPress = () => {
         if (codigoEscrito === '') {
             Alert.alert("ERROR", 'Codigo vacio')
         } else {
-            getData('http://13.216.205.228:8080/optima/codigo?codigo=' + codigoEscrito).then((response) => {
+            getData(config.API_OPTIMA + 'codigo?codigo=' + codigoEscrito).then((response) => {
                 if (response.message === "") {
                     setCodigo(codigoEscrito);
                     props.navigation.navigate('RestablecerContra');

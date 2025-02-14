@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useCallback } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Context from '../Utils/Context';
 import { View, Text, Image, ScrollView, StyleSheet, Alert, Pressable } from 'react-native';
 import HeaderRutina from '../Components/headerRutina/HeaderRutina';
@@ -14,9 +14,9 @@ import { launchImageLibrary } from 'react-native-image-picker';
 const Ajustes = (props) => {
     const { token, setToken } = useContext(Context);
     const { loading, setLoading } = useContext(Context);
-    const { modalVisible, setModalVisible } = useContext(Context);
-    const { alertMessage, setAlertMessage } = useContext(Context);
-    const { alertTitle, setAlertTitle } = useContext(Context);
+    const { setModalVisible } = useContext(Context);
+    const { setAlertMessage } = useContext(Context);
+    const { setAlertTitle } = useContext(Context);
     const [nombre, setNombre] = useState("nombre");
     const [vistaPrevia, setVistaPrevia] = useState(null);
     const [foto, setFoto] = useState();
