@@ -177,9 +177,11 @@ const Ajustes = (props) => {
                     ) : (
                         <Text style={[styles.name, isDarkMode ? styles.darkText : styles.lightText]}>{nombre}</Text>
                     )}
-                    <Pressable style={styles.editButton} onPress={toggleEditNombre}>
-                        <Text style={styles.editButtonText}>{nombreEditable ? 'Guardar' : 'Modificar'}</Text>
-                    </Pressable>
+                </View>
+                <View style={{alignItems:'center',marginTop:20}}>
+                <Pressable style={styles.editButton} onPress={toggleEditNombre}>
+                    <Text style={styles.editButtonText}>{nombreEditable ? 'Guardar' : 'Modificar'}</Text>
+                </Pressable>
                 </View>
             </View>
 
