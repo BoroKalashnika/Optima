@@ -9,9 +9,12 @@ import {
     StyleSheet,
     Image,
     ScrollView,
+    Modal
 } from 'react-native';
 import { HelperText } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { Checkbox } from 'react-native-paper';
 import postData from '../../Utils/services/postData';
 import Carga from '../../Components/carga/Carga';
 import config from '../../config/config';
@@ -25,6 +28,10 @@ const Registro = (props) => {
     const [peso, setPeso] = useState('');
     const [altura, setAltura] = useState('');
     const [opcion, setOpcion] = useState('');
+    const [checked, setChecked] = useState(false);
+    const [mensaje, setMensaje] = useState('');
+    const [titulo, setTitulo] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
     const data = [
         { key: '1', value: 'Principiante' },
         { key: '2', value: 'Intermedio' },
@@ -62,6 +69,8 @@ const Registro = (props) => {
             Alert.alert("ERROR", 'Contraseña no coincide')
         } else if (emailHasErrors() || usuarioHasErrors() || contrasenyaHasErrors() || alturaHasErrors() || pesoHasErrors()) {
             Alert.alert("ERROR", 'Algunos de los campos es invalido')
+        } else if (!checked) {
+            Alert.alert("NO HAS ACEPTADO LOS TERMINOS Y PRIVACIDAD", 'No puedes registrate sin aceptar los terminos y politicas')
         } else {
             const json = {
                 nombre: usuario,
@@ -195,7 +204,24 @@ const Registro = (props) => {
                     dropdownTextStyles={styles.dropdownText}
                     placeholder='Selecciona una dificultad inicial'
                 />
-                <View style={styles.subContainer}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Checkbox
+                        status={checked ? 'checked' : 'unchecked'}
+                        onPress={() => setChecked(!checked)}
+                        color={checked ? '#607cff' : '#ffffff'}
+                        uncheckedColor="#ffffff"
+                        size={80}
+                    />
+                    <Text style={{ color: '#ffffff', marginLeft: 8, fontSize: 16 }}>
+                        I agree to the Privacy Policy and Terms of Service
+                    </Text>
+                </View>
+                <View style={{ marginTop: 10, marginLeft: 10 }}>
+                    <Pressable onPress={() => setModalVisible(true)}>
+                        <Text style={{ color: 'white', textDecorationLine: 'underline' }}>See more</Text>
+                    </Pressable>
+                </View>
+                <View style={styles.registrar}>
                     <Pressable style={styles.bottom} onPress={() => registrarUsuario()}>
                         <Text style={styles.textLogin}>Registrarse</Text>
                     </Pressable>
@@ -207,6 +233,21 @@ const Registro = (props) => {
                     </Pressable>
                 </View>
             </View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalTitle}>Privacy Consent Agreement</Text>
+                        <Text style={styles.modalMessage}>By registering, you agree to our Privacy Policy and Terms of Service.{'\n\n'}You consent to the collection, storage, and processing of your personal data in accordance with our policies.{'\n\n'}Your information will be used to provide and improve our services, and we will not share it with third parties without your consent, except as required by law.</Text>
+                        <Button mode="contained" onPress={() => setModalVisible(false)} style={styles.modalButton}>
+                            Cerrar
+                        </Button>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 }
@@ -229,6 +270,11 @@ const styles = StyleSheet.create({
     subContainer: {
         alignItems: 'center',
         marginBottom: 15,
+    },
+    registrar: {
+        alignItems: 'center',
+        marginTop: 15,
+        marginBottom: 10,
     },
     formContainer: {
         paddingHorizontal: 16, // px-4
@@ -278,7 +324,6 @@ const styles = StyleSheet.create({
         height: 55,
         width: 160,
         alignItems: 'center',
-        marginTop: 5,
         marginBottom: 10
     },
     selectBox: {
@@ -307,9 +352,34 @@ const styles = StyleSheet.create({
     },
     login: {
         alignItems: 'center',
-        marginTop: 20,
-        marginBottom: 25,
-    }
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContainer: {
+        backgroundColor: '#ffffff',
+        padding: 20,
+        borderRadius: 10,
+        width: '80%',
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#0d47a1',
+        marginBottom: 10,
+    },
+    modalMessage: {
+        fontSize: 16,
+        color: '#333333',
+        marginBottom: 20,
+    },
+    modalButton: {
+        backgroundColor: '#607cff',
+    },
 });
 
 export default Registro;
