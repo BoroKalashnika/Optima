@@ -126,9 +126,6 @@ const Ajustes = (props) => {
                 const response = await postData(config.API_OPTIMA + 'cambiarNombre', json, setLoading);
                 if (response.status === 200) {
                     setNombre(nuevoNombre);  // Actualizamos el nombre en el estado local
-                    setAlertMessage("Nombre actualizado correctamente");
-                    setAlertTitle("Éxito");
-                    setModalVisible(true);
                 } else {
                     console.error("Error en la respuesta de la API:", response);
                     Alert.alert("ERROR", response.data?.message || "No se pudo actualizar el nombre");
