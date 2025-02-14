@@ -94,10 +94,10 @@ const Buscar = (props) => {
                             selectedValue={dificultad}
                             onValueChange={(itemValue) => setDificultad(itemValue)}
                             style={styles.picker}>
-                            <Picker.Item label="Selecciona dificultad..." value={null} style={styles.pickerItem} />
-                            <Picker.Item label="Principiante" value="Principiante" style={styles.pickerItem} />
-                            <Picker.Item label="Intermedio" value="Intermedio" style={styles.pickerItem} />
-                            <Picker.Item label="Experto" value="Experto" style={styles.pickerItem} />
+                            <Picker.Item label="Select difficulty..." value={null} style={styles.pickerItem} />
+                            <Picker.Item label="Beginner" value="Principiante" style={styles.pickerItem} />
+                            <Picker.Item label="Intermediate" value="Intermedio" style={styles.pickerItem} />
+                            <Picker.Item label="Expert" value="Experto" style={styles.pickerItem} />
                         </Picker>
                     </View>
 
@@ -106,10 +106,10 @@ const Buscar = (props) => {
                             selectedValue={ambito}
                             onValueChange={(itemValue) => setAmbito(itemValue)}
                             style={styles.picker}>
-                            <Picker.Item label="Selecciona ambito..." value={null} style={styles.pickerItem} />
-                            <Picker.Item label="Gimnasio" value="Gimnasio" style={styles.pickerItem} />
-                            <Picker.Item label="Calistenia" value="Calistenia" style={styles.pickerItem} />
-                            <Picker.Item label="Casa" value="Casa" style={styles.pickerItem} />
+                            <Picker.Item label="Select scope..." value={null} style={styles.pickerItem} />
+                            <Picker.Item label="Gym" value="Gimnasio" style={styles.pickerItem} />
+                            <Picker.Item label="Calisthenics" value="Calistenia" style={styles.pickerItem} />
+                            <Picker.Item label="House" value="Casa" style={styles.pickerItem} />
                         </Picker>
                     </View>
 
@@ -118,12 +118,12 @@ const Buscar = (props) => {
                             selectedValue={musculo}
                             onValueChange={(itemValue) => setMusculo(itemValue)}
                             style={styles.picker}>
-                            <Picker.Item label="Selecciona musculo..." value={null} style={styles.pickerItem} />
+                            <Picker.Item label="Select muscle..." value={null} style={styles.pickerItem} />
                             <Picker.Item label="Biceps" value="Biceps" style={styles.pickerItem} />
                             <Picker.Item label="Triceps" value="Triceps" style={styles.pickerItem} />
-                            <Picker.Item label="Pecho" value="Pecho" style={styles.pickerItem} />
-                            <Picker.Item label="Espalda" value="Espalda" style={styles.pickerItem} />
-                            <Picker.Item label="Pierna" value="Pierna" style={styles.pickerItem} />
+                            <Picker.Item label="Chest" value="Pecho" style={styles.pickerItem} />
+                            <Picker.Item label="Back" value="Espalda" style={styles.pickerItem} />
+                            <Picker.Item label="Legs" value="Pierna" style={styles.pickerItem} />
                         </Picker>
                     </View>
                     <Button
@@ -136,7 +136,7 @@ const Buscar = (props) => {
                             setHasMore(true);
                             setBuscar(true);
                         }}>
-                        Buscar
+                        Search
                     </Button>
                 </View>
             ) : (
@@ -153,14 +153,14 @@ const Buscar = (props) => {
                             setAmbito(null);
                             setIndex(0);
                         }}>
-                        Filtrar
+                        Filter
                     </Button>
 
                 </View>
             )}
 
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
-                <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
+                <Text style={styles.textRutinas}> ───── Routines ─────</Text>
                 <FlatList
                     ref={flatListRef}
                     data={rutinas}
@@ -183,13 +183,13 @@ const Buscar = (props) => {
                     onEndReachedThreshold={0.1}
                     ListFooterComponent={
                         <View>
-                            {loading && <Text style={styles.loadingText}>Cargando más rutinas...</Text>}
+                            {loading && <Text style={styles.loadingText}>Loading more routines...</Text>}
                             {rutinas.length > 5 && (
                                 <TouchableOpacity
                                     style={styles.scrollTopButton}
                                     onPress={() => flatListRef.current.scrollToOffset({ animated: true, offset: 0 })}
                                 >
-                                    <Text style={styles.scrollTopText}>Volver al principio</Text>
+                                    <Text style={styles.scrollTopText}>Back to top</Text>
                                 </TouchableOpacity>
                             )}
                         </View>
@@ -208,7 +208,7 @@ const Buscar = (props) => {
                         <Text style={styles.modalTitle}>{alertTitle}</Text>
                         <Text style={styles.modalMessage}>{alertMessage}</Text>
                         <Button mode="contained" onPress={() => setModalVisible(false)} style={styles.modalButton}>
-                            Cerrar
+                            Close
                         </Button>
                     </View>
                 </View>
