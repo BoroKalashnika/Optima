@@ -448,7 +448,7 @@ public class Controller {
 				rutinaRepository.save(rutina);
 
 				response.put("message", "Valoración actualizada correctamente.");
-				return ResponseEntity.ok(response.toString());
+				return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 			}
 			response.put("message", "La rutina no existe!");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.toString());
