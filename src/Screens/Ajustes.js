@@ -43,7 +43,7 @@ const Ajustes = (props) => {
                     const response = await postData(config.API_OPTIMA + 'registrarFoto', json, setLoading);
                     console.log(response);
                     if (response.status !== 200) {
-                        setAlertMessage(response.message);
+                        setAlertMessage(response.data.message);
                         setAlertTitle('ERROR');
                         setModalVisible(true);
                     }

@@ -87,7 +87,7 @@ const VerRutina = (props) => {
             json, setLoading
         );
         if (response.status !== 202) {
-            setAlertMessage(response.message);
+            setAlertMessage(response.data.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
         }
@@ -100,7 +100,7 @@ const VerRutina = (props) => {
             config.API_OPTIMA + 'eliminarRutinaActiva?token=' + token + '&id=' + idRutina, setLoading
         );
         if (response.status !== 202) {
-            setAlertMessage(response.message);
+            setAlertMessage(response.data.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
         }
@@ -119,7 +119,7 @@ const VerRutina = (props) => {
             json, setLoading
         );
         if (response.status !== 202) {
-            setAlertMessage(response.message);
+            setAlertMessage(response.data.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
         }
@@ -133,7 +133,7 @@ const VerRutina = (props) => {
             config.API_OPTIMA + 'deleteFavoritoRutina?token=' + token + '&id=' + idRutina, setLoading
         );
         if (response.status !== 200) {
-            setAlertMessage(response.message);
+            setAlertMessage(response.data.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
         }
@@ -159,8 +159,8 @@ const VerRutina = (props) => {
             json, setLoading
         );
 
-        if (response.status !== 202) {
-            setAlertMessage(response.message);
+        if (response.status !== 200) {
+            setAlertMessage(response.data.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
         }

@@ -131,7 +131,7 @@ const CalcularIMC = (props) => {
             config.API_OPTIMA + 'eliminarHistorialImc?token=' + token, setLoading
         );
         if (response.status !== 200) {
-            setAlertMessage(response.message);
+            setAlertMessage(response.data.message);
             setAlertTitle('ERROR');
             setModalVisible(true);
         }

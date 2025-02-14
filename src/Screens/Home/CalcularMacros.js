@@ -100,7 +100,7 @@ const CalcularMacros = (props) => {
             setModalVisible(true);
         } else {
             setTitulo('Error');
-            setMensaje(response.data.error);
+            setMensaje(response.data.message);
             setModalVisible(true);
         }
     };
