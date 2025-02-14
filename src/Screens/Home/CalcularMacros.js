@@ -51,12 +51,12 @@ const CalcularMacros = (props) => {
 
         if (!pesoNum || !edadNum || !alturaNum || pesoNum <= 0 || edadNum <= 0 || alturaNum <= 0) {
             setTitulo('Error');
-            setMensaje('Por favor, ingrese valores válidos.');
+            setMensaje('Please enter valid values.');
             setModalVisible(true);
             return;
         } else if (alturaHasErrors() || pesoHasErrors() || edadHasErrors()) {
             setTitulo('Error');
-            setMensaje('Valores inválidos.');
+            setMensaje('Invalid values.');
             setModalVisible(true);
             return;
         }
@@ -125,15 +125,15 @@ const CalcularMacros = (props) => {
     return (
         <ScrollView style={styles.container}>
             <View style={{ justifyContent: 'center', alignItems: 'center', }}>
-                <Text style={styles.title}>Calculadora de Macros</Text>
+                <Text style={styles.title}>Macro Calculator</Text>
                 {(peso != '' && pesoHasErrors()) && (
                     <HelperText type="error">
-                        Peso en kilogramos
+                        Weight in kilograms
                     </HelperText>
                 )}
                 <TextInput
                     style={styles.input}
-                    placeholder="Peso (kg)"
+                    placeholder="Weight (kg)"
                     placeholderTextColor="#90caf9"
                     keyboardType="numeric"
                     value={peso}
@@ -141,12 +141,12 @@ const CalcularMacros = (props) => {
                 />
                 {(edad != '' && edadHasErrors()) && (
                     <HelperText type="error">
-                        Edad de 1-90 años
+                        Age from 1-90 years
                     </HelperText>
                 )}
                 <TextInput
                     style={styles.input}
-                    placeholder="Edad (años)"
+                    placeholder="Age (years)"
                     placeholderTextColor="#90caf9"
                     keyboardType="numeric"
                     value={edad}
@@ -154,12 +154,12 @@ const CalcularMacros = (props) => {
                 />
                 {(altura != '' && alturaHasErrors()) && (
                     <HelperText type="error">
-                        Altura en centímetros
+                        Height in centimeters
                     </HelperText>
                 )}
                 <TextInput
                     style={styles.input}
-                    placeholder="Altura (cm)"
+                    placeholder="Height (cm)"
                     placeholderTextColor="#90caf9"
                     keyboardType="numeric"
                     value={altura}
@@ -167,42 +167,42 @@ const CalcularMacros = (props) => {
                 />
 
                 <View style={styles.pickerContainer}>
-                    <Text style={styles.label}>Sexo</Text>
+                    <Text style={styles.label}>Gender</Text>
                     <Picker
                         selectedValue={sexo}
                         style={styles.picker}
                         onValueChange={(itemValue) => setSexo(itemValue)}
                     >
                         <Picker.Item label="Masculino" value="masculino" />
-                        <Picker.Item label="Femenino" value="femenino" />
+                        <Picker.Item label="Female" value="femenino" />
                     </Picker>
                 </View>
 
                 <View style={styles.pickerContainer}>
-                    <Text style={styles.label}>Nivel de Actividad</Text>
+                    <Text style={styles.label}>Activity Level</Text>
                     <Picker
                         selectedValue={actividad}
                         style={styles.picker}
                         onValueChange={(itemValue) => setActividad(itemValue)}
                     >
-                        <Picker.Item label="Poco Activo" value="pocoActivo" />
-                        <Picker.Item label="Medio Activo" value="medioActivo" />
-                        <Picker.Item label="Muy Activo" value="muyActivo" />
+                        <Picker.Item label="Low activity" value="pocoActivo" />
+                        <Picker.Item label="Medium Activity" value="medioActivo" />
+                        <Picker.Item label="Very Activity" value="muyActivo" />
                     </Picker>
                 </View>
 
                 <View style={styles.buttonContainer}>
-                    <Button title="Calcular" onPress={calcularMacros} color="#607cff" />
-                    <Button title="Limpiar" onPress={limpiarCampos} color="#607cff" />
-                    <Button title="Volver" onPress={() => { props.navigation.goBack() }} color="#607cff" />
+                    <Button title="Calculate" onPress={calcularMacros} color="#607cff" />
+                    <Button title="Clean" onPress={limpiarCampos} color="#607cff" />
+                    <Button title="Return" onPress={() => { props.navigation.goBack() }} color="#607cff" />
                 </View>
 
                 {macros && (
                     <View style={styles.resultContainer}>
-                        <Text style={styles.result}>Calorías Totales: {macros.caloriasTotales} kcal</Text>
-                        <Text style={styles.result}>Carbohidratos: {macros.carbos} g</Text>
-                        <Text style={styles.result}>Proteínas: {macros.proteinas} g</Text>
-                        <Text style={styles.result}>Grasas: {macros.grasas} g</Text>
+                        <Text style={styles.result}>Total Calories: {macros.caloriasTotales} kcal</Text>
+                        <Text style={styles.result}>Carbohydrates: {macros.carbos} g</Text>
+                        <Text style={styles.result}>Proteins: {macros.proteinas} g</Text>
+                        <Text style={styles.result}>Fats: {macros.grasas} g</Text>
 
                         <PieChart
                             data={[
@@ -214,14 +214,14 @@ const CalcularMacros = (props) => {
                                     legendFontSize: 15
                                 },
                                 {
-                                    name: 'Proteínas',
+                                    name: 'Proteins',
                                     population: parseFloat(macros.proteinas),
                                     color: '#4CAF50',
                                     legendFontColor: '#7F7F7F',
                                     legendFontSize: 15
                                 },
                                 {
-                                    name: 'Grasas',
+                                    name: 'Fats',
                                     population: parseFloat(macros.grasas),
                                     color: '#FFD700',
                                     legendFontColor: '#7F7F7F',
