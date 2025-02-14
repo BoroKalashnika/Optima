@@ -160,6 +160,7 @@ const Registro = (props) => {
                     placeholderTextColor="#9CA3AF"
                     value={usuario}
                     onChangeText={setUsuario}
+                    maxLength={15}
                 />
                 <View style={styles.helpersDatos}>
                     <View style={styles.containerHelper}>
@@ -184,6 +185,7 @@ const Registro = (props) => {
                         placeholderTextColor="#9CA3AF"
                         value={altura}
                         onChangeText={setAltura}
+                        maxLength={3}
                     />
 
                     <TextInput
@@ -192,6 +194,7 @@ const Registro = (props) => {
                         placeholderTextColor="#9CA3AF"
                         value={peso}
                         onChangeText={setPeso}
+                        maxLength={3}
                     />
                 </View>
                 <SelectList
