@@ -147,10 +147,10 @@ const Usuario = (props) => {
                     {macros && macros.length > 0 ? (
                         <View style={styles.listItem}>
                             <View>
-                                <Text style={styles.result}>Calorías Totales.........................{macros[0]} kcal</Text>
-                                <Text style={styles.result}>Carbohidratos............................{macros[1]} g</Text>
-                                <Text style={styles.result}>Proteínas...................................{macros[2]} g</Text>
-                                <Text style={styles.result}>Grasas.......................................{macros[3]} g</Text>
+                                <Text style={styles.result}>Total Calories............................{macros[0]} kcal</Text>
+                                <Text style={styles.result}>Carbohydrates...........................{macros[1]} g</Text>
+                                <Text style={styles.result}>Proteins.....................................{macros[2]} g</Text>
+                                <Text style={styles.result}>Fats............................................{macros[3]} g</Text>
                             </View>
                             <PieChart
                                 data={[
