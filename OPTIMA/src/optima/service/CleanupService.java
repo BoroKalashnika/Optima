@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import optima.model.Rutina;
@@ -26,6 +27,9 @@ public class CleanupService {
 	@Autowired
 	private CloudinaryService cloudinaryService;
 
+	@Value("${app.rutina.key_nombre}")
+	private String claveRutina;
+
 	@Autowired
 	public CleanupService(RutinaRepository rutinaRepository, EjercicioRepository ejercicioRepository) {
 		this.rutinaRepository = rutinaRepository;
@@ -35,8 +39,8 @@ public class CleanupService {
 	@Scheduled(cron = "0 * * * * *") // Segundo , minuto, dia ...
 	public void cleanOrphanedExercises() {
 		Instant expirationTime = Instant.now().minus(15, ChronoUnit.MINUTES);
-		List<Rutina> orphanedRoutines = rutinaRepository.findAllByNombreRutina("$$crea$$");
 
+		List<Rutina> orphanedRoutines = rutinaRepository.findAllByNombreRutina(claveRutina);
 		orphanedRoutines.stream().filter(rutina -> isTimestampBeforeExpiration(rutina.getTimestamp(), expirationTime))
 				.forEach(rutina -> {
 					ejercicioRepository.findByIdRutina(rutina.getId()).forEach(ejercicio -> {

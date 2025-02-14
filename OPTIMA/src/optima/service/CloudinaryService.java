@@ -2,6 +2,7 @@ package optima.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -11,9 +12,11 @@ public class CloudinaryService {
 
 	private final Cloudinary cloudinary;
 
-	public CloudinaryService() {
-		cloudinary = new Cloudinary(ObjectUtils.asMap("cloud_name", "dhfvnvuox", "api_key", "742673386693573",
-				"api_secret", "nNRecTieVNYeG49SBpYiZUX-4pI"));
+	public CloudinaryService(@Value("${cloudinary.cloud_name}") String cloudName,
+			@Value("${cloudinary.api_key}") String apiKey, @Value("${cloudinary.api_secret}") String apiSecret) {
+
+		this.cloudinary = new Cloudinary(
+				ObjectUtils.asMap("cloud_name", cloudName, "api_key", apiKey, "api_secret", apiSecret));
 	}
 
 	public void deleteVideo(String videoUrl) {
@@ -21,7 +24,8 @@ public class CloudinaryService {
 			String publicId = extractPublicId(videoUrl);
 			if (publicId != null) {
 				@SuppressWarnings("rawtypes")
-				Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("resource_type", "video", "invalidate", true));
+				Map result = cloudinary.uploader().destroy(publicId,
+						ObjectUtils.asMap("resource_type", "video", "invalidate", true));
 				System.out.println("Video deleted: " + result);
 			}
 		} catch (Exception e) {

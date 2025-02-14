@@ -1,9 +1,6 @@
 package optima.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,6 +47,12 @@ public class Controller {
 
 	@Autowired
 	private CloudinaryService cloudinaryService;
+
+	@Value("${app.rutina.key_nombre}")
+	private String claveRutina;
+
+	@Value("${ip_api_optima}")
+	private String ipAPI;
 
 	// USUARIOS LOGIN / LOGOUT / VERIFICAR / REGISTRAR
 	@GetMapping("/optima/tokenUsuario")
@@ -155,8 +159,7 @@ public class Controller {
 		} else {
 			nuevoUsuario.setContrasenya(nuevoUsuario.encriptacionContrasenya(nuevoUsuario.getContrasenya()));
 			usuarioRepository.save(nuevoUsuario);
-			String enlaceVerificacion = "http://" + ipAPI() + ":8080/optima/verificar?correo="
-					+ nuevoUsuario.getCorreo();
+			String enlaceVerificacion = "http://" + ipAPI + ":8080/optima/verificar?correo=" + nuevoUsuario.getCorreo();
 			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion);
 			response.put("message", "Accede al correo para verificar cuenta");
 			return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
@@ -290,8 +293,6 @@ public class Controller {
 			@RequestParam(value = "grupoMuscular", required = false) String grupoMuscular,
 			@RequestParam(value = "ambito", required = false) String ambito) {
 
-		final String clave;
-
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 		JSONObject response = new JSONObject();
 
@@ -300,15 +301,8 @@ public class Controller {
 			return ResponseEntity.ok(response.toString());
 		}
 
-		try {
-			clave = claveRutina();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener clave de la rutina");
-		}
-
 		List<Rutina> rutinasBaseDatos = rutinaRepository.findAll();
-		List<Rutina> rutinasFiltradas = rutinasBaseDatos.stream().filter(r -> !r.getNombreRutina().equals(clave))
+		List<Rutina> rutinasFiltradas = rutinasBaseDatos.stream().filter(r -> !r.getNombreRutina().equals(claveRutina))
 				.filter(r -> dificultad == null || r.getDificultad().equalsIgnoreCase(dificultad))
 				.filter(r -> grupoMuscular == null || r.getGrupoMuscular().equalsIgnoreCase(grupoMuscular))
 				.filter(r -> ambito == null || r.getAmbito().equalsIgnoreCase(ambito))
@@ -476,7 +470,7 @@ public class Controller {
 			Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(nuevaRutina.getToken());
 			if (usuarioBaseDatos.isPresent()) {
 				nuevaRutina.setToken(null);
-				if (nuevaRutina.getNombreRutina().equals(claveRutina())) {
+				if (nuevaRutina.getNombreRutina().equals(claveRutina)) {
 					Rutina rutinaGuardada = rutinaRepository.save(nuevaRutina);
 					Usuario usuario = usuarioBaseDatos.get();
 					usuario.getRutinasCreadas().add(rutinaGuardada.getId());
@@ -494,7 +488,7 @@ public class Controller {
 						if (rutinaListaUsuario.isPresent()) {
 							Rutina rutinaFinalizar = rutinaListaUsuario.get();
 
-							if (rutinaFinalizar.getNombreRutina().equals(claveRutina())) {
+							if (rutinaFinalizar.getNombreRutina().equals(claveRutina)) {
 								rutinaFinalizar.setNombreRutina(nuevaRutina.getNombreRutina());
 								rutinaFinalizar.setValoracion(nuevaRutina.getValoracion());
 								rutinaFinalizar.setDificultad(nuevaRutina.getDificultad());
@@ -714,7 +708,7 @@ public class Controller {
 		List<Rutina> rutinas = rutinaRepository.findByIdUsuario(usuario.getId());
 
 		for (Rutina rutina : rutinas) {
-			if (rutina.getNombreRutina().equals(claveRutina())) {
+			if (rutina.getNombreRutina().equals(claveRutina)) {
 				List<String> ejercicios = rutina.getEjercicios();
 				if (ejercicios.remove(id)) {
 					rutinaRepository.save(rutina);
@@ -726,22 +720,4 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.OK).body(respuesta.toString());
 	}
 
-	// RESOURCES
-	public String ipAPI() throws IOException {
-		String api;
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("IP_API.txt");
-		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-		api = br.readLine();
-		br.close();
-		return api;
-	}
-
-	public String claveRutina() throws IOException {
-		String clave;
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("RUTINA_KEY.txt");
-		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-		clave = br.readLine();
-		br.close();
-		return clave;
-	}
 }
