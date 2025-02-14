@@ -346,8 +346,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     ContainerFiltro: {
-        width: '90%',
-        paddingTop: 20,
+        width: '90%',        
         marginBottom: 10,
         padding: 5,
         justifyContent: 'center',

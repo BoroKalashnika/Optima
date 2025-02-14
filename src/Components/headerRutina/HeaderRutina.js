@@ -81,7 +81,7 @@ const HeaderRutina = (props) => {
         return (
             <View style={estilos.containerRowUser}>
                 <Image source={require('../../Assets/img/logo.png')} style={estilos.image} />
-                <Icon name="setting" size={45} color="#607cff" style={{ marginRight: 10 }} onPress={props.onAjustes}/>
+                <Icon name="setting" size={45} color="#607cff" style={{ marginRight: 10 }} onPress={props.onAjustes} />
             </View>
         );
     }
@@ -96,11 +96,10 @@ const estilos = StyleSheet.create({
         alignItems: 'center',
         padding: 5,
         backgroundColor: '#1F2937',
-        marginTop: 15,
-
+        marginTop: 10,
     },
     containerRowAjustes: {
-        flex: 1,
+        flex: 2,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
@@ -115,15 +114,17 @@ const estilos = StyleSheet.create({
         backgroundColor: '#1F2937',
     },
     containerIconos: {
-        flex: 3,
+        flex: 1,
         flexDirection: 'row',
         marginRight: 5,
         marginBottom: 5,
         justifyContent: "flex-end",
         height: 70,
+        alignItems: "center"
     },
     containerTitulo: {
-        flex: 1
+        flex: 2,
+        width: "100%"
     },
     nombre: {
         fontSize: 30,
