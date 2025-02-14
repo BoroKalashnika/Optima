@@ -282,6 +282,7 @@ const CrearRutina = (props) => {
                 placeholderTextColor="#90caf9"
                 value={nomRutina}
                 onChangeText={(newText) => setNomRutina(newText)}
+                maxLength={17}
             />
             <View style={styles.pickerContainer}>
                 <Picker

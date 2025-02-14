@@ -189,6 +189,7 @@ const CrearEjercicio = (props) => {
                         placeholderTextColor="#9CA3AF"
                         value={nombre}
                         onChangeText={setNombre}
+                        maxLength={17}
                     />
                 </View>
 
@@ -235,6 +236,7 @@ const CrearEjercicio = (props) => {
                     placeholderTextColor="#9CA3AF"
                     value={descripcion}
                     onChangeText={setDescripcion}
+                    maxLength={70}
                 />
                 <View style={styles.subContainer}>
                     <Pressable style={[styles.bottom, { marginRight: 5 }]} onPress={() => handleOnPress()}>

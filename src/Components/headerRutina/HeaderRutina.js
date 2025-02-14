@@ -123,7 +123,7 @@ const estilos = StyleSheet.create({
         alignItems: "center"
     },
     containerTitulo: {
-        flex: 2,
+        flex: 3,
         width: "100%"
     },
     nombre: {

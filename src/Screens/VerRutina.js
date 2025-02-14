@@ -26,6 +26,7 @@ const VerRutina = (props) => {
     const [estaGuardada, setEstaGuardada] = useState(false);
     const [estaActiva, setEstaActiva] = useState(false);
     const [imagenPerfil, setImagenPerfil] = useState('');
+    const [dieta, setDieta] = useState('');
     const { loading, setLoading } = useContext(Context);
     const { setModalVisible } = useContext(Context);
     const { setAlertMessage } = useContext(Context);
@@ -180,6 +181,7 @@ const VerRutina = (props) => {
                 chancheAmbito(response.ambito);
                 chancheColor(response.dificultad);
                 chancheMusculo(response.grupoMuscular);
+                setDieta(response.dieta);
                 await getData(config.API_OPTIMA + 'obtenerUsuario?token=' + token + '&correo=' + response.creador).then((response) => {
                     setCreador(response.nombre);
                     setImagenPerfil(response.fotoPerfil)
@@ -272,6 +274,11 @@ const VerRutina = (props) => {
                     )}
                 />
             </View>
+            <Text style={styles.textEjercicio}>───── Dieta ─────</Text>
+            <View style={styles.containerDatos}>
+                <Text style={styles.textLogin}>{dieta}</Text>
+            </View>
+
             <View style={styles.containerRow}>
                 <Text style={styles.textLogin}>Valorar</Text>
                 <View style={styles.containerStars}>
