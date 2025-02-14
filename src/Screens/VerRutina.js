@@ -25,6 +25,7 @@ const VerRutina = (props) => {
     const [activo, setActivo] = useState();
     const [estaGuardada, setEstaGuardada] = useState(false);
     const [estaActiva, setEstaActiva] = useState(false);
+    const [imagenPerfil, setImagenPerfil] = useState('');
     const { loading, setLoading } = useContext(Context);
     const { setModalVisible } = useContext(Context);
     const { setAlertMessage } = useContext(Context);
@@ -80,6 +81,7 @@ const VerRutina = (props) => {
             config.API_OPTIMA + 'rutinaActiva',
             json, setLoading
         );
+
         if (response.status !== 202) {
             setAlertMessage(response.data.message);
             setAlertTitle('ERROR');
@@ -180,6 +182,7 @@ const VerRutina = (props) => {
                 chancheMusculo(response.grupoMuscular);
                 await getData(config.API_OPTIMA + 'obtenerUsuario?token=' + token + '&correo=' + response.creador).then((response) => {
                     setCreador(response.nombre);
+                    setImagenPerfil(response.fotoPerfil)
                 });
             });
         } catch (error) {
@@ -235,7 +238,7 @@ const VerRutina = (props) => {
 
             <View style={styles.containerRow}>
                 <Text style={styles.title}>{creador}</Text>
-                <Image source={require('../Assets/img/perfil.png')} style={styles.profileImage} />
+                <Image source={{ uri: imagenPerfil }} style={styles.profileImage} />
             </View>
             <View style={styles.containerDatos}>
                 <View style={styles.subContainer}>
@@ -304,7 +307,7 @@ const styles = StyleSheet.create({
         padding: 5
     },
     containerRow: {
-        flex: 1,
+        flex: 1.5,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -338,9 +341,10 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     profileImage: {
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         borderRadius: 50,
+        marginRight: 10,
     },
     textEjercicio: {
         fontSize: 25,

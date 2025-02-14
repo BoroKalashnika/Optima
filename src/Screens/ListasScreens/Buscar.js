@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
     },
     ContainerFiltro: {
         width: '90%',
-        marginTop: 15,
+        paddingTop: 20,
         marginBottom: 10,
         padding: 5,
         justifyContent: 'center',
