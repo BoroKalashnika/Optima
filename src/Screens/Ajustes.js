@@ -27,7 +27,6 @@ const Ajustes = (props) => {
             if (response.fotoPerfil !== "") {
                 setFoto(response.fotoPerfil);
             }
-            console.log(response);
         });
     }, []);
 
@@ -41,7 +40,6 @@ const Ajustes = (props) => {
                 };
                 try {
                     const response = await postData(config.API_OPTIMA + 'registrarFoto', json, setLoading);
-                    console.log(response);
                     if (response.status !== 200) {
                         setAlertMessage(response.data.message);
                         setAlertTitle('ERROR');

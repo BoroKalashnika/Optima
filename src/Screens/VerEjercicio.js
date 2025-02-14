@@ -27,7 +27,6 @@ const VerEjercicio = (props) => {
             getData(
                 config.API_OPTIMA + 'obtenerEjercicio?token=' + token + '&id=' + idEjercicio
             ).then((response) => {
-                console.log(response);
                 setDescripcion(response.explicacion);
                 setNombre(response.nombreEjercicio);
                 setGrupoMuscular(response.grupoMuscular);

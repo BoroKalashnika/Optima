@@ -59,7 +59,6 @@ const Buscar = (props) => {
             if (musculo) url += `&grupoMuscular=${musculo}`;
 
             const response = await getData(url);
-            console.log(response);
             if (response.count === 0 || !response.count) {
                 setHasMore(false);
                 return;

@@ -180,7 +180,6 @@ const VerRutina = (props) => {
                 chancheMusculo(response.grupoMuscular);
                 await getData(config.API_OPTIMA + 'obtenerUsuario?token=' + token + '&correo=' + response.creador).then((response) => {
                     setCreador(response.nombre);
-                    console.log(response);
                 });
             });
         } catch (error) {
