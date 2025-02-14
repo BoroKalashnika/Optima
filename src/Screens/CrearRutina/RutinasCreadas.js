@@ -31,7 +31,7 @@ const Buscar = (props) => {
 
     return (
         <View style={styles.container}>
-            <HeaderRutina tipo={'ajustes'} titulo={'Rutinas Creadas'} />
+            <HeaderRutina tipo={'ajustes'} titulo={'Rutinas Creadas'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")} />
             {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
                 <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>

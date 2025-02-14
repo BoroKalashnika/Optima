@@ -4,6 +4,7 @@ import {
     Text,
     View,
     Image,
+    Pressable,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -70,7 +71,9 @@ const HeaderRutina = (props) => {
     if (props.tipo === 'ajustes') {
         return (
             <View style={estilos.containerRowAjustes}>
-                <Image source={require('../../Assets/img/logo.png')} style={estilos.image} />
+                <Pressable onPress={props.onHome}>
+                    <Image source={require('../../Assets/img/logo.png')} style={estilos.image} />
+                </Pressable>
                 <Text style={estilos.title}>{props.titulo}</Text>
                 <Icon name="setting" size={50} color="#607cff" style={{ marginRight: 10 }} onPress={props.onAjustes} />
             </View>
@@ -80,7 +83,9 @@ const HeaderRutina = (props) => {
     if (props.tipo === 'user') {
         return (
             <View style={estilos.containerRowUser}>
-                <Image source={require('../../Assets/img/logo.png')} style={estilos.image} />
+                <Pressable onPress={props.onHome}>
+                    <Image source={require('../../Assets/img/logo.png')} style={estilos.image} />
+                </Pressable>
                 <Icon name="setting" size={45} color="#607cff" style={{ marginRight: 10 }} onPress={props.onAjustes} />
             </View>
         );

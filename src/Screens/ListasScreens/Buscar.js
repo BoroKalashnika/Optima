@@ -85,7 +85,7 @@ const Buscar = (props) => {
 
     return (
         <View style={styles.container}>
-            <HeaderRutina tipo={'ajustes'} titulo={'Buscar Rutinas'} />
+            <HeaderRutina tipo={'ajustes'} titulo={'Buscar Rutinas'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")}/>
 
             {filtro ? (
                 <View style={styles.ContainerFiltro}>
