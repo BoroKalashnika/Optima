@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'row',
-        backgroundColor: '#003247', // bg-gray-950
+        backgroundColor: '#003247',
         width: '100%',
         borderColor: '#607cff',
         borderRadius: 10,

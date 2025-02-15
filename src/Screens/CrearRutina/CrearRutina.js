@@ -287,9 +287,9 @@ const CrearRutina = (props) => {
                     selectedValue={dificultad}
                     onValueChange={(itemValue) => setDificultad(itemValue)}
                     style={styles.picker}>
-                    <Picker.Item label="Beginner" value="Beginner" style={styles.pickerItem} />
-                    <Picker.Item label="Intermediate" value="Intermediate" style={styles.pickerItem} />
-                    <Picker.Item label="Expert" value="Expert" style={styles.pickerItem} />
+                    <Picker.Item label="Beginner" value="Principiante" style={styles.pickerItem} />
+                    <Picker.Item label="Intermediate" value="Intermedio" style={styles.pickerItem} />
+                    <Picker.Item label="Expert" value="Experto" style={styles.pickerItem} />
                 </Picker>
             </View>
             <View style={styles.pickerContainer}>
@@ -297,9 +297,9 @@ const CrearRutina = (props) => {
                     selectedValue={ambito}
                     onValueChange={(itemValue) => setAmbito(itemValue)}
                     style={styles.picker}>
-                    <Picker.Item label="Gym" value="Gym" style={styles.pickerItem} />
-                    <Picker.Item label="Calisthenics" value="Calisthenics" style={styles.pickerItem} />
-                    <Picker.Item label="Home" value="Home" style={styles.pickerItem} />
+                    <Picker.Item label="Gym" value="Gimnasio" style={styles.pickerItem} />
+                    <Picker.Item label="Calisthenics" value="Calistenia" style={styles.pickerItem} />
+                    <Picker.Item label="Home" value="Casa" style={styles.pickerItem} />
                 </Picker>
             </View>
             <View style={styles.pickerContainer}>
@@ -309,9 +309,9 @@ const CrearRutina = (props) => {
                     style={styles.picker}>
                     <Picker.Item label="Biceps" value="Biceps" style={styles.pickerItem} />
                     <Picker.Item label="Triceps" value="Triceps" style={styles.pickerItem} />
-                    <Picker.Item label="Chest" value="Chest" style={styles.pickerItem} />
-                    <Picker.Item label="Back" value="Back" style={styles.pickerItem} />
-                    <Picker.Item label="Legs" value="Legs" style={styles.pickerItem} />
+                    <Picker.Item label="Chest" value="Pecho" style={styles.pickerItem} />
+                    <Picker.Item label="Back" value="Espalda" style={styles.pickerItem} />
+                    <Picker.Item label="Legs" value="Pierna" style={styles.pickerItem} />
                 </Picker>
             </View>
             <TextInput

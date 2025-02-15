@@ -20,22 +20,19 @@ const Ajustes = (props) => {
     const [nombre, setNombre] = useState("nombre");
     const [vistaPrevia, setVistaPrevia] = useState(null);
     const [foto, setFoto] = useState();
-    const [isDarkMode, setIsDarkMode] = useState(true); // Estado para el modo oscuro/claro
+    const [isDarkMode, setIsDarkMode] = useState(true);
     const [nombreEditable, setNombreEditable] = useState(false);
-    const [nuevoNombre, setNuevoNombre] = useState(nombre); // Inicializa nuevoNombre con el valor de nombre
+    const [nuevoNombre, setNuevoNombre] = useState(nombre);
 
     useEffect(() => {
         getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
             setNombre(response.nombre);
-            setNuevoNombre(response.nombre); // Actualiza nuevoNombre con el nombre del usuario
+            setNuevoNombre(response.nombre);
             if (response.fotoPerfil !== "") {
                 setFoto(response.fotoPerfil);
             }
         });
     }, []);
-
-    // Elimina este useEffect, ya que no es necesario
-    // useEffect(() => { setNuevoNombre(nombre) }, [nombre]);
 
     useEffect(() => {
         const actualizarFoto = async () => {
@@ -125,7 +122,7 @@ const Ajustes = (props) => {
             try {
                 const response = await postData(config.API_OPTIMA + 'cambiarNombre', json, setLoading);
                 if (response.status === 200) {
-                    setNombre(nuevoNombre);  // Actualizamos el nombre en el estado local
+                    setNombre(nuevoNombre);
                 } else {
                     Alert.alert("ERROR", response.data?.message || "The name wasn't changed");
                 }
@@ -138,13 +135,14 @@ const Ajustes = (props) => {
         }
         setNombreEditable(!nombreEditable);
     };
+
     if (loading) {
         return <Carga />;
     }
 
     return (
         <ScrollView contentContainerStyle={[styles.container, isDarkMode ? styles.darkMode : styles.lightMode]}>
-            <HeaderRutina tipo={'user'} />
+            <HeaderRutina tipo={'user'} onHome={() => props.navigation.goBack()} />
             <View style={styles.profileContainer}>
                 <Pressable onPress={() => cambairFoto()}>
                     {vistaPrevia ?
@@ -182,16 +180,6 @@ const Ajustes = (props) => {
                         <Text style={styles.editButtonText}>{nombreEditable ? 'Save' : 'Edit'}</Text>
                     </Pressable>
                 </View>
-            </View>
-
-            <View style={styles.themeContainer}>
-                <Text style={[styles.themeText, isDarkMode ? styles.darkText : styles.lightText]}>Dark Mode</Text>
-                <Switch
-                    value={isDarkMode}
-                    onValueChange={toggleDarkMode}
-                    thumbColor={isDarkMode ? '#607cff' : '#f4f3f4'}
-                    trackColor={{ false: '#767577', true: '#81b0ff' }}
-                />
             </View>
 
             <Pressable style={[styles.logoutButton, isDarkMode ? styles.darkButton : styles.lightButton]} onPress={() => cerrarSesion()}>
