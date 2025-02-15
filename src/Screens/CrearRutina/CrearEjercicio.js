@@ -52,17 +52,17 @@ const CrearEjercicio = (props) => {
     });
 
     const data = [
-        { key: '1', value: 'Pecho' },
-        { key: '2', value: 'Espalda' },
+        { key: '1', value: 'Chest' },
+        { key: '2', value: 'Back' },
         { key: '3', value: 'Biceps' },
         { key: '4', value: 'Triceps' },
-        { key: '5', value: 'Pierna' },
+        { key: '5', value: 'Leg' },
     ];
 
     const nivel = [
-        { key: '1', value: 'bajo' },
-        { key: '2', value: 'medio' },
-        { key: '3', value: 'alto' },
+        { key: '1', value: 'Low' },
+        { key: '2', value: 'Medium' },
+        { key: '3', value: 'High' },
     ];
 
     const pickVideo = async () => {
@@ -78,7 +78,7 @@ const CrearEjercicio = (props) => {
                 }
 
                 if (response.errorCode) {
-                    console.error('Error al seleccionar el video:', response.errorCode);
+                    console.error('Error selecting video:', response.errorCode);
                     return;
                 }
 
@@ -93,13 +93,13 @@ const CrearEjercicio = (props) => {
                             setVideoFile(videoUri);
                         } else {
                             Alert.alert(
-                                'Archivo demasiado grande',
-                                `El video excede el tamaño máximo permitido de ${maxSize} MB.`
+                                'File too large',
+                                `The video exceeds the maximum allowed size of ${maxSize} MB.`
                             );
                         }
                     })
                     .catch((error) => {
-                        console.log('Error al obtener el tamaño del archivo:', error);
+                        console.log('Error getting file size:', error);
                     });
             }
         );
@@ -135,8 +135,8 @@ const CrearEjercicio = (props) => {
 
                 if (response.status === 201) {
                     setIdEjercicios([...idEjercicios, response.data.message]);
-                    setAlertMessage('Ejercicio creado correctamente.');
-                    setAlertTitle('Éxito');
+                    setAlertMessage('Exercise created successfully.');
+                    setAlertTitle('Success');
                     setModalVisible(true);
                     limpiarCampos();
                     handleOnPress();
@@ -151,7 +151,7 @@ const CrearEjercicio = (props) => {
                 setModalVisible(true);
             }
         } else {
-            setAlertMessage('Completa todos los campos');
+            setAlertMessage('Complete all fields');
             setAlertTitle('ERROR');
             setModalVisible(true);
         }
@@ -179,13 +179,13 @@ const CrearEjercicio = (props) => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.subContainer}>
-                <Text style={styles.title}>Crear Ejercicio</Text>
+                <Text style={styles.title}>Create Exercise</Text>
             </View>
             <View style={styles.formContainer}>
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Introduce el nombre"
+                        placeholder="Enter the name"
                         placeholderTextColor="#9CA3AF"
                         value={nombre}
                         onChangeText={setNombre}
@@ -199,7 +199,7 @@ const CrearEjercicio = (props) => {
                     defaultOption="Biceps"
                     save="value"
                     boxStyles={styles.selectBox}
-                    placeholder="Grupo Muscular"
+                    placeholder="Muscle Group"
                     inputStyles={styles.selectInput}
                     dropdownStyles={styles.dropdown}
                     dropdownTextStyles={styles.dropdownText}
@@ -210,7 +210,7 @@ const CrearEjercicio = (props) => {
                     data={nivel}
                     save="value"
                     boxStyles={styles.selectBox}
-                    placeholder="Dificultad"
+                    placeholder="Difficulty"
                     inputStyles={styles.selectInput}
                     dropdownStyles={styles.dropdown}
                     dropdownTextStyles={styles.dropdownText}
@@ -220,7 +220,7 @@ const CrearEjercicio = (props) => {
                     mode="contained"
                     style={styles.imagePickerButton}
                     onPress={pickVideo}>
-                    Seleccionar Video
+                    Select Video
                 </Button>
                 {videoFile && (
                     <Video
@@ -232,7 +232,7 @@ const CrearEjercicio = (props) => {
                 )}
                 <TextInput
                     style={styles.input}
-                    placeholder="Introduce una Descripcion"
+                    placeholder="Enter a Description"
                     placeholderTextColor="#9CA3AF"
                     value={descripcion}
                     onChangeText={setDescripcion}
@@ -241,13 +241,13 @@ const CrearEjercicio = (props) => {
                 <View style={styles.subContainer}>
                     <Pressable style={[styles.bottom, { marginRight: 5 }]} onPress={() => handleOnPress()}>
                         <MaterialIcons name="cancel" color="#fe876d" size={35} />
-                        <Text style={styles.resetPasswordText}>Cancelar</Text>
+                        <Text style={styles.resetPasswordText}>Cancel</Text>
                     </Pressable>
                     <Pressable
                         style={[styles.bottom, { marginLeft: 5 }]}
                         onPress={() => crearEjercicio()}>
                         <Ionicons name="add-circle-outline" color="lightgreen" size={35} />
-                        <Text style={styles.resetPasswordText}>Crear Ejercicio</Text>
+                        <Text style={styles.resetPasswordText}>Create</Text>
                     </Pressable>
                 </View>
             </View>
