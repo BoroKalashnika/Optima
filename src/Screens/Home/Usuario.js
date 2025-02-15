@@ -61,15 +61,29 @@ const Usuario = (props) => {
 
     useFocusEffect(
         useCallback(() => {
-            getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + idRutinaActiva).then((response) => {
-                setAmbito(response.ambito);
-                setDificultad(response.dificultad);
-                setImagen(response.vistaPrevia);
-                setTitulo(response.nombreRutina);
-                setEstrellas(response.valoracion);
-                setMusculo(response.grupoMuscular);
+            getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
+                setIdRutinaActiva(response.rutinaActiva);
+                setNombre(response.nombre);
+                setHistorialIMC(response.historialImc);
+                if (response.macros) {
+                    setMacros(response.macros.split('|'));
+                } else {
+                    setMacros([]);
+                }
+                if (response.fotoPerfil != "") {
+                    setFoto(response.fotoPerfil);
+                    setVistaPrevia(true);
+                }
             });
-        }, [estrellas])
+        }, [])
+    );
+
+    useFocusEffect(
+        useCallback(() => {
+            getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + idRutinaActiva).then((response) => {
+                setEstrellas(response.valoracion);
+            })
+        }, [])
     );
 
     useEffect(() => {
@@ -79,6 +93,17 @@ const Usuario = (props) => {
             });
         }
     }, []);
+
+    useEffect(() => {
+        getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + idRutinaActiva).then((response) => {
+            setAmbito(response.ambito);
+            setDificultad(response.dificultad);
+            setImagen(response.vistaPrevia);
+            setTitulo(response.nombreRutina);
+            setEstrellas(response.valoracion);
+            setMusculo(response.grupoMuscular);
+        })
+    }, [idRutinaActiva]);
 
     const getRandom = () => {
         return Math.floor(Math.random() * frasesMotivadoras.frases.length);
