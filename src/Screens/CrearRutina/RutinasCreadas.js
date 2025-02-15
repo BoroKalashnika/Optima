@@ -31,10 +31,10 @@ const Buscar = (props) => {
 
     return (
         <View style={styles.container}>
-            <HeaderRutina tipo={'ajustes'} titulo={'Rutinas Creadas'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")} />
+            <HeaderRutina tipo={'ajustes'} titulo={'Created Routines'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")} />
             {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
-                <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
+                <Text style={styles.textRutinas}> ───── Routines ─────</Text>
                 <FlatList
                     data={rutinas}
                     keyExtractor={(item) => item.id}
@@ -55,7 +55,7 @@ const Buscar = (props) => {
                 />
             </View>
             <Pressable style={styles.containerCrear} onPress={() => props.navigation.navigate('CrearRutina')}>
-                <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "7%" }} /><Text style={styles.text}>Crear Rutina</Text>
+                <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "7%" }} /><Text style={styles.text}>Create Routine</Text>
             </Pressable>
             <Modal
                 animationType="slide"
@@ -67,7 +67,7 @@ const Buscar = (props) => {
                         <Text style={styles.modalTitle}>{alertTitle}</Text>
                         <Text style={styles.modalMessage}>{alertMessage}</Text>
                         <Button mode="contained" onPress={() => setModalVisible(false)} style={styles.modalButton}>
-                            Cerrar
+                            Close
                         </Button>
                     </View>
                 </View>

@@ -36,9 +36,9 @@ const Favoritos = (props) => {
 
     return (
         <View style={styles.container}>
-            <HeaderRutina tipo={'ajustes'} titulo={'Tus Favoritos'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")}/>
+            <HeaderRutina tipo={'ajustes'} titulo={'Your Favorites'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")}/>
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
-                <Text style={styles.textRutinas}> ───── Rutinas ─────</Text>
+                <Text style={styles.textRutinas}> ───── Routines ─────</Text>
                 {rutinas && rutinas.length > 0 ? <FlatList
                     data={rutinas}
                     keyExtractor={(item) => item.id}
@@ -57,7 +57,7 @@ const Favoritos = (props) => {
                         />
                     )}
                 /> : <View style={{ marginTop: 35, marginBottom: 15, alignItems: "center", justifyContent: 'center', flex: 2 }}>
-                    <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>You don't have any routines in favorites, ¡FIND IT!</Text>
+                    <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>You don't have any routines in favorites{"\n"}FIND IT!</Text>
                     <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Buscar")}>
                         <Text style={styles.textLogin}>Search Routine</Text>
                     </Pressable>

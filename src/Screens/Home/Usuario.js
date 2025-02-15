@@ -93,9 +93,9 @@ const Usuario = (props) => {
             <View style={styles.containerCard}>
                 {!idRutinaActiva ?
                     <View style={{ marginTop: 35, marginBottom: 15, alignItems: "center" }}>
-                        <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>No tienes todavía ninguna rutina activa ¡ENCUENTRALA!</Text>
+                        <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>You don't have any active routines yet.{"\n"}FIND IT!</Text>
                         <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Buscar")}>
-                            <Text style={styles.textLogin}>Buscar Rutina</Text>
+                            <Text style={styles.textLogin}>Find Routine</Text>
                         </Pressable>
                     </View> :
                     <Card
