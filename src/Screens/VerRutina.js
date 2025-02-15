@@ -10,6 +10,7 @@ import postData from '../Utils/services/postData';
 import deleteData from '../Utils/services/deleteData';
 import config from '../config/config';
 import Carga from '../Components/carga/Carga';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const VerRutina = (props) => {
     const [nombre, setNombre] = useState();
@@ -236,7 +237,9 @@ const VerRutina = (props) => {
     }
     return (
         <View style={styles.container}>
-            <HeaderRutina nombre={nombre} tipo={'rutina'} activo={getActivo} favorito={getFavorito} guardada={estaGuardada} activada={estaActiva} />
+            <View style={{ flex: 2 }}>
+                <HeaderRutina nombre={nombre} tipo={'rutina'} activo={getActivo} favorito={getFavorito} guardada={estaGuardada} activada={estaActiva} />
+            </View>
 
             <View style={styles.containerRow}>
                 <Text style={styles.title}>{creador}</Text>
@@ -275,8 +278,11 @@ const VerRutina = (props) => {
                 />
             </View>
             <Text style={styles.textEjercicio}>───── Dieta ─────</Text>
-            <View style={styles.containerDatos}>
-                <Text style={styles.textLogin}>{dieta}</Text>
+            <View style={styles.containerRow}>
+
+                <ScrollView>
+                    <Text style={styles.textLogin}>{dieta}</Text>
+                </ScrollView>
             </View>
 
             <View style={styles.containerRow}>
@@ -314,7 +320,7 @@ const styles = StyleSheet.create({
         padding: 5
     },
     containerRow: {
-        flex: 1.5,
+        flex: 2,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
