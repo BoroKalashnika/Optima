@@ -16,9 +16,9 @@ import config from '../../config/config';
 
 const CrearRutina = (props) => {
     const [nomRutina, setNomRutina] = useState('');
-    const [dificultad, setDificultad] = useState('Beginner');
+    const [dificultad, setDificultad] = useState('Principiante');
     const [musculo, setMusculo] = useState('Biceps');
-    const [ambito, setAmbito] = useState('Gym');
+    const [ambito, setAmbito] = useState('Gimnasio');
     const [dieta, setDieta] = useState('');
     const [vistaPrevia, setVistaPrevia] = useState(null);
     const [ejerciciosRutina, setEjerciciosRutina] = useState([]);
