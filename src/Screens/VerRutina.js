@@ -247,11 +247,11 @@ const VerRutina = (props) => {
             </View>
             <View style={styles.containerDatos}>
                 <View style={styles.subContainer}>
-                    <Text style={styles.textLogin}>Ambito</Text>
+                    <Text style={styles.textLogin}>Scope</Text>
                     <Text style={styles.textLogin}>|</Text>
-                    <Text style={styles.textLogin}>Musculo</Text>
+                    <Text style={styles.textLogin}>Muscle</Text>
                     <Text style={styles.textLogin}>|</Text>
-                    <Text style={styles.textLogin}>Dificultad</Text>
+                    <Text style={styles.textLogin}>Difficulty</Text>
                 </View>
                 <View style={styles.subContainer}>
                     <Image source={ambitoImg} style={styles.icono} />
@@ -260,7 +260,7 @@ const VerRutina = (props) => {
                 </View>
             </View>
             <View style={{ flex: 7 }}>
-                <Text style={styles.textEjercicio}>───── Ejercicios ─────</Text>
+                <Text style={styles.textEjercicio}>───── Exercices ─────</Text>
                 <FlatList
                     data={ejercicios}
                     keyExtractor={(item) => item.id}
@@ -277,7 +277,7 @@ const VerRutina = (props) => {
                     )}
                 />
             </View>
-            <Text style={styles.textEjercicio}>───── Dieta ─────</Text>
+            <Text style={styles.textEjercicio}>───── Diet ─────</Text>
             <View style={styles.containerRow}>
 
                 <ScrollView>
@@ -286,7 +286,7 @@ const VerRutina = (props) => {
             </View>
 
             <View style={styles.containerRow}>
-                <Text style={styles.textLogin}>Valorar</Text>
+                <Text style={styles.textLogin}>Rate</Text>
                 <View style={styles.containerStars}>
                     {[1, 2, 3, 4, 5].map((value) => (
                         <Icon

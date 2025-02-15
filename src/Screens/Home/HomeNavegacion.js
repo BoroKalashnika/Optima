@@ -20,14 +20,23 @@ const HomeNavegacion = (props) => {
                 tabBarInactiveTintColor: '#cdcdcd',
             }}>
                 <Tab.Screen
-                    name="Home" component={Home} options={{
+                    name="Home"
+                    component={Home}
+                    options={{
+                        title: "Home",
+                        tabBarLabel: "Home",
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="home" size={size} color={color} />
-                        ), headerShown: false
+                        ),
+                        headerShown: false
                     }}
                 />
                 <Tab.Screen
-                    name="Buscar" component={Buscar} options={{
+                    name="Buscar"
+                    component={Buscar}
+                    options={{
+                        title: "Search",
+                        tabBarLabel: "Search",
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="search" size={size} color={color} />
                         ),
@@ -35,7 +44,11 @@ const HomeNavegacion = (props) => {
                     }}
                 />
                 <Tab.Screen
-                    name="Crear" component={CrearRutinaNavegacion} options={{
+                    name="Crear"
+                    component={CrearRutinaNavegacion}
+                    options={{
+                        title: "Create",
+                        tabBarLabel: "Create",
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="add-circle-outline" size={size} color={color} />
                         ),
@@ -44,7 +57,11 @@ const HomeNavegacion = (props) => {
 
                 />
                 <Tab.Screen
-                    name="Favoritos" component={Favoritos} options={{
+                    name="Favoritos"
+                    component={Favoritos}
+                    options={{
+                        title: "Favorites",
+                        tabBarLabel: "Favorites",
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="heart" size={size} color={color} />
                         ),
