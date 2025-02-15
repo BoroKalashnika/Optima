@@ -75,10 +75,10 @@ const Ajustes = (props) => {
         if (response.status === 200) {
             await removeToken();
             setToken('');
-            Alert.alert("Cerrando sesión", 'Se ha deslogueado correctamente');
+            Alert.alert("Logging out", 'You have been logged out');
             props.navigation.navigate('Login')
         } else {
-            Alert.alert("ERROR", 'No se ha podido cerrar la sesión');
+            Alert.alert("ERROR", 'An error occured while logging out');
         }
         setLoading(false);
     }
@@ -93,9 +93,9 @@ const Ajustes = (props) => {
 
         launchImageLibrary(options, async (response) => {
             if (response.didCancel) {
-                Alert.alert('Cancelado', 'Seleccionaste cancelar la imagen');
+                Alert.alert('Cancelled', "You didn't choose an image");
             } else if (response.errorCode) {
-                Alert.alert('Error', 'Ocurrió un error al seleccionar la imagen');
+                Alert.alert('Error', 'An error occured while selecting the image');
             } else {
                 try {
                     const format = response.assets[0].type;
@@ -104,7 +104,7 @@ const Ajustes = (props) => {
                     setFoto(`data:${format};base64,${base64String}`);
                     console.log(foto);
                 } catch (err) {
-                    console.error("Error al procesar la imagen:", err);
+                    console.error("Error while processing the image:", err);
                 }
             }
         });
@@ -127,12 +127,11 @@ const Ajustes = (props) => {
                 if (response.status === 200) {
                     setNombre(nuevoNombre);  // Actualizamos el nombre en el estado local
                 } else {
-                    console.error("Error en la respuesta de la API:", response);
-                    Alert.alert("ERROR", response.data?.message || "No se pudo actualizar el nombre");
+                    Alert.alert("ERROR", response.data?.message || "The name wasn't changed");
                 }
             } catch (error) {
                 console.error("Error al actualizar el nombre:", error);
-                Alert.alert("ERROR", "Hubo un problema al comunicarse con el servidor");
+                Alert.alert("ERROR", "An error occured while communicating with the server");
             }
 
             setLoading(false);
@@ -172,21 +171,21 @@ const Ajustes = (props) => {
                             style={[styles.input, isDarkMode ? styles.darkInput : styles.lightInput]}
                             value={nuevoNombre}
                             onChangeText={setNuevoNombre}
-                            maxLength={15}
+                            maxLength={14}
                         />
                     ) : (
                         <Text style={[styles.name, isDarkMode ? styles.darkText : styles.lightText]}>{nombre}</Text>
                     )}
                 </View>
-                <View style={{alignItems:'center',marginTop:20}}>
-                <Pressable style={styles.editButton} onPress={toggleEditNombre}>
-                    <Text style={styles.editButtonText}>{nombreEditable ? 'Guardar' : 'Modificar'}</Text>
-                </Pressable>
+                <View style={{ alignItems: 'center', marginTop: 20 }}>
+                    <Pressable style={styles.editButton} onPress={toggleEditNombre}>
+                        <Text style={styles.editButtonText}>{nombreEditable ? 'Save' : 'Edit'}</Text>
+                    </Pressable>
                 </View>
             </View>
 
             <View style={styles.themeContainer}>
-                <Text style={[styles.themeText, isDarkMode ? styles.darkText : styles.lightText]}>Modo Oscuro</Text>
+                <Text style={[styles.themeText, isDarkMode ? styles.darkText : styles.lightText]}>Dark Mode</Text>
                 <Switch
                     value={isDarkMode}
                     onValueChange={toggleDarkMode}
@@ -196,7 +195,7 @@ const Ajustes = (props) => {
             </View>
 
             <Pressable style={[styles.logoutButton, isDarkMode ? styles.darkButton : styles.lightButton]} onPress={() => cerrarSesion()}>
-                <Text style={styles.logoutText}>Cerrar sesión</Text>
+                <Text style={styles.logoutText}>Logout</Text>
             </Pressable>
         </ScrollView>
     );
