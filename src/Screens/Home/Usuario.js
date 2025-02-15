@@ -59,6 +59,19 @@ const Usuario = (props) => {
         }, [])
     );
 
+    useFocusEffect(
+        useCallback(() => {
+            getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + idRutinaActiva).then((response) => {
+                setAmbito(response.ambito);
+                setDificultad(response.dificultad);
+                setImagen(response.vistaPrevia);
+                setTitulo(response.nombreRutina);
+                setEstrellas(response.valoracion);
+                setMusculo(response.grupoMuscular);
+            });
+        }, [estrellas])
+    );
+
     useEffect(() => {
         if (!email) {
             getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
@@ -66,17 +79,6 @@ const Usuario = (props) => {
             });
         }
     }, []);
-
-    useEffect(() => {
-        getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + idRutinaActiva).then((response) => {
-            setAmbito(response.ambito);
-            setDificultad(response.dificultad);
-            setImagen(response.vistaPrevia);
-            setTitulo(response.nombreRutina);
-            setEstrellas(response.valoracion);
-            setMusculo(response.grupoMuscular);
-        })
-    }, [idRutinaActiva]);
 
     const getRandom = () => {
         return Math.floor(Math.random() * frasesMotivadoras.frases.length);
