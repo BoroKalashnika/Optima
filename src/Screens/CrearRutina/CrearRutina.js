@@ -16,9 +16,9 @@ import config from '../../config/config';
 
 const CrearRutina = (props) => {
     const [nomRutina, setNomRutina] = useState('');
-    const [dificultad, setDificultad] = useState('Principiante');
+    const [dificultad, setDificultad] = useState('Beginner');
     const [musculo, setMusculo] = useState('Biceps');
-    const [ambito, setAmbito] = useState('Gimnasio');
+    const [ambito, setAmbito] = useState('Gym');
     const [dieta, setDieta] = useState('');
     const [vistaPrevia, setVistaPrevia] = useState(null);
     const [ejerciciosRutina, setEjerciciosRutina] = useState([]);
@@ -35,7 +35,7 @@ const CrearRutina = (props) => {
     useFocusEffect(
         useCallback(() => {
             const backAction = () => {
-                return true; // Evita la acción predeterminada de retroceso
+                return true;
             };
 
             const backHandler = BackHandler.addEventListener(
@@ -93,7 +93,7 @@ const CrearRutina = (props) => {
             })
             setEjerciciosRutina(newArray);
             setIdEjercicios(response.ejercicios.map(element => element.id));
-            setDraft(' (Borrador)');
+            setDraft(' (Draft)');
         } else {
             setEjerciciosRutina([]);
             setIdEjercicios([]);
@@ -141,7 +141,6 @@ const CrearRutina = (props) => {
 
     const sumarEjercicios = async () => {
         if (!idRutina || !idEjercicios || idEjercicios.length === 0) {
-            console.log("No hay ejercicios para agregar o la rutina no está definida.");
             return;
         }
         setLoading(true);
@@ -190,8 +189,8 @@ const CrearRutina = (props) => {
             json, setLoading
         );
         if (response.status === 201) {
-            setAlertMessage('Rutina creada correctamente.');
-            setAlertTitle('Éxito');
+            setAlertMessage('Routine created successfully.');
+            setAlertTitle('Success');
             setModalVisible(true);
             props.navigation.goBack();
             limpiarCampos();
@@ -215,9 +214,9 @@ const CrearRutina = (props) => {
 
         launchImageLibrary(options, (response) => {
             if (response.didCancel) {
-                Alert.alert('Cancelado', 'Seleccionaste cancelar la imagen');
+                Alert.alert('Cancelled', 'You cancelled image selection');
             } else if (response.errorCode) {
-                Alert.alert('Error', 'Ocurrió un error al seleccionar la imagen');
+                Alert.alert('Error', 'An error occurred while selecting the image');
             } else {
                 const format = response.assets[0].type;
                 RNFS.readFile(response.assets[0].uri, 'base64')
@@ -232,7 +231,6 @@ const CrearRutina = (props) => {
         setNomRutina('');
         setDificultad('');
         setAmbito('');
-        setAmbito('');
         setDieta('');
         setVistaPrevia(null);
         setIdEjercicios([]);
@@ -244,8 +242,8 @@ const CrearRutina = (props) => {
         const response = await deleteData(config.API_OPTIMA + 'eliminarRutina?token=' + token + '&id=' + idRutina, setLoading);
         setLoading(false);
         if (response.status === 200) {
-            setAlertMessage('Creación de rutina cancelada');
-            setAlertTitle('Cancelado');
+            setAlertMessage('Routine creation cancelled');
+            setAlertTitle('Cancelled');
             setModalVisible(true);
             limpiarCampos();
             props.navigation.goBack();
@@ -259,12 +257,12 @@ const CrearRutina = (props) => {
     const validarCampos = () => {
         if (!nomRutina || !ambito || idEjercicios == '' || ejerciciosRutina == [] || !dieta || !vistaPrevia) {
             if (idEjercicios == '' || ejerciciosRutina == []) {
-                setAlertMessage('No ha insertado ningún ejercicio.');
+                setAlertMessage('You have not added any exercises.');
                 setAlertTitle('Error');
                 setModalVisible(true);
                 return;
             }
-            setAlertMessage('Todos los campos deben estar completos antes de guardar.');
+            setAlertMessage('All fields must be completed before saving.');
             setAlertTitle('Error');
             setModalVisible(true);
             return;
@@ -275,10 +273,10 @@ const CrearRutina = (props) => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Crear Nueva Rutina{draft}</Text>
+            <Text style={styles.title}>Create New Routine{draft}</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Nombre de la rutina"
+                placeholder="Routine Name"
                 placeholderTextColor="#90caf9"
                 value={nomRutina}
                 onChangeText={(newText) => setNomRutina(newText)}
@@ -289,9 +287,9 @@ const CrearRutina = (props) => {
                     selectedValue={dificultad}
                     onValueChange={(itemValue) => setDificultad(itemValue)}
                     style={styles.picker}>
-                    <Picker.Item label="Principiante" value="Principiante" style={styles.pickerItem} />
-                    <Picker.Item label="Intermedio" value="Intermedio" style={styles.pickerItem} />
-                    <Picker.Item label="Experto" value="Experto" style={styles.pickerItem} />
+                    <Picker.Item label="Beginner" value="Beginner" style={styles.pickerItem} />
+                    <Picker.Item label="Intermediate" value="Intermediate" style={styles.pickerItem} />
+                    <Picker.Item label="Expert" value="Expert" style={styles.pickerItem} />
                 </Picker>
             </View>
             <View style={styles.pickerContainer}>
@@ -299,9 +297,9 @@ const CrearRutina = (props) => {
                     selectedValue={ambito}
                     onValueChange={(itemValue) => setAmbito(itemValue)}
                     style={styles.picker}>
-                    <Picker.Item label="Gimnasio" value="Gimnasio" style={styles.pickerItem} />
-                    <Picker.Item label="Calistenia" value="Calistenia" style={styles.pickerItem} />
-                    <Picker.Item label="Casa" value="Casa" style={styles.pickerItem} />
+                    <Picker.Item label="Gym" value="Gym" style={styles.pickerItem} />
+                    <Picker.Item label="Calisthenics" value="Calisthenics" style={styles.pickerItem} />
+                    <Picker.Item label="Home" value="Home" style={styles.pickerItem} />
                 </Picker>
             </View>
             <View style={styles.pickerContainer}>
@@ -311,21 +309,21 @@ const CrearRutina = (props) => {
                     style={styles.picker}>
                     <Picker.Item label="Biceps" value="Biceps" style={styles.pickerItem} />
                     <Picker.Item label="Triceps" value="Triceps" style={styles.pickerItem} />
-                    <Picker.Item label="Pecho" value="Pecho" style={styles.pickerItem} />
-                    <Picker.Item label="Espalda" value="Espalda" style={styles.pickerItem} />
-                    <Picker.Item label="Pierna" value="Pierna" style={styles.pickerItem} />
+                    <Picker.Item label="Chest" value="Chest" style={styles.pickerItem} />
+                    <Picker.Item label="Back" value="Back" style={styles.pickerItem} />
+                    <Picker.Item label="Legs" value="Legs" style={styles.pickerItem} />
                 </Picker>
             </View>
             <TextInput
                 style={styles.input}
-                placeholder="Dieta"
+                placeholder="Diet"
                 placeholderTextColor="#90caf9"
                 value={dieta}
                 onChangeText={(newText) => setDieta(newText)}
             />
             <Pressable style={styles.containerCrear} onPress={() => props.navigation.navigate('CrearEjercicio')}>
                 <Icon name="add-circle-outline" color="#607cff" size={50} style={{ marginHorizontal: "5%" }} />
-                <Text style={styles.text}>Crear Ejercicio</Text>
+                <Text style={styles.text}>Create Exercise</Text>
             </Pressable>
             <View style={styles.listContainer}>
                 <ScrollView nestedScrollEnabled={true}>
@@ -345,7 +343,7 @@ const CrearRutina = (props) => {
             </View>
             <View style={styles.buttonContainer}>
                 <Button mode="contained" style={styles.imagePickerButton} onPress={pickImage}>
-                    Seleccionar Imagen
+                    Select Image
                 </Button>
             </View>
             {vistaPrevia && (
@@ -353,10 +351,10 @@ const CrearRutina = (props) => {
             )}
             <View style={styles.buttonContainer}>
                 <Button mode="contained" style={styles.button} onPress={() => validarCampos()}>
-                    Guardar
+                    Save
                 </Button>
                 <Button mode="contained" style={styles.buttonClear} onPress={() => cancelarPress()}>
-                    Cancelar
+                    Cancel
                 </Button>
             </View>
         </ScrollView>
@@ -366,7 +364,7 @@ const CrearRutina = (props) => {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        padding: 20,
+        padding: 10,
         backgroundColor: '#1F2937',
         alignItems: 'center',
     },
@@ -376,7 +374,7 @@ const styles = StyleSheet.create({
         color: '#bbdefb',
         marginBottom: 20,
         textAlign: 'center',
-        marginTop: 40,
+        marginTop: 20,
     },
     input: {
         borderRadius: 10,
