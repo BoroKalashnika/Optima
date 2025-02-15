@@ -13,6 +13,7 @@ import { HelperText } from 'react-native-paper';
 import postData from '../../Utils/services/postData';
 import Carga from '../../Components/carga/Carga';
 import config from '../../config/config';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Correo = (props) => {
     const { loading, setLoading } = useContext(Context);
@@ -26,9 +27,9 @@ const Correo = (props) => {
 
     const handleOnPress = async () => {
         if (correo === '') {
-            Alert.alert("ERROR", 'Correo Vacio')
+            Alert.alert("ERROR", 'Email empty')
         } else if (emailHasErrors()) {
-            Alert.alert("ERROR", 'Correo invalido')
+            Alert.alert("ERROR", 'Invalid email')
         } else {
             const json = {
                 nombre: "",
@@ -68,33 +69,35 @@ const Correo = (props) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.subContainer}>
-                <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
-            </View>
-            <View style={styles.formContainer}>
-                <Text style={styles.text}>Introduce tu correo para enviarte un código de un solo uso</Text>
-                <View style={styles.inputContainer}>
-                    {(correo != '' && emailHasErrors()) && (
-                        <HelperText type="error">
-                            Dirección de correo invalida
-                        </HelperText>
-                    )}
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Introduce tu correo electronico"
-                        placeholderTextColor="#9CA3AF"
-                        value={correo}
-                        onChangeText={(newEmail) => setCorreo(newEmail)}
-                    />
-                </View>
-
+            <ScrollView>
                 <View style={styles.subContainer}>
-                    <Pressable style={styles.bottom} onPress={() => handleOnPress()}>
-                        <Text style={styles.textLogin}>Enviar</Text>
-                    </Pressable>
+                    <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
                 </View>
-            </View>
+                <View style={styles.formContainer}>
+                    <Text style={styles.text}>Enter your email to receive a one-time verification code</Text>
+                    <View style={styles.inputContainer}>
+                        {(correo != '' && emailHasErrors()) && (
+                            <HelperText type="error">
+                                Invalid email address
+                            </HelperText>
+                        )}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter your email"
+                            placeholderTextColor="#9CA3AF"
+                            value={correo}
+                            onChangeText={(newEmail) => setCorreo(newEmail)}
+                            keyboardType='email-address'
+                        />
+                    </View>
 
+                    <View style={styles.subContainer}>
+                        <Pressable style={styles.bottom} onPress={() => handleOnPress()}>
+                            <Text style={styles.textLogin}>Send</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </ScrollView>
         </View>
     );
 }
@@ -106,7 +109,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#1F2937',
-        paddingTop: 60
     },
     subContainer: {
         alignItems: 'center',

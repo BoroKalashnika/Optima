@@ -26,7 +26,7 @@ const RestablecerContra = (props) => {
 
     useFocusEffect(() => {
         const backAction = () => {
-            return true; // Bloquea el botón de retroceso
+            return true;
         };
 
         const backHandler = BackHandler.addEventListener(
@@ -34,7 +34,7 @@ const RestablecerContra = (props) => {
             backAction
         );
 
-        return () => backHandler.remove(); // Se elimina al salir de la pantalla
+        return () => backHandler.remove();
     });
 
     const contrasenyaHasErrors = () => {
@@ -71,7 +71,7 @@ const RestablecerContra = (props) => {
             const response = await postData(config.API_OPTIMA + 'cambiarContrasenya', json, setLoading);
 
             if (response.status === 200) {
-                Alert.alert("CONTRASEÑA CAMBIADA", response.data.message);
+                Alert.alert("PASSWORD CHANGED", response.data.message);
                 setCodigo('');
                 setEmail('');
                 props.navigation.navigate('Login');
@@ -93,26 +93,26 @@ const RestablecerContra = (props) => {
                 <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
             </View>
             <View style={styles.formContainer}>
-                <Text style={styles.title}>Restablecer Contraseña</Text>
+                <Text style={styles.title}>Reset Password</Text>
                 <View style={styles.inputContainer}>
-                    <Text style={styles.text}>Introduce una nueva Contraseña</Text>
+                    <Text style={styles.text}>Enter a new Password</Text>
                     {(contra != '' && contrasenyaHasErrors()) && (
                         <HelperText type="error">
-                            Contraseña con al menos una letra mayúscula, una minúscula y un número
+                            Password with at least one uppercase letter, one lowercase letter and one number
                         </HelperText>
                     )}
                     <TextInput
                         style={styles.input}
-                        placeholder="Introduce la nueva Contraseña"
+                        placeholder="Enter Password"
                         placeholderTextColor="#9CA3AF"
                         value={contra}
                         onChangeText={(newContra) => setContra(newContra)}
                         secureTextEntry
                     />
-                    <Text style={styles.text}>Repite la nueva Contraseña</Text>
+                    <Text style={styles.text}>Repeat the new password</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="Repite la nueva Contraseña"
+                        placeholder="Repeat the new password"
                         placeholderTextColor="#9CA3AF"
                         value={repetirContra}
                         onChangeText={(newRepetirContra) => setRepetirContra(newRepetirContra)}
@@ -122,7 +122,7 @@ const RestablecerContra = (props) => {
 
                 <View style={styles.subContainer}>
                     <Pressable style={styles.bottom} onPress={() => handleOnPress()}>
-                        <Text style={styles.text}>Restablecer</Text>
+                        <Text style={styles.text}>Restore</Text>
                     </Pressable>
                 </View>
             </View>

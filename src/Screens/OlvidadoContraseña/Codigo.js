@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import getData from "../../Utils/services/getData";
 import config from '../../config/config';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Codigo = (props) => {
     const [codigoEscrito, setCodigoEscrito] = useState('');
@@ -18,14 +19,14 @@ const Codigo = (props) => {
 
     const handleOnPress = () => {
         if (codigoEscrito === '') {
-            Alert.alert("ERROR", 'Codigo vacio')
+            Alert.alert("ERROR", 'Empty code')
         } else {
             getData(config.API_OPTIMA + 'codigo?codigo=' + codigoEscrito).then((response) => {
                 if (response.message === "") {
                     setCodigo(codigoEscrito);
                     props.navigation.navigate('RestablecerContra');
                 } else {
-                    Alert.alert("CODIGO NO VALIDO", response.message)
+                    Alert.alert("INVALID CODE", response.message)
                 }
             })
         }
@@ -33,15 +34,16 @@ const Codigo = (props) => {
 
     return (
         <View style={styles.container}>
+            <ScrollView>
             <View style={styles.subContainer}>
                 <Image source={require('../../Assets/img/logo.png')} style={styles.image} />
             </View>
             <View style={styles.formContainer}>
-                <Text style={styles.text}>Hemos enviado un código de verificación a tu correo, por favor ves a tu correo e introduce el código</Text>
+                <Text style={styles.text}>We have sent a verification code to your email, please go to your email and enter the code</Text>
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Introduce el codigo de verificacion"
+                        placeholder="Enter the verification code"
                         placeholderTextColor="#9CA3AF"
                         value={codigoEscrito}
                         onChangeText={(newCodigo) => setCodigoEscrito(newCodigo)}
@@ -50,11 +52,11 @@ const Codigo = (props) => {
 
                 <View style={styles.subContainer}>
                     <Pressable style={styles.bottom} onPress={() => handleOnPress()}>
-                        <Text style={styles.textLogin}>Enviar</Text>
+                        <Text style={styles.textLogin}>Send</Text>
                     </Pressable>
                 </View>
             </View>
-
+            </ScrollView>
         </View>
     );
 }
@@ -66,7 +68,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#1F2937',
-        paddingTop: 60
     },
     subContainer: {
         alignItems: 'center',
