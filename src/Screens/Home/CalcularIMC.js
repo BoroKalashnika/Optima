@@ -140,7 +140,7 @@ const CalcularIMC = (props) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Calculator IMC</Text>
+            <Text style={styles.title}>BMI Calculator</Text>
             {(peso != '' && pesoHasErrors()) && (
                 <HelperText type="error">
                     Peso en kilogramos
@@ -169,8 +169,8 @@ const CalcularIMC = (props) => {
             />
 
             <View style={styles.buttonContainer}>
-                <Button title="Calculate IMC" onPress={() => calcularIMC()} color="#607cff" />
-                <Button title="Clean" onPress={() => limpiarCampos()} color="#607cff" />
+                <Button title="Calculate BMI" onPress={() => calcularIMC()} color="#607cff" />
+                <Button title="Delete Data" onPress={() => limpiarCampos()} color="#607cff" />
                 <Button title="Return" onPress={() => props.navigation.goBack()} color="#607cff" />
             </View>
 

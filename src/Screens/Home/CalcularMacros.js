@@ -95,7 +95,7 @@ const CalcularMacros = (props) => {
         const response = await postData(config.API_OPTIMA + 'registrarMacros', json, setLoading);
 
         if (response.status === 200) {
-            setTitulo('Calculado');
+            setTitulo('Success');
             setMensaje(response.data.message);
             setModalVisible(true);
         } else {
@@ -173,7 +173,7 @@ const CalcularMacros = (props) => {
                         style={styles.picker}
                         onValueChange={(itemValue) => setSexo(itemValue)}
                     >
-                        <Picker.Item label="Masculino" value="masculino" />
+                        <Picker.Item label="Male" value="masculino" />
                         <Picker.Item label="Female" value="femenino" />
                     </Picker>
                 </View>
@@ -185,9 +185,9 @@ const CalcularMacros = (props) => {
                         style={styles.picker}
                         onValueChange={(itemValue) => setActividad(itemValue)}
                     >
-                        <Picker.Item label="Low activity" value="pocoActivo" />
-                        <Picker.Item label="Medium Activity" value="medioActivo" />
-                        <Picker.Item label="Very Activity" value="muyActivo" />
+                        <Picker.Item label="Not Active" value="pocoActivo" />
+                        <Picker.Item label="Active" value="medioActivo" />
+                        <Picker.Item label="Very Active" value="muyActivo" />
                     </Picker>
                 </View>
 
@@ -207,7 +207,7 @@ const CalcularMacros = (props) => {
                         <PieChart
                             data={[
                                 {
-                                    name: 'Carbos',
+                                    name: 'Carbs',
                                     population: parseFloat(macros.carbos),
                                     color: '#FF6347',
                                     legendFontColor: '#7F7F7F',

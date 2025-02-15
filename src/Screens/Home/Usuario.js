@@ -113,7 +113,7 @@ const Usuario = (props) => {
             </View>
             <View style={styles.calculadoraContainer}>
                 <TouchableOpacity style={styles.calcRow} onPress={() => props.navigation.navigate('CalcularIMC')}>
-                    <Text style={styles.calcTitle}>IMC</Text>
+                    <Text style={styles.calcTitle}>BMI</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image source={require('../../Assets/img/click.png')} style={styles.imageClick} />
                         <Image source={require('../../Assets/img/calculadoraIMC.png')} style={styles.image} />
@@ -155,21 +155,21 @@ const Usuario = (props) => {
                             <PieChart
                                 data={[
                                     {
-                                        name: 'Carbos',
+                                        name: 'Carbs',
                                         population: parseFloat(macros[1]),
                                         color: '#FF6347',
                                         legendFontColor: '#7F7F7F',
                                         legendFontSize: 12
                                     },
                                     {
-                                        name: 'Proteínas',
+                                        name: 'Proteins',
                                         population: parseFloat(macros[2]),
                                         color: '#4CAF50',
                                         legendFontColor: '#7F7F7F',
                                         legendFontSize: 12
                                     },
                                     {
-                                        name: 'Grasas',
+                                        name: 'Fats',
                                         population: parseFloat(macros[3]),
                                         color: '#FFD700',
                                         legendFontColor: '#7F7F7F',
@@ -195,7 +195,7 @@ const Usuario = (props) => {
                         </View>
                     ) : (
                         <View style={styles.listItem}>
-                            <Text style={styles.listItemText}>No has realizado ningún cálculo</Text>
+                            <Text style={styles.listItemText}>You have not made any calculations</Text>
                         </View>
                     )}
                 </View>
