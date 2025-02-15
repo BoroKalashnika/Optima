@@ -29,13 +29,11 @@ const Registro = (props) => {
     const [altura, setAltura] = useState('');
     const [opcion, setOpcion] = useState('');
     const [checked, setChecked] = useState(false);
-    const [mensaje, setMensaje] = useState('');
-    const [titulo, setTitulo] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const data = [
-        { key: '1', value: 'Principiante' },
-        { key: '2', value: 'Intermedio' },
-        { key: '3', value: 'Profesional' },
+        { key: '1', value: 'Beginner' },
+        { key: '2', value: 'Intermediate' },
+        { key: '3', value: 'Professional' },
     ];
 
     const emailHasErrors = () => {
@@ -64,13 +62,13 @@ const Registro = (props) => {
 
     const registrarUsuario = async () => {
         if (email === '' || password === '' || repetriContra === '' || usuario === '' || peso === '' || altura === '' || opcion === '') {
-            Alert.alert("ERROR", 'Campos vacios porfavor completalos')
+            Alert.alert("ERROR", 'Please fill in all fields')
         } else if (password !== repetriContra) {
-            Alert.alert("ERROR", 'Contraseña no coincide')
+            Alert.alert("ERROR", 'Passwords do not match')
         } else if (emailHasErrors() || usuarioHasErrors() || contrasenyaHasErrors() || alturaHasErrors() || pesoHasErrors()) {
-            Alert.alert("ERROR", 'Algunos de los campos es invalido')
+            Alert.alert("ERROR", 'Some fields are invalid')
         } else if (!checked) {
-            Alert.alert("NO HAS ACEPTADO LOS TERMINOS Y PRIVACIDAD", 'No puedes registrate sin aceptar los terminos y politicas')
+            Alert.alert("YOU HAVE NOT ACCEPTED THE TERMS AND PRIVACY", 'You cannot register without accepting the terms and policies')
         } else {
             const json = {
                 nombre: usuario,
@@ -92,7 +90,7 @@ const Registro = (props) => {
             const response = await postData(config.API_OPTIMA + 'registrar', json, setLoading);
 
             if (response.status === 201) {
-                Alert.alert("USUARIO REGISTRADO", response.data.message);
+                Alert.alert("USER REGISTERED", response.data.message);
                 props.navigation.navigate('Login');
             } else {
                 Alert.alert("ERROR", response.data.message);
@@ -115,12 +113,12 @@ const Registro = (props) => {
                 <View style={styles.inputContainer}>
                     {(email != '' && emailHasErrors()) && (
                         <HelperText type="error">
-                            Dirección de correo invalida
+                            Invalid email address
                         </HelperText>
                     )}
                     <TextInput
                         style={styles.input}
-                        placeholder="Introduce el Email"
+                        placeholder="Enter Email"
                         placeholderTextColor="#9CA3AF"
                         value={email}
                         onChangeText={setEmail}
@@ -129,12 +127,12 @@ const Registro = (props) => {
                     />
                     {(password != '' && contrasenyaHasErrors()) && (
                         <HelperText type="error">
-                            Contraseña con minimo 8 caracteres, al menos una letra mayúscula, una minúscula y un número
+                            Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number
                         </HelperText>
                     )}
                     <TextInput
                         style={styles.input}
-                        placeholder="Introduce la contraseña"
+                        placeholder="Enter Password"
                         placeholderTextColor="#9CA3AF"
                         value={password}
                         onChangeText={setPassword}
@@ -142,7 +140,7 @@ const Registro = (props) => {
                     />
                     <TextInput
                         style={styles.input}
-                        placeholder="Repetir Contraseña"
+                        placeholder="Repeat Password"
                         placeholderTextColor="#9CA3AF"
                         value={repetriContra}
                         onChangeText={setRepetirContras}
@@ -151,12 +149,12 @@ const Registro = (props) => {
                 </View>
                 {(usuario != '' && usuarioHasErrors()) && (
                     <HelperText type="error">
-                        Nombre usuario invalido longitud 3-20 carácteres
+                        Invalid username, must be 3-20 characters long
                     </HelperText>
                 )}
                 <TextInput
                     style={styles.input}
-                    placeholder="Nombre Usuario"
+                    placeholder="Username"
                     placeholderTextColor="#9CA3AF"
                     value={usuario}
                     onChangeText={setUsuario}
@@ -166,14 +164,14 @@ const Registro = (props) => {
                     <View style={styles.containerHelper}>
                         {(altura != '' && alturaHasErrors()) && (
                             <HelperText type="error">
-                                Altura en centímetros
+                                Height in centimeters
                             </HelperText>
                         )}
                     </View>
                     <View style={styles.containerHelper}>
                         {(peso != '' && pesoHasErrors()) && (
                             <HelperText type="error">
-                                Peso en kilogramos
+                                Weight in kilograms
                             </HelperText>
                         )}
                     </View>
@@ -181,7 +179,7 @@ const Registro = (props) => {
                 <View style={styles.containerDatos}>
                     <TextInput
                         style={[styles.input, { width: '49%' }]}
-                        placeholder="Altura (cm)"
+                        placeholder="Height (cm)"
                         placeholderTextColor="#9CA3AF"
                         value={altura}
                         onChangeText={setAltura}
@@ -190,7 +188,7 @@ const Registro = (props) => {
 
                     <TextInput
                         style={[styles.input, { width: '49%' }]}
-                        placeholder="Peso (kg)"
+                        placeholder="Weight (kg)"
                         placeholderTextColor="#9CA3AF"
                         value={peso}
                         onChangeText={setPeso}
@@ -205,7 +203,7 @@ const Registro = (props) => {
                     inputStyles={styles.selectInput}
                     dropdownStyles={styles.dropdown}
                     dropdownTextStyles={styles.dropdownText}
-                    placeholder='Selecciona una dificultad inicial'
+                    placeholder='Select an initial difficulty level'
                 />
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Checkbox
@@ -226,11 +224,11 @@ const Registro = (props) => {
                 </View>
                 <View style={styles.registrar}>
                     <Pressable style={styles.bottom} onPress={() => registrarUsuario()}>
-                        <Text style={styles.textLogin}>Registrarse</Text>
+                        <Text style={styles.textLogin}>Register</Text>
                     </Pressable>
                 </View>
                 <View style={styles.login}>
-                    <Text style={styles.resetPasswordText}>Ya tengo cuenta</Text>
+                    <Text style={styles.resetPasswordText}>Already have an account</Text>
                     <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Login")}>
                         <Text style={styles.textLogin}>Login</Text>
                     </Pressable>
@@ -246,7 +244,7 @@ const Registro = (props) => {
                         <Text style={styles.modalTitle}>Privacy Consent Agreement</Text>
                         <Text style={styles.modalMessage}>By registering, you agree to our Privacy Policy and Terms of Service.{'\n\n'}You consent to the collection, storage, and processing of your personal data in accordance with our policies.{'\n\n'}Your information will be used to provide and improve our services, and we will not share it with third parties without your consent, except as required by law.</Text>
                         <Button mode="contained" onPress={() => setModalVisible(false)} style={styles.modalButton}>
-                            Cerrar
+                            Close
                         </Button>
                     </View>
                 </View>

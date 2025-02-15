@@ -8,8 +8,8 @@ import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 const Carga = () => {
     return (
         <View style={styles.containerCarga}>
-            <ActivityIndicator animating={true} color={MD2Colors.blue700} size={100} />
-            <Text style={styles.title}>Cargando...</Text>
+            <ActivityIndicator animating={true} color={MD2Colors.blue700} size={50} />
+            <Text style={styles.title}>Loading...</Text>
         </View>
     );
 }

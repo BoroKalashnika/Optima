@@ -9,7 +9,7 @@ const Carga = () => {
     return (
         <View style={styles.containerCarga}>
             <ActivityIndicator animating={true} color={MD2Colors.blue700} size={100} />
-            <Text style={styles.title}>Cargando...</Text>
+            <Text style={styles.title}>Loading...</Text>
         </View>
     );
 }

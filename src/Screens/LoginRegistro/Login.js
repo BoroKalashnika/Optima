@@ -48,7 +48,7 @@ const Login = (props) => {
                     await postData(config.API_OPTIMA + 'logout', tokenCache, setLoading)
                     await removeToken();
                     setToken('');
-                    Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
+                    Alert.alert("CREDENTIALS EXPIRED", 'Please log in again', [
                         {
                             text: "OK",
                             onPress: () => props.navigation.navigate('Login')
@@ -63,7 +63,7 @@ const Login = (props) => {
                         await postData(config.API_OPTIMA + 'logout', tokenCache, setLoading)
                         await removeToken();
                         setToken('');
-                        Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
+                        Alert.alert("CREDENTIALS EXPIRED", 'Please log in again', [
                             {
                                 text: "OK",
                                 onPress: () => props.navigation.navigate('Login')
@@ -79,7 +79,7 @@ const Login = (props) => {
                 await postData(config.API_OPTIMA + 'logout', tokenCache, setLoading)
                 await removeToken();
                 setToken('');
-                Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
+                Alert.alert("CREDENTIALS EXPIRED", 'Please log in again', [
                     {
                         text: "OK",
                         onPress: () => props.navigation.navigate('Login')
@@ -102,7 +102,7 @@ const Login = (props) => {
                     await postData(config.API_OPTIMA + 'logout', tokenCache, setLoading)
                     await removeToken();
                     setToken('');
-                    Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
+                    Alert.alert("CREDENTIALS EXPIRED", 'Please log in again', [
                         {
                             text: "OK",
                             onPress: () => props.navigation.navigate('Login')
@@ -113,19 +113,19 @@ const Login = (props) => {
                 await postData(config.API_OPTIMA + 'logout', tokenCache, setLoading)
                 await removeToken();
                 setToken('');
-                Alert.alert("CADUCIDAD CREDENCIALES", 'Por favor vuelve a iniciar sesión', [
+                Alert.alert("CREDENTIALS EXPIRED", 'Please log in again', [
                     {
                         text: "OK",
                         onPress: () => props.navigation.navigate('Login')
                     }
                 ]);
             }
-        }, 60000); // Cada 1 minuto
+        }, 60000); // Every 1 minute
     };
 
     const loginUsuario = async () => {
         if (email === '' || password === '') {
-            Alert.alert("ERROR", 'Campos vacios porfavor completalos')
+            Alert.alert("ERROR", 'Please fill in all fields')
         } else {
             const json = {
                 contrasenya: password,
@@ -160,7 +160,7 @@ const Login = (props) => {
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Introduce el Email"
+                        placeholder="Email"
                         placeholderTextColor="#9CA3AF"
                         value={email}
                         onChangeText={setEmail}
@@ -169,7 +169,7 @@ const Login = (props) => {
                     />
                     <TextInput
                         style={styles.input}
-                        placeholder="Introduce la contraseña"
+                        placeholder="Password"
                         placeholderTextColor="#9CA3AF"
                         value={password}
                         onChangeText={setPassword}
@@ -179,7 +179,7 @@ const Login = (props) => {
 
                 <View style={styles.optionsContainer}>
                     <Pressable onPress={() => props.navigation.navigate("StacksOlvidadoContraseña")}>
-                        <Text style={styles.resetPasswordText}>He olvidado la contraseña</Text>
+                        <Text style={styles.resetPasswordText}>Forgot Password</Text>
                     </Pressable>
                 </View>
                 <View style={styles.containerBotones}>
@@ -190,7 +190,7 @@ const Login = (props) => {
                     </View>
                     <View style={styles.subContainer}>
                         <Pressable style={styles.bottom} onPress={() => props.navigation.navigate("Registro")}>
-                            <Text style={styles.textLogin}>REGISTRO</Text>
+                            <Text style={styles.textLogin}>REGISTER</Text>
                         </Pressable>
                     </View>
                 </View>
