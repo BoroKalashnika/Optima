@@ -42,7 +42,8 @@ const Usuario = (props) => {
 
     useFocusEffect(
         useCallback(() => {
-            getData(config.API_OPTIMA + 'tokenUsuario?token=' + token).then((response) => {
+            const fetchData = async () => {
+                const response = await getData(config.API_OPTIMA + 'tokenUsuario?token=' + token);
                 setIdRutinaActiva(response.rutinaActiva);
                 setNombre(response.nombre);
                 setHistorialIMC(response.historialImc);
@@ -55,7 +56,12 @@ const Usuario = (props) => {
                     setFoto(response.fotoPerfil);
                     setVistaPrevia(true);
                 }
-            });
+                if (response.rutinaActiva) {
+                    const rutinaResponse = await getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + response.rutinaActiva);
+                    setEstrellas(rutinaResponse.valoracion);
+                }
+            };
+            fetchData();
         }, [])
     );
 
@@ -75,14 +81,6 @@ const Usuario = (props) => {
                     setVistaPrevia(true);
                 }
             });
-        }, [])
-    );
-
-    useFocusEffect(
-        useCallback(() => {
-            getData(config.API_OPTIMA + 'obtenerRutina?token=' + token + '&id=' + idRutinaActiva).then((response) => {
-                setEstrellas(response.valoracion);
-            })
         }, [])
     );
 
