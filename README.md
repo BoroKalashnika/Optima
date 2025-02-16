@@ -37,6 +37,7 @@ La fórmula del rendimiento
 
 > [!IMPORTANT]
 > Estamos en proceso de solucionar este problema para el día 25, cuando realizaremos la exposición ante el jurado que evaluará el proyecto integrado.
+> <strong>LA BASE DE DATOS ESTA VACIA SOLO TIENE 3 USUARIOS REGISTRADOS</strong>
 
 >  [!TIP]
 > Hemos creado una cuenta para que podais utilizarla que ya esta verificada de forma manual en la Base de Datos.<br><br>
