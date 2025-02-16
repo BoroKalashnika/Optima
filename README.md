@@ -11,7 +11,7 @@ La aplicación está diseñada para un público que ya está en contacto con el 
 En resumen, OPTIMA no es solo una aplicación de entrenamiento, sino una comunidad donde los entusiastas del fitness pueden compartir conocimientos, motivarse mutuamente y acceder a información clave para optimizar su rendimiento. Con su enfoque en la personalización, la interacción y la educación, OPTIMA se posiciona como una herramienta imprescindible para cualquier persona que quiera mejorar su condición física de manera efectiva y estructurada.
 
 <h2>
-OPTIMA 
+<font color="blue">OPTIMA</font> 
   <br>
 La fórmula del rendimiento
 </h2>
