@@ -1,5 +1,6 @@
 # DAM2425_Roig
-#Què és OPTIMA?
+
+#Què és OPTIMA
 
 ### Contacte
 Contacte dels membres de l'equip
