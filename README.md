@@ -7,30 +7,30 @@ Contacte dels membres de l'equip
 
 <div align="center">
 
-**- Javier Armero -**  
+<h3>Javier Armero</h3>  
 *Frontend*  
-<img src="https://avatars.githubusercontent.com/u/150703636?v=4" alt="Foto perfil Javichuu" width="150">  
+<img src="https://avatars.githubusercontent.com/u/150703636?v=4" alt="Foto perfil Javichuu" width="125">  
 Email: [jaarlo@alumnatflorida.es](mailto:jaarlo@alumnatflorida.es)  
 
 ---
 
-**- Rubén Martínez -**  
+<h3>Rubén Martínez</h3>  
 *Frontend / Scrum Manager*  
-<img src="https://avatars.githubusercontent.com/u/122776183?v=4" alt="Foto perfil Rubén" width="150">  
+<img src="https://avatars.githubusercontent.com/u/122776183?v=4" alt="Foto perfil Rubén" width="125">  
 Email: [rumama02@alumnatflorida.es](mailto:rumama02@alumnatflorida.es)  
 
 ---
 
-**- Boromir Stanislavov -**  
+<h3>Boromir Stanislavov</h3>  
 *Backend / Project Manager*  
-<img src="https://avatars.githubusercontent.com/u/122878993?v=4" alt="Foto perfil Boromir" width="150">  
+<img src="https://avatars.githubusercontent.com/u/122878993?v=4" alt="Foto perfil Boromir" width="125">  
 Email: [bostbo@alumnatflorida.es](mailto:bostbo@alumnatflorida.es)  
 
 ---
 
-**- Juan Manuel Vila -**  
+<h3>Juan Manuel Vila</h3>  
 *FullStack*  
-<img src="https://avatars.githubusercontent.com/u/181088733?v=4" alt="Foto perfil Juanma" width="150">  
+<img src="https://avatars.githubusercontent.com/u/181088733?v=4" alt="Foto perfil Juanma" width="125">  
 Email: [juvigo@alumnatflorida.es](mailto:juvigo@alumnatflorida.es)  
 
 </div>
