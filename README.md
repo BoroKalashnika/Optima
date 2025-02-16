@@ -1,7 +1,11 @@
 # OPTIMA
+<div align="center">
+Es una app tipo red social donde la gente puede subir sus rutinas de ejercicios, valorarlas, darles me gusta, filtrarlas, calcular IMC y Macros.
+</div>
 
-### Contacte
-Contacte dels membres de l'equip
+
+### Contacto
+Miembros de Optima Group
 
 <div align="center">
 
