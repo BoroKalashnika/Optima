@@ -1,6 +1,4 @@
-# DAM2425_Roig
-
-#OPTIMA
+# OPTIMA
 
 ### Contacte
 Contacte dels membres de l'equip
