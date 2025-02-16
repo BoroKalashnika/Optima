@@ -33,7 +33,20 @@ La fórmula del rendimiento
 
 # <div align="center">💻‎‎‎‎  ‎      LINKS ‎ ‎‎  📲</div>
 > [!CAUTION]
-> Cuando generamos el APK como recibe peticiones HTTP , la aplicación esta configurada para que puede recibir y mandar este tipo de peticiones, el problema es que cuando se registra un usuario se le envia un correo con un link de verificación donde si se hace click en el se accede a una pequeña página HTML donde se le indicara que ha sido verificado como este correo se envia desde HTTP los ervicios de correos electroncios lo capan ya que detectan que es un mensaje malicioso impidiendo asi al usuario verificarse ya que todo el texto del mensaje lo pone como texto plano.
+> Cuando generamos el APK, la aplicación está configurada para recibir y enviar peticiones HTTP. El problema surge cuando un usuario se registra, ya que se le envía un correo con un enlace de verificación. Al hacer clic en este enlace, el usuario accede a una pequeña página HTML donde se le indica que ha sido verificado.<br><br>Sin embargo, como este correo se envía mediante HTTP, los servicios de correo electrónico lo bloquean al detectarlo como un mensaje malicioso. Esto impide que el usuario pueda verificarse, ya que todo el contenido del mensaje se muestra como texto plano.
+
+> [!IMPORTANT]
+> Estamos en proceso de solucionar este problema para el día 25, cuando realizaremos la exposición ante el jurado que evaluará el proyecto integrado.
+
+>  [!TIP]
+> Hemos creado una cuenta para que podais utilizar queya esta verificado de forma manual en la Base de Datos.<br><br>
+> 📩📱 Correo: profesoresflorida@gmail.com<br>
+> 📩 Contraseña <strong>Email</strong>: Hola-1234 <br><br><strong><em>La contraseña del email os la escribimos para que podais iniciar sesión y comprobar el apartado de restablecer contraseña que si que funciona correctamente.</em></strong><br><br> 📱Contraseña <strong>OPTIMA</strong>: Hola1234
+
+<h3>
+  APK: https://drive.google.com/file/d/168v3_4xqZUpY8ywrI4FDjhlB24jyeGGF/view?usp=sharing
+
+</h3>
 
 # <div align="center">🏋️‍♀️‎‎‎‎ ‎   Optima Group ‎ ‎‎ 🏋️‍♂️</div>
 <div align="center">
