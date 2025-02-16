@@ -1,4 +1,4 @@
-#OPTIMA
+# OPTIMA
 <div align="center">
 OPTIMA es una innovadora aplicación tipo red social diseñada para los amantes del deporte y el fitness. Su principal objetivo es ofrecer un espacio donde los usuarios puedan compartir sus rutinas de ejercicio, valorarlas, darles "me gusta" y filtrarlas según sus necesidades y objetivos específicos.
 
