@@ -13,8 +13,8 @@ En resumen, OPTIMA no es solo una aplicación de entrenamiento, sino una comunid
 <h2>
 OPTIMA 
   <br>
-La fórmula del rendimientoi
-h2>
+La fórmula del rendimiento
+</h2>
 
 </div>
 
