@@ -68,28 +68,28 @@ El video Elevator Pitch también se entregará el día 25.
 
 **- Javier Armero -**  
 *Frontend*  
-<img src="https://avatars.githubusercontent.com/u/150703636?v=4" alt="Foto perfil Javichuu" width="150">  
+<img src="https://avatars.githubusercontent.com/u/150703636?v=4" alt="Foto perfil Javichuu" width="150" style="border: 3px solid #000; border-radius: 10px;">  
 Email: [jaarlo@alumnatflorida.es](mailto:jaarlo@alumnatflorida.es)  
 
 ---
 
 **- Rubén Martínez -**  
 *Frontend / Scrum Manager*  
-<img src="https://avatars.githubusercontent.com/u/122776183?v=4" alt="Foto perfil Rubén" width="150">  
+<img src="https://avatars.githubusercontent.com/u/122776183?v=4" alt="Foto perfil Rubén" width="150" style="border: 3px solid #000; border-radius: 10px;">  
 Email: [rumama02@alumnatflorida.es](mailto:rumama02@alumnatflorida.es)  
 
 ---
 
 **- Boromir Stanislavov -**  
 *Backend / Project Manager*  
-<img src="https://avatars.githubusercontent.com/u/122878993?v=4" alt="Foto perfil Boromir" width="150">  
+<img src="https://avatars.githubusercontent.com/u/122878993?v=4" alt="Foto perfil Boromir" width="150" style="border: 3px solid #000; border-radius: 10px;">  
 Email: [bostbo@alumnatflorida.es](mailto:bostbo@alumnatflorida.es)  
 
 ---
 
 **- Juan Manuel Vila -**  
 *FullStack*  
-<img src="https://avatars.githubusercontent.com/u/181088733?v=4" alt="Foto perfil Juanma" width="150">  
+<img src="https://avatars.githubusercontent.com/u/181088733?v=4" alt="Foto perfil Juanma" width="150" style="border: 3px solid #000; border-radius: 10px;">  
 Email: [juvigo@alumnatflorida.es](mailto:juvigo@alumnatflorida.es)  
 
 </div>
