@@ -1,4 +1,4 @@
-# <span style="color:blue;">OPTIMA</span>
+#OPTIMA
 <div align="center">
 OPTIMA es una innovadora aplicación tipo red social diseñada para los amantes del deporte y el fitness. Su principal objetivo es ofrecer un espacio donde los usuarios puedan compartir sus rutinas de ejercicio, valorarlas, darles "me gusta" y filtrarlas según sus necesidades y objetivos específicos.
 
@@ -10,8 +10,12 @@ La aplicación está diseñada para un público que ya está en contacto con el 
 
 En resumen, OPTIMA no es solo una aplicación de entrenamiento, sino una comunidad donde los entusiastas del fitness pueden compartir conocimientos, motivarse mutuamente y acceder a información clave para optimizar su rendimiento. Con su enfoque en la personalización, la interacción y la educación, OPTIMA se posiciona como una herramienta imprescindible para cualquier persona que quiera mejorar su condición física de manera efectiva y estructurada.
 
-<h2>OPTIMA</h2>
-<h3>La fórmula del rendimientoi</h3>
+<h2>
+OPTIMA 
+  <br>
+La fórmula del rendimientoi
+h2>
+
 </div>
 
 
