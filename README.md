@@ -2,9 +2,7 @@
 <div align="center">
 <strong>OPTIMA</strong> es una innovadora aplicación tipo <strong><em>red social</em></strong> diseñada para los amantes del deporte y el fitness. Su principal objetivo es ofrecer un espacio donde los usuarios puedan <strong><em>compartir sus rutinas de ejercicio, valorarlas, darles "me gusta" y filtrarlas según sus necesidades y objetivos específicos.</em></strong>
 <br>
-<br>
 <img src="https://github.com/user-attachments/assets/e18b7160-8183-4060-b4f8-90bcd19276bd" alt="Foto Logo width="200"> 
-<br>
 <br>
 Lo que realmente diferencia a <strong>OPTIMA</strong> de otras plataformas similares es la incorporación de herramientas avanzadas de cálculo, como el <strong><em>Índice de Masa Corporal (IMC) y el cálculo de macronutrientes (Macros).</em></strong> Estas funciones permiten a los usuarios obtener información personalizada sobre su estado físico y alimentación, ayudándolos a planificar su entrenamiento y nutrición de manera más eficiente.
 <br>
