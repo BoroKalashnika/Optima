@@ -116,7 +116,7 @@ const CrearRutina = (props) => {
         if (!existe) {
             const date = new Date();
             const opciones = { day: "2-digit", year: "numeric", month: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" };
-            const fechaFormateada = date.toLocaleString("es-ES", opciones);
+            const fechaFormateada = date.toLocaleString(opciones);
 
             const json = {
                 nombreRutina: config.CREA_RUTINA,
