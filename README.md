@@ -41,7 +41,7 @@ La fórmula del rendimiento
 >  [!TIP]
 > Hemos creado una cuenta para que podais utilizarla que ya esta verificada de forma manual en la Base de Datos.<br><br>
 > 📩📱 Correo: profesoresflorida@gmail.com<br>
-> 📩 Contraseña <strong>Email</strong>: Hola-1234 <br><br><strong><em>La contraseña del email os la escribimos para que podais iniciar sesión y comprobar el apartado de restablecer contraseña que si que funciona correctamente.</em></strong><br><br> 📱Contraseña <strong>OPTIMA</strong>: Hola1234
+> 📩 Contraseña <strong>Email</strong>: Hola-1234 <br><br><strong><em>La contraseña del email os la escribimos para que podais iniciar sesión en la cuenta de correo electrónico y comprobar el apartado de restablecer contraseña que si que funciona correctamente, enviando un correo con un código de un solo uso para que se pueda comenzar el proceso de restablecimiento de la password.</em></strong><br><br> 📱Contraseña <strong>OPTIMA</strong>: Hola1234
 
 <h3>
   APK: https://drive.google.com/file/d/168v3_4xqZUpY8ywrI4FDjhlB24jyeGGF/view?usp=sharing
