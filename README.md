@@ -45,7 +45,8 @@ La fórmula del rendimiento
 
 <h3>
   APK: https://drive.google.com/file/d/168v3_4xqZUpY8ywrI4FDjhlB24jyeGGF/view?usp=sharing
-
+  <br>
+  Trello: https://trello.com/invite/b/676fe0816a1f5d52a61fe287/ATTI2ee607f0e291129e80bbaa546a4af924EDFA6A09/optima
 </h3>
 
 # <div align="center">🏋️‍♀️‎‎‎‎ ‎   Optima Group ‎ ‎‎ 🏋️‍♂️</div>
