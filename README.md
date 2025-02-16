@@ -39,7 +39,7 @@ La fórmula del rendimiento
 > Estamos en proceso de solucionar este problema para el día 25, cuando realizaremos la exposición ante el jurado que evaluará el proyecto integrado.
 
 >  [!TIP]
-> Hemos creado una cuenta para que podais utilizar que ya esta verificado de forma manual en la Base de Datos.<br><br>
+> Hemos creado una cuenta para que podais utilizarla que ya esta verificado de forma manual en la Base de Datos.<br><br>
 > 📩📱 Correo: profesoresflorida@gmail.com<br>
 > 📩 Contraseña <strong>Email</strong>: Hola-1234 <br><br><strong><em>La contraseña del email os la escribimos para que podais iniciar sesión y comprobar el apartado de restablecer contraseña que si que funciona correctamente.</em></strong><br><br> 📱Contraseña <strong>OPTIMA</strong>: Hola1234
 
