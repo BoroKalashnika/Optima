@@ -45,10 +45,14 @@ La fórmula del rendimiento
 > 📩 Contraseña <strong>Email</strong>: Hola-1234 <br><br><strong><em>La contraseña del email os la escribimos para que podais iniciar sesión en la cuenta de correo electrónico y comprobar el apartado de restablecer contraseña que si que funciona correctamente, enviando un correo con un código de un solo uso para que se pueda comenzar el proceso de restablecimiento de la password.</em></strong><br><br> 📱Contraseña <strong>OPTIMA</strong>: Hola1234
 
 <h3>
-  APK: https://drive.google.com/file/d/168v3_4xqZUpY8ywrI4FDjhlB24jyeGGF/view?usp=sharing
-  <br>
-  <br>
-  Trello: https://trello.com/invite/b/676fe0816a1f5d52a61fe287/ATTI2ee607f0e291129e80bbaa546a4af924EDFA6A09/optima
+## 🔗 Enlaces Importantes
+
+### 📥 Descarga la APK  
+🔗 [OPTIMA APK](https://drive.google.com/file/d/168v3_4xqZUpY8ywrI4FDjhlB24jyeGGF/view?usp=sharing)  
+
+### 🏗️ Gestión del Proyecto  
+🔗 [Trello](https://trello.com/invite/b/676fe0816a1f5d52a61fe287/ATTI2ee607f0e291129e80bbaa546a4af924EDFA6A09/optima)  
+
 </h3>
 
 # <div align="center">📋‎‎‎‎ ‎   DOCUMENTACIÓN ‎ ‎‎ 📝</div>
