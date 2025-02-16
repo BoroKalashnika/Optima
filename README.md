@@ -1,36 +1,35 @@
 # DAM2425_Roig
 #Què és OPTIMA?
 
-
 ### Contacte
 Contacte dels membres de l'equip
 
 <div align="center">
 
-<h3>Javier Armero</h3>  
+**- Javier Armero -**  
 *Frontend*  
-<img src="https://avatars.githubusercontent.com/u/150703636?v=4" alt="Foto perfil Javichuu" width="125">  
+<img src="https://avatars.githubusercontent.com/u/150703636?v=4" alt="Foto perfil Javichuu" width="150">  
 Email: [jaarlo@alumnatflorida.es](mailto:jaarlo@alumnatflorida.es)  
 
 ---
 
-<h3>Rubén Martínez</h3>  
+**- Rubén Martínez -**  
 *Frontend / Scrum Manager*  
-<img src="https://avatars.githubusercontent.com/u/122776183?v=4" alt="Foto perfil Rubén" width="125">  
+<img src="https://avatars.githubusercontent.com/u/122776183?v=4" alt="Foto perfil Rubén" width="150">  
 Email: [rumama02@alumnatflorida.es](mailto:rumama02@alumnatflorida.es)  
 
 ---
 
-<h3>Boromir Stanislavov</h3>  
+**- Boromir Stanislavov -**  
 *Backend / Project Manager*  
-<img src="https://avatars.githubusercontent.com/u/122878993?v=4" alt="Foto perfil Boromir" width="125">  
+<img src="https://avatars.githubusercontent.com/u/122878993?v=4" alt="Foto perfil Boromir" width="150">  
 Email: [bostbo@alumnatflorida.es](mailto:bostbo@alumnatflorida.es)  
 
 ---
 
-<h3>Juan Manuel Vila</h3>  
+**- Juan Manuel Vila -**  
 *FullStack*  
-<img src="https://avatars.githubusercontent.com/u/181088733?v=4" alt="Foto perfil Juanma" width="125">  
+<img src="https://avatars.githubusercontent.com/u/181088733?v=4" alt="Foto perfil Juanma" width="150">  
 Email: [juvigo@alumnatflorida.es](mailto:juvigo@alumnatflorida.es)  
 
 </div>
