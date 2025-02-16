@@ -1,15 +1,19 @@
 # <div align="center">OPTIMA</div>
 <div align="center">
-<strong>OPTIMA</strong> es una innovadora aplicación tipo <strong>red social</strong> diseñada para los amantes del deporte y el fitness. Su principal objetivo es ofrecer un espacio donde los usuarios puedan <em>compartir sus rutinas de ejercicio, valorarlas, darles "me gusta" y filtrarlas según sus necesidades y objetivos específicos.</em>
+<strong>OPTIMA</strong> es una innovadora aplicación tipo <strong><em>red social</em></strong> diseñada para los amantes del deporte y el fitness. Su principal objetivo es ofrecer un espacio donde los usuarios puedan <strong><em>compartir sus rutinas de ejercicio, valorarlas, darles "me gusta" y filtrarlas según sus necesidades y objetivos específicos.</em></strong>
+<br>
 <br>
 <br>
 Lo que realmente diferencia a <strong>OPTIMA</strong> de otras plataformas similares es la incorporación de herramientas avanzadas de cálculo, como el <em>Índice de Masa Corporal (IMC) y el cálculo de macronutrientes (Macros).</em> Estas funciones permiten a los usuarios obtener información personalizada sobre su estado físico y alimentación, ayudándolos a planificar su entrenamiento y nutrición de manera más eficiente.
 <br>
 <br>
-Otra característica innovadora es la posibilidad de subir <em>>videos explicativos</em junto con las rutinas de ejercicio. Esto facilita el aprendizaje y la correcta ejecución de cada movimiento, reduciendo el riesgo de lesiones y mejorando la experiencia del usuario. A diferencia de otras plataformas que solo permiten subir imágenes o texto, <strong>OPTIMA</strong> apuesta por un enfoque más dinámico e interactivo.
+<br>
+Otra característica innovadora es la posibilidad de subir <em>videos explicativos</em> junto con las rutinas de ejercicio. Esto facilita el aprendizaje y la correcta ejecución de cada movimiento, reduciendo el riesgo de lesiones y mejorando la experiencia del usuario. A diferencia de otras plataformas que solo permiten subir imágenes o texto, <strong>OPTIMA</strong> apuesta por un enfoque más dinámico e interactivo.
 <br>
 <br>
-La aplicación está diseñada para un público que ya está en contacto con el <em>>mundo del deporte</em, desde principiantes hasta atletas avanzados, entrenadores personales o simplemente personas que buscan mejorar su condición física. Dentro de <strong>OPTIMA</strong>, los usuarios podrán encontrar una amplia variedad de rutinas adaptadas a distintos objetivos, como pérdida de peso, ganancia muscular, resistencia o tonificación.
+<br>
+La aplicación está diseñada para un público que ya está en contacto con el <em>mundo del deporte</em>, desde principiantes hasta atletas avanzados, entrenadores personales o simplemente personas que buscan mejorar su condición física. Dentro de <strong>OPTIMA</strong>, los usuarios podrán encontrar una amplia variedad de rutinas adaptadas a distintos objetivos, como pérdida de peso, ganancia muscular, resistencia o tonificación.
+<br>
 <br>
 <br>
 En resumen, <strong>OPTIMA</strong> no es solo una aplicación de entrenamiento, sino una comunidad donde los entusiastas del fitness pueden compartir conocimientos, motivarse mutuamente y acceder a información clave para optimizar su rendimiento. Con su enfoque en la personalización, la interacción y la educación, <strong>OPTIMA</strong> se posiciona como una herramienta imprescindible para cualquier persona que quiera mejorar su condición física de manera efectiva y estructurada.
