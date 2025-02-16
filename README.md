@@ -45,7 +45,7 @@ La fórmula del rendimiento
 > 📩 Contraseña <strong>Email</strong>: Hola-1234 <br><br><strong><em>La contraseña del email os la escribimos para que podais iniciar sesión en la cuenta de correo electrónico y comprobar el apartado de restablecer contraseña que si que funciona correctamente, enviando un correo con un código de un solo uso para que se pueda comenzar el proceso de restablecimiento de la password.</em></strong><br><br> 📱Contraseña <strong>OPTIMA</strong>: Hola1234
 
 <h3>
-## 🔗 Enlaces Importantes
+🔗 Enlaces Importantes
 
 ### 📥 Descarga la APK  
 🔗 [OPTIMA APK](https://drive.google.com/file/d/168v3_4xqZUpY8ywrI4FDjhlB24jyeGGF/view?usp=sharing)  
