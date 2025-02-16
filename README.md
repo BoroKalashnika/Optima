@@ -50,6 +50,14 @@ La fórmula del rendimiento
   Trello: https://trello.com/invite/b/676fe0816a1f5d52a61fe287/ATTI2ee607f0e291129e80bbaa546a4af924EDFA6A09/optima
 </h3>
 
+# <div align="center">📋‎‎‎‎ ‎   DOCUMENTACIÓN ‎ ‎‎ 📝</div>
+<div align="center">
+En proceso de realización se entregará a mano el día 25 al jurado que evaluará el proyecto integrado durante la exposición.
+<br>
+<br>
+El video Elevator Pitch también se entregará el día 25.
+</div>
+
 # <div align="center">🏋️‍♀️‎‎‎‎ ‎   Optima Group ‎ ‎‎ 🏋️‍♂️</div>
 <div align="center">
 
