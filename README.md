@@ -34,7 +34,7 @@ La fórmula del rendimiento
 # <div align="center">💻‎‎‎‎  ‎      LINKS ‎ ‎‎  📲</div>
 > [!CAUTION]
 > Cuando generamos el APK, la aplicación está configurada para enviar y recibir peticiones HTTP. El inconveniente surge al registrar un usuario, ya que se le envía un correo con un enlace de verificación. Al hacer clic en este enlace, el usuario accede a una pequeña página HTML donde se le informa que ha sido verificado.
-<br>No obstante, como este correo se envía mediante HTTP, los servicios de correo electrónico lo bloquean al considerarlo un mensaje malicioso, mostrando el contenido en texto plano. Para resolver esto, hemos implementado el uso de Ngrok, un servicio confiable, que nos permite enviar la petición GET de verificación de cuenta, asegurando así que el enlace en el correo no sea bloqueado.
+<br><br>No obstante, como este correo se envía mediante HTTP, los servicios de correo electrónico lo bloquean al considerarlo un mensaje malicioso, mostrando el contenido en texto plano. Para resolver esto, hemos implementado el uso de Ngrok, un servicio confiable, que nos permite enviar la petición GET de verificación de cuenta, asegurando así que el enlace en el correo no sea bloqueado.
 
 
 > [!IMPORTANT]
