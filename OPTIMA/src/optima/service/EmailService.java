@@ -18,10 +18,10 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(mensaje, true);
 
         helper.setTo(destinatario);
-        helper.setSubject("Restablecimiento de Contraseña");
-        helper.setText("<p>Has solicitado restablecer tu contraseña.</p>"
-                + "<p>Tu código de recuperación es: <strong>" + codigo + "</strong></p>"
-                + "<p>Ingresa este código en la aplicación para establecer una nueva contraseña.</p>",
+        helper.setSubject("Password Reset");
+        helper.setText("<p>You have requested to reset your password.</p>"
+                + "<p>Your recovery code is: <strong>" + codigo + "</strong></p>"
+                + "<p>Enter this code in the app to set a new password.</p>",
                 true);
 
         mailSender.send(mensaje);
@@ -33,9 +33,9 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(mensaje, true);
 
         helper.setTo(destinatario);
-        helper.setSubject("Verifica tu cuenta");
-        helper.setText("<p>Gracias por registrarte. Para verificar tu cuenta, haz clic en el siguiente enlace:</p>"
-                + "<p><a href='" + enlaceVerificacion + "'>Verificar cuenta</a></p>",
+        helper.setSubject("Verify your account");
+        helper.setText("<p>Thank you for registering. To verify your account, please click on the following link:</p>"
+                + "<p><a href='" + enlaceVerificacion + "'>Verify account</a></p>",
                 true);
 
         mailSender.send(mensaje);

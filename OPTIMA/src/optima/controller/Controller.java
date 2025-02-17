@@ -84,7 +84,7 @@ public class Controller {
 			Usuario usuarioVerificado = usuario.get();
 			usuarioVerificado.setVerificado(true);
 			usuarioRepository.save(usuarioVerificado);
-			return ResponseEntity.ok("Correo verificado correctamente");
+			return ResponseEntity.ok("Email verified successfully");
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
@@ -97,7 +97,7 @@ public class Controller {
 			response.put("message", "");
 			return ResponseEntity.ok(response.toString());
 		}
-		response.put("message", "No se ha encrontrado ningun usuario con este codigo.");
+		response.put("message", "No user has been found with this code.");
 		return ResponseEntity.ok(response.toString());
 	}
 
@@ -117,10 +117,10 @@ public class Controller {
 
 			emailService.enviarCorreoRestablecerContrasenya(usuario.getCorreo(), codigo);
 
-			response.put("message", "Se ha enviado un código de recuperación a tu correo");
+			response.put("message", "A recovery code has been sent to your email");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
-			response.put("message", "USUARIO NO REGISTRADO");
+			response.put("message", "UNREGISTERED USER");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.toString());
 		}
 	}
@@ -137,14 +137,14 @@ public class Controller {
 				usuario.setContrasenya(usuario.encriptacionContrasenya(request.getContrasenya()));
 				usuario.setCodigo("");
 				usuarioRepository.save(usuario);
-				response.put("message", "Contraseña actualizada correctamente.");
+				response.put("message", "Password updated successfully.");
 				return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 			} else {
-				response.put("message", "Código incorrecto o expirado.");
+				response.put("message", "Incorrect or expired code.");
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
 			}
 		} else {
-			response.put("message", "Usuario no encontrado.");
+			response.put("message", "User not found.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.toString());
 		}
 	}
@@ -154,14 +154,14 @@ public class Controller {
 			throws NoSuchAlgorithmException, MessagingException, IOException {
 		JSONObject response = new JSONObject();
 		if (usuarioRepository.findByCorreo(nuevoUsuario.getCorreo()).isPresent()) {
-			response.put("message", "USUARIO YA REGISTRADO");
+			response.put("message", "USER ALREADY REGISTERED");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
 		} else {
 			nuevoUsuario.setContrasenya(nuevoUsuario.encriptacionContrasenya(nuevoUsuario.getContrasenya()));
 			usuarioRepository.save(nuevoUsuario);
 			String enlaceVerificacion = "https://6262-13-216-205-228.ngrok-free.app/optima/verificar?correo=" + nuevoUsuario.getCorreo();
 			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion);
-			response.put("message", "Accede al correo para verificar cuenta");
+			response.put("message", "Access the email to verify account");
 			return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
 		}
 	}
@@ -180,10 +180,10 @@ public class Controller {
 				response.put("token", token);
 				return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 			}
-			response.put("message", "USUARIO NO VERIFICADO");
+			response.put("message", "UNVERIFIED USER");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		} else {
-			response.put("message", "USUARIO NO SE ENCUENTRA REGISTRADO");
+			response.put("message", "USER IS NOT REGISTERED");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
@@ -220,10 +220,10 @@ public class Controller {
 			usuario.getHistorialImc().add(jsonObject.getString("mensaje"));
 
 			usuarioRepository.save(usuario);
-			response.put("message", "IMC registrado");
+			response.put("message", "BMI recorded");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
-			response.put("message", "Token inválido");
+			response.put("message", "Invalid token");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
@@ -242,10 +242,10 @@ public class Controller {
 			usuario.setMacros(jsonObject.getString("macros"));
 
 			usuarioRepository.save(usuario);
-			response.put("message", "Macros registrados");
+			response.put("message", "Registered macros");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
-			response.put("message", "Token inválido");
+			response.put("message", "Invalid token");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
@@ -262,10 +262,10 @@ public class Controller {
 			Usuario usuario = usuarioBaseDatos.get();
 			usuario.setFotoPerfil(jsonObject.getString("fotoPerfil"));
 			usuarioRepository.save(usuario);
-			response.put("message", "Foto cambiada");
+			response.put("message", "Photo changed");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
-			response.put("message", "Token inválido");
+			response.put("message", "Invalid token");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
@@ -281,10 +281,10 @@ public class Controller {
 			Usuario usuario = usuarioBaseDatos.get();
 			usuario.setNombre(jsonObject.getString("nuevoNombre"));
 			usuarioRepository.save(usuario);
-			response.put("message", "Nombre cambiada");
+			response.put("message", "Name changed");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
-			response.put("message", "Token inválido");
+			response.put("message", "Invalid token");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
@@ -297,10 +297,10 @@ public class Controller {
 			Usuario usuario = usuarioBaseDatos.get();
 			usuario.getHistorialImc().clear();
 			usuarioRepository.save(usuario);
-			response.put("message", "Historial IMC limpiado con exito");
+			response.put("message", "BMI history successfully cleared");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		} else {
-			response.put("message", "Token inválido");
+			response.put("message", "Invalid token");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 		}
 	}
@@ -316,7 +316,7 @@ public class Controller {
 		JSONObject response = new JSONObject();
 
 		if (!usuarioBaseDatos.isPresent()) {
-			response.put("message", "Token inválido");
+			response.put("message", "Invalid token");
 			return ResponseEntity.ok(response.toString());
 		}
 
@@ -331,12 +331,12 @@ public class Controller {
 
 		if (totalRutinas == 0) {
 			response.put("count", totalRutinas);
-			response.put("message", "No hay rutinas.");
+			response.put("message", "There are no routines.");
 			return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 		}
 
 		if (index < 0 || index >= totalRutinas) {
-			response.put("error", "Rango de índices inválido");
+			response.put("error", "Invalid index range");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
 		}
 
@@ -471,13 +471,13 @@ public class Controller {
 				usuarioRepository.save(usuario);
 				rutinaRepository.save(rutina);
 
-				response.put("message", "Valoración actualizada correctamente.");
+				response.put("message", "Rating updated successfully.");
 				return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 			}
-			response.put("message", "La rutina no existe!");
+			response.put("message", "Routine does not exist!");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.toString());
 		}
-		response.put("message", "Token expirado!");
+		response.put("message", "Invalid token");
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 	}
 
@@ -519,14 +519,14 @@ public class Controller {
 								rutinaFinalizar.setUsuariosValorados(nuevaRutina.getUsuariosValorados());
 
 								rutinaRepository.save(rutinaFinalizar);
-								respuesta.put("message", "Rutina creada con éxito");
+								respuesta.put("message", "Routine successfully created");
 								rutinaEncontrada = true;
 								return ResponseEntity.status(HttpStatus.CREATED).body(respuesta.toString());
 							}
 						}
 					}
 					if (!rutinaEncontrada) {
-						respuesta.put("message", "Rutina no encontrada para actualizar");
+						respuesta.put("message", "Routine not found for update");
 						return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta.toString());
 					}
 				}
@@ -534,7 +534,7 @@ public class Controller {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		} catch (Exception e) {
 			e.printStackTrace();
-			respuesta.put("message", "Error interno del servidor");
+			respuesta.put("message", "Internal Server Error");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta.toString());
 		}
 	}
@@ -549,10 +549,10 @@ public class Controller {
 			rutina.setToken(null);
 			rutinaSumarEjercicios.get().setEjercicios(rutina.getEjercicios());
 			rutinaRepository.save(rutinaSumarEjercicios.get());
-			respusta.put("message", "Ejercicios incluidos a rutina");
+			respusta.put("message", "Exercises included in routine");
 			return ResponseEntity.status(HttpStatus.OK).body(respusta.toString());
 		}
-		respusta.put("message", "Error al incluir ejercicios a la rutina");
+		respusta.put("message", "Invalid token");
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respusta.toString());
 	}
 
@@ -566,10 +566,10 @@ public class Controller {
 			Usuario usuario = usuarioBaseDatos.get();
 			usuario.getRutinasGuardadas().add(rutinaFavorita.getId());
 			usuarioRepository.save(usuario);
-			respusta.put("message", "Rutina añadida a favoritos con exito");
+			respusta.put("message", "Routine successfully added to favorites");
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(respusta.toString());
 		}
-		respusta.put("message", "La rutina no se ha podido añadir a favoritos");
+		respusta.put("message", "Invalid token");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respusta.toString());
 	}
 
@@ -583,10 +583,10 @@ public class Controller {
 			Usuario usuario = usuarioBaseDatos.get();
 			usuario.setRutinaActiva(rutinaActiva.getId());
 			usuarioRepository.save(usuario);
-			respusta.put("message", "Rutina activa añadida");
+			respusta.put("message", "Active routine added");
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(respusta.toString());
 		}
-		respusta.put("message", "La rutina no se ha podido añadir a rutina activa");
+		respusta.put("message", "Invalid token");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respusta.toString());
 	}
 
@@ -606,13 +606,13 @@ public class Controller {
 					}
 				}
 				rutinaRepository.deleteById(id);
-				respusta.put("message", "Rutina eliminada correctamente");
+				respusta.put("message", "Routine successfully removed");
 				return ResponseEntity.status(HttpStatus.OK).body(respusta.toString());
 			}
-			respusta.put("message", "Rutina no encontrada para eliminar");
+			respusta.put("message", "Routine not found to delete");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respusta.toString());
 		}
-		respusta.put("message", "Token expirado");
+		respusta.put("message", "Invalid token");
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respusta.toString());
 	}
 
@@ -627,11 +627,11 @@ public class Controller {
 				if (usuario.getRutinasGuardadas().get(i).equals(id)) {
 					usuario.getRutinasGuardadas().remove(i);
 					usuarioRepository.save(usuario);
-					respusta.put("message", "Rutina eliminada de favoritos con exito");
+					respusta.put("message", "Routine successfully removed from favorites");
 					return ResponseEntity.status(HttpStatus.OK).body(respusta.toString());
 				}
 			}
-			respusta.put("message", "Error rutina no encontrada en favoritos");
+			respusta.put("message", "Error routine not found in favorites");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respusta.toString());
 
 		}
@@ -648,10 +648,10 @@ public class Controller {
 			Usuario usuario = usuarioBaseDatos.get();
 			usuario.setRutinaActiva("");
 			usuarioRepository.save(usuario);
-			respusta.put("message", "Rutina activa eliminada");
+			respusta.put("message", "Active routine removed");
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(respusta.toString());
 		}
-		respusta.put("message", "La rutina activa no se ha podido eliminar");
+		respusta.put("message", "Invalid token");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respusta.toString());
 	}
 
@@ -698,7 +698,7 @@ public class Controller {
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
 		}
-		response.put("message", "Token expirado.");
+		response.put("message", "Invalid token");
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 	}
 
@@ -709,7 +709,7 @@ public class Controller {
 		Optional<Usuario> usuarioBaseDatos = usuarioRepository.findByToken(token);
 
 		if (!usuarioBaseDatos.isPresent()) {
-			respuesta.put("message", "Token expirado.");
+			respuesta.put("message", "Invalid token");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respuesta.toString());
 		}
 
@@ -717,7 +717,7 @@ public class Controller {
 		Optional<Ejercicio> ej = ejercicioRepository.findById(id);
 
 		if (!ej.isPresent()) {
-			respuesta.put("message", "Ejercicio no encontrado.");
+			respuesta.put("message", "Exercise not found.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta.toString());
 		}
 
@@ -735,7 +735,7 @@ public class Controller {
 			}
 		}
 
-		respuesta.put("message", "Ejercicio eliminado de la rutina.");
+		respuesta.put("message", "Exercise removed from routine.");
 		return ResponseEntity.status(HttpStatus.OK).body(respuesta.toString());
 	}
 
