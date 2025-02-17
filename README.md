@@ -38,11 +38,11 @@ La fórmula del rendimiento
 
 
 > [!IMPORTANT]
-> Estamos en proceso de solucionar este problema para el día 25, cuando realizaremos la exposición ante el jurado que evaluará el proyecto integrado.
+> Estamos en proceso de mejorar la interfaz para el día 25, cuando realizaremos la exposición ante el jurado que evaluará el proyecto integrado.
 > <strong>LA BASE DE DATOS ESTA VACIA SOLO TIENE 3 USUARIOS REGISTRADOS</strong>
 
 >  [!TIP]
-> Por si acaso, hemos creado una cuenta para que podais utilizarla que ya esta verificada de forma manual en la Base de Datos.<br><br>
+> Por si acaso ocurriese el error de verificación, hemos creado una cuenta para que podais utilizarla que ya esta verificada de forma manual en la Base de Datos.<br><br>
 > 📩📱 Correo: profesoresflorida@gmail.com<br>
 > 📩 Contraseña <strong>Email</strong>: Hola-1234 <br><br><strong><em>La contraseña del email os la escribimos para que podais iniciar sesión en la cuenta de correo electrónico y comprobar el apartado de restablecer contraseña que si que funciona correctamente, enviando un correo con un código de un solo uso para que se pueda comenzar el proceso de restablecimiento de la password.</em></strong><br><br> 📱Contraseña <strong>OPTIMA</strong>: Hola1234
 
