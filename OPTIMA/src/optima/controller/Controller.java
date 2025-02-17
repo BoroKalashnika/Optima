@@ -159,7 +159,7 @@ public class Controller {
 		} else {
 			nuevoUsuario.setContrasenya(nuevoUsuario.encriptacionContrasenya(nuevoUsuario.getContrasenya()));
 			usuarioRepository.save(nuevoUsuario);
-			String enlaceVerificacion = "http://" + ipAPI + ":8080/optima/verificar?correo=" + nuevoUsuario.getCorreo();
+			String enlaceVerificacion = "https://6262-13-216-205-228.ngrok-free.app/optima/verificar?correo=" + nuevoUsuario.getCorreo();
 			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion);
 			response.put("message", "Accede al correo para verificar cuenta");
 			return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
