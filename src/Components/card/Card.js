@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const { width } = Dimensions.get('window');
-const iconSize = width * 0.1; // Tamaño de iconos dinámico
+const iconSize = width * 0.1;
 const starSize = width * 0.06;
 
 const Card = (props) => {
@@ -101,16 +101,16 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     title: {
-        fontSize: width * 0.1, // Título ajustable al ancho de pantalla
+        fontSize: width * 0.1,
         color: 'white',
     },
     image: {
-        width: width * 0.35, // Imagen proporcional
+        width: width * 0.35,
         height: width * 0.35,
         borderRadius: 10,
     },
     icono: {
-        width: width * 0.12, // Iconos ajustables
+        width: width * 0.12,
         height: undefined,
         aspectRatio: 1,
     },
