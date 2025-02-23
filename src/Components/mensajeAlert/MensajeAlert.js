@@ -11,7 +11,7 @@ const MensajeAlert = (props) => {
                 <View style={styles.modalContainer}>
                     <Text style={styles.modalTitle}>{props.titulo}</Text>
                     <Text style={styles.modalMessage}>{props.mensaje}</Text>
-                    <Button title="Cerrar" onPress={props.cerrarModal} color="#607cff" />
+                    <Button title="Close" onPress={props.cerrarModal} color="#607cff" />
                 </View>
             </View>
         </Modal>
