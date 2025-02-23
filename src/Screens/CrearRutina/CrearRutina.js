@@ -351,7 +351,7 @@ const CrearRutina = (props) => {
                 <Image source={{ uri: vistaPrevia }} style={styles.image} />
             )}
             <View style={styles.buttonContainer}>
-                <Button mode="contained" style={styles.buttonClear} onPress={() => cancelarPress()}>
+                <Button mode="contained" style={styles.buttonClear} onPress={() => validarCampos()}>
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
                         <MaterialIcons name="save" color="lightgreen" size={25} style={{ marginRight: 5 }} />
                         <Text style={styles.resetPasswordText}>Save</Text>

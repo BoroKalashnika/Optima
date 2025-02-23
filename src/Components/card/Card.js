@@ -1,11 +1,15 @@
-import { Text, Pressable, StyleSheet, View, Image } from 'react-native';
+import { Text, Pressable, StyleSheet, View, Image, Dimensions } from 'react-native';
 import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 
+const { width } = Dimensions.get('window');
+const iconSize = width * 0.1; // Tamaño de iconos dinámico
+const starSize = width * 0.06;
+
 const Card = (props) => {
     const [color, setColor] = useState('red');
-    const [ambitoImg, setAmbitoImg] = useState('Casa');
-    const [musculoImg, setMusculoImg] = useState('Biceps');
+    const [ambitoImg, setAmbitoImg] = useState(null);
+    const [musculoImg, setMusculoImg] = useState(null);
     const { ambito, musculo, dificultad, imagen, titulo, estrellas } = props;
     const [stars, setStars] = useState([
         { id: 1, icon: 'staro' },
@@ -14,70 +18,47 @@ const Card = (props) => {
         { id: 4, icon: 'staro' },
         { id: 5, icon: 'staro' },
     ]);
-    const chancheColor = () => {
-        if (dificultad === 'Experto') setColor('red');
-        if (dificultad === 'Intermedio') setColor('yellow');
-        if (dificultad === 'Principiante') setColor('green');
-    };
-    const chancheMusculo = () => {
-        if (musculo === 'Biceps') setMusculoImg(require('../../Assets/img/biceps.png'));
-        if (musculo === 'Pecho') setMusculoImg(require('../../Assets/img/pecho.png'));
-        if (musculo === 'Triceps') setMusculoImg(require('../../Assets/img/triceps.png'));
-        if (musculo === 'Pierna') setMusculoImg(require('../../Assets/img/pierna.png'));
-        if (musculo === 'Espalda') setMusculoImg(require('../../Assets/img/espalda.png'));
-
-    };
-    const chancheAmbito = () => {
-        if (ambito === 'Casa') setAmbitoImg(require('../../Assets/img/casa.png'));
-        if (ambito === 'Gimnasio') setAmbitoImg(require('../../Assets/img/pesa.png'));
-        if (ambito === 'Calistenia') setAmbitoImg(require('../../Assets/img/calistenia.png'));
-    };
-    
-    const getStars = (indice) => {
-        const newArray = stars.map((value) => {
-            return {
-                ...value,
-                icon: value.id <= indice ? 'star' : 'staro',
-            };
-        });
-        setStars(newArray);
-    };
     
     useEffect(() => {
-        chancheAmbito();
-        chancheColor();
-        chancheMusculo();
-        getStars(estrellas)
-    }, [ambito, color, musculo, estrellas])
+        setColor(dificultad === 'Experto' ? 'red' : dificultad === 'Intermedio' ? 'yellow' : 'green');
+
+        const musculoImages = {
+            Biceps: require('../../Assets/img/biceps.png'),
+            Pecho: require('../../Assets/img/pecho.png'),
+            Triceps: require('../../Assets/img/triceps.png'),
+            Pierna: require('../../Assets/img/pierna.png'),
+            Espalda: require('../../Assets/img/espalda.png'),
+        };
+        setMusculoImg(musculoImages[musculo]);
+
+        const ambitoImages = {
+            Casa: require('../../Assets/img/casa.png'),
+            Gimnasio: require('../../Assets/img/pesa.png'),
+            Calistenia: require('../../Assets/img/calistenia.png'),
+        };
+        setAmbitoImg(ambitoImages[ambito]);
+
+        setStars(stars.map(value => ({ ...value, icon: value.id <= estrellas ? 'star' : 'staro' })));
+    }, [ambito, musculo, dificultad, estrellas]);
 
     return (
         <Pressable onPress={props.onRutina}>
             <View style={styles.container}>
-                <Image source={{ uri: imagen }} style={styles.image} />
+                <Image source={{ uri: imagen }} style={styles.image} resizeMode="cover" />
                 <View style={styles.subContainer}>
                     <View style={styles.containerDescripcion}>
                         <Text style={styles.title}>{titulo}</Text>
                     </View>
                     <View style={styles.containerRow}>
-                        <Image
-                            source={ambitoImg}
-                            style={styles.icono}
-                        />
+                        <Image source={ambitoImg} style={styles.icono} resizeMode="contain" />
                         <View style={styles.spacer} />
-                        <Image
-                            source={musculoImg}
-                            style={styles.icono}
-                        />
+                        <Image source={musculoImg} style={styles.icono} resizeMode="contain" />
                         <View style={styles.spacer} />
-                        <Icon name="dashboard" size={40} color={color} />
+                        <Icon name="dashboard" size={iconSize} color={color} />
                     </View>
                     <View style={styles.containerStars}>
                         {stars.map((value) => (
-                            <Icon
-                                name={value.icon}
-                                size={25}
-                                color="yellow"
-                            />
+                            <Icon key={value.id} name={value.icon} size={starSize} color="yellow" />
                         ))}
                     </View>
                 </View>
@@ -101,13 +82,13 @@ const styles = StyleSheet.create({
     },
     containerRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         alignItems: 'center',
-        width: '80%',
+        width: '90%',
     },
     containerStars: {
         flexDirection: 'row',
-        justifyContent:'center',
+        justifyContent: 'center',
         alignItems: 'center',
         marginTop: 5,
     },
@@ -117,25 +98,21 @@ const styles = StyleSheet.create({
     },
     subContainer: {
         flex: 2,
-        alignItems: "center"
+        alignItems: 'center'
     },
     title: {
-        fontSize: 37,
-        color: 'white',
-    },
-    text: {
-        fontSize: 18,
+        fontSize: width * 0.1, // Título ajustable al ancho de pantalla
         color: 'white',
     },
     image: {
-        width: 130,
-        height: 130,
-        borderRadius:10
-
+        width: width * 0.35, // Imagen proporcional
+        height: width * 0.35,
+        borderRadius: 10,
     },
     icono: {
-        width: 40,
-        height: 40,
+        width: width * 0.12, // Iconos ajustables
+        height: undefined,
+        aspectRatio: 1,
     },
     spacer: {
         width: 15,
