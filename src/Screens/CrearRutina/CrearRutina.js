@@ -13,6 +13,7 @@ import Carga from '../../Components/carga/Carga';
 import CardEjercicio from '../../Components/cardEjercicio/CardEjercicio';
 import RNFS from 'react-native-fs';
 import config from '../../config/config';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const CrearRutina = (props) => {
     const [nomRutina, setNomRutina] = useState('');
@@ -350,11 +351,17 @@ const CrearRutina = (props) => {
                 <Image source={{ uri: vistaPrevia }} style={styles.image} />
             )}
             <View style={styles.buttonContainer}>
-                <Button mode="contained" style={styles.button} onPress={() => validarCampos()}>
-                    Save
+                <Button mode="contained" style={styles.buttonClear} onPress={() => cancelarPress()}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <MaterialIcons name="save" color="lightgreen" size={25} style={{ marginRight: 5 }} />
+                        <Text style={styles.resetPasswordText}>Save</Text>
+                    </View>
                 </Button>
                 <Button mode="contained" style={styles.buttonClear} onPress={() => cancelarPress()}>
-                    Cancel
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <MaterialIcons name="cancel" color="#fe876d" size={25} style={{ marginRight: 5 }} />
+                        <Text style={styles.resetPasswordText}>Cancel</Text>
+                    </View>
                 </Button>
             </View>
         </ScrollView>
@@ -375,6 +382,11 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
         marginTop: 20,
+    },
+    resetPasswordText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 18,
     },
     input: {
         borderRadius: 10,
@@ -446,6 +458,7 @@ const styles = StyleSheet.create({
         height: 55,
         width: 160,
         alignItems: 'center',
+        borderColor: 'black',
     },
     containerCrear: {
         width: '90%',

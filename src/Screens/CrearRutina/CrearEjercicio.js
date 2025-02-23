@@ -239,15 +239,15 @@ const CrearEjercicio = (props) => {
                     maxLength={70}
                 />
                 <View style={styles.subContainer}>
-                    <Pressable style={[styles.bottom, { marginRight: 5 }]} onPress={() => handleOnPress()}>
-                        <MaterialIcons name="cancel" color="#fe876d" size={35} />
-                        <Text style={styles.resetPasswordText}>Cancel</Text>
-                    </Pressable>
                     <Pressable
-                        style={[styles.bottom, { marginLeft: 5 }]}
+                        style={[styles.bottom, { marginRight: 5 }]}
                         onPress={() => crearEjercicio()}>
                         <Ionicons name="add-circle-outline" color="lightgreen" size={35} />
                         <Text style={styles.resetPasswordText}>Create</Text>
+                    </Pressable>
+                    <Pressable style={[styles.bottom, { marginLeft: 5 }]} onPress={() => handleOnPress()}>
+                        <MaterialIcons name="cancel" color="#fe876d" size={35} />
+                        <Text style={styles.resetPasswordText}>Cancel</Text>
                     </Pressable>
                 </View>
             </View>
