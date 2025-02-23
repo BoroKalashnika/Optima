@@ -44,11 +44,11 @@ const RestablecerContra = (props) => {
 
     const handleOnPress = async () => {
         if (repetirContra === '' && contra === '') {
-            Alert.alert("ERROR", 'Campos vacios porfavor completalos')
+            Alert.alert("ERROR", 'Empty fields please fill them in')
         } else if (contra !== repetirContra) {
-            Alert.alert("ERROR", 'Contraseña no coincide')
+            Alert.alert("ERROR", 'Password does not match')
         } else if (contrasenyaHasErrors()) {
-            Alert.alert("ERROR", 'Contraseña invalida')
+            Alert.alert("ERROR", 'Invalid password')
         } else {
             const json = {
                 nombre: "",
