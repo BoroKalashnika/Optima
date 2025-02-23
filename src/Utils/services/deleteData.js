@@ -14,8 +14,7 @@ const deleteData = async (url, setLoading) => {
         return { status, data: data };
 
     } catch (error) {
-        console.error('Error en la petición post:', error);
-        return { status: null, data: { message: 'Error en la conexión' } };
+        return { status: null, data: { message: 'Error in the connection' } };
     } finally {
         setLoading(false);
     }
