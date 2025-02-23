@@ -256,6 +256,12 @@ const CrearRutina = (props) => {
     }
 
     const validarCampos = () => {
+        if (nomRutina === config.CREA_RUTINA) {
+            setAlertMessage("You can't use this name!");
+            setAlertTitle('Error');
+            setModalVisible(true);
+            return;
+        }
         if (!nomRutina || !ambito || idEjercicios == '' || ejerciciosRutina == [] || !dieta || !vistaPrevia) {
             if (idEjercicios == '' || ejerciciosRutina == []) {
                 setAlertMessage('You have not added any exercises.');

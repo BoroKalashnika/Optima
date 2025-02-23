@@ -112,9 +112,9 @@ const CrearEjercicio = (props) => {
 
             if (videoUrl !== 'Failed to upload video') {
 
-                const publicId = videoUrl.split('/').slice(-1)[0].split('.')[0]; // Extract the public ID
+                const publicId = videoUrl.split('/').slice(-1)[0].split('.')[0];
 
-                const thumbnailUrl = `https://res.cloudinary.com/dhfvnvuox/video/upload/so_auto/${publicId}.jpg`; // Using AI to pick an interesting frame
+                const thumbnailUrl = `https://res.cloudinary.com/${config.CLOUDINARY_NAME}/video/upload/so_auto/${publicId}.jpg`;
 
                 const json = {
                     nombreEjercicio: nombre,
