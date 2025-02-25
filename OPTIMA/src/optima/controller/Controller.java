@@ -153,13 +153,14 @@ public class Controller {
 	ResponseEntity<Object> registrar(@RequestBody Usuario nuevoUsuario)
 			throws NoSuchAlgorithmException, MessagingException, IOException {
 		JSONObject response = new JSONObject();
-		if (usuarioRepository.findByCorreo(nuevoUsuario.getCorreo()).isPresent()) {
+		if (usuarioRepository.findByCorreo(nuevoUsuario.getCorreo().toLowerCase()).isPresent()) {
 			response.put("message", "USER ALREADY REGISTERED");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.toString());
 		} else {
+			nuevoUsuario.setCorreo(nuevoUsuario.getCorreo().toLowerCase());
 			nuevoUsuario.setContrasenya(nuevoUsuario.encriptacionContrasenya(nuevoUsuario.getContrasenya()));
 			usuarioRepository.save(nuevoUsuario);
-			String enlaceVerificacion = "https://f224-13-216-205-228.ngrok-free.app/optima/verificar?correo=" + nuevoUsuario.getCorreo();
+			String enlaceVerificacion = "https://596f-13-216-205-228.ngrok-free.app/optima/verificar?correo=" + nuevoUsuario.getCorreo();
 			emailService.enviarCorreoVerificacion(nuevoUsuario.getCorreo(), enlaceVerificacion);
 			response.put("message", "Access the email to verify account");
 			return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
