@@ -1,5 +1,5 @@
 import { FlatList, View, StyleSheet, Text, Modal, TouchableOpacity } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Divider } from 'react-native-paper';
 import { useState, useContext, useCallback, useRef, useEffect } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
@@ -85,10 +85,10 @@ const Buscar = (props) => {
 
     return (
         <View style={styles.container}>
-            <HeaderRutina tipo={'ajustes'} titulo={'Find Routines'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")}/>
+            <HeaderRutina tipo={'ajustes'} titulo={'Find Routines'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")} />
 
             {filtro ? (
-                <View style={styles.ContainerFiltro}>
+                <View style={styles.containerFiltro}>
                     <View style={styles.pickerContainer}>
                         <Picker
                             selectedValue={dificultad}
@@ -140,7 +140,7 @@ const Buscar = (props) => {
                     </Button>
                 </View>
             ) : (
-                <View style={styles.ContainerFiltro}>
+                <View style={styles.containerFiltro}>
                     <Button
                         mode="contained"
                         style={styles.imagePickerButton}
@@ -160,7 +160,11 @@ const Buscar = (props) => {
             )}
 
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
-                <Text style={styles.textRutinas}> ───── Routines ─────</Text>
+                <View style={styles.deviderContainer}>
+                    <Divider style={styles.devider} />
+                    <Text style={styles.textRutinas}>Routines</Text>
+                    <Divider style={styles.devider} />
+                </View>
                 <FlatList
                     ref={flatListRef}
                     data={rutinas}
@@ -220,8 +224,23 @@ const Buscar = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1F2937', // bg-gray-950
+        backgroundColor: '#1F2937',
         alignItems: "center"
+    },
+    deviderContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    devider: {
+        flex: 1,
+        height: 2,
+        backgroundColor: 'white'
+    },
+    textRutinas: {
+        marginHorizontal: 10,
+        fontSize: 25,
+        color: 'white'
     },
     containerRow: {
         flex: 1,
@@ -271,7 +290,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         alignItems: "center",
     },
-
     picker: {
         color: '#bbdefb',
     },
@@ -287,16 +305,6 @@ const styles = StyleSheet.create({
         fontSize: 30,
         textAlign: 'center',
         color: 'white',
-    },
-    textRutinas: {
-        fontSize: 25,
-        width: "100%",
-        color: 'white',
-        padding: 4,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20,
-        textAlign: "center"
     },
     text: {
         fontSize: 30,
@@ -345,14 +353,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flex: 1
     },
-    ContainerFiltro: {
-        width: '90%',        
+    containerFiltro: {
+        width: '90%',
         marginBottom: 10,
         padding: 5,
         justifyContent: 'center',
         alignItems: 'center',
     },
-
     pickerContainer: {
         width: '100%',
         marginBottom: 10,
@@ -362,7 +369,6 @@ const styles = StyleSheet.create({
         borderColor: '#607cff',
         borderWidth: 1,
     },
-
     imagePickerButton: {
         width: '100%',
         backgroundColor: '#607cff',

@@ -1,5 +1,5 @@
 import { FlatList, View, StyleSheet, Text, Pressable, Modal } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Divider } from 'react-native-paper';
 import { useState, useContext, useCallback } from 'react';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
@@ -32,9 +32,12 @@ const Buscar = (props) => {
     return (
         <View style={styles.container}>
             <HeaderRutina tipo={'ajustes'} titulo={'Created Routines'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")} />
-            {/* onPress={()=> props.navigation.navigate('Ajustes')} */}
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
-                <Text style={styles.textRutinas}> ───── Routines ─────</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+                    <View style={{ flex: 1, height: 2, backgroundColor: 'white' }} />
+                    <Text style={{ marginHorizontal: 10, fontSize: 25, color: 'white' }}>Routines</Text>
+                    <View style={{ flex: 1, height: 2, backgroundColor: 'white' }} />
+                </View>
                 <FlatList
                     data={rutinas}
                     keyExtractor={(item) => item.id}
@@ -79,7 +82,7 @@ const Buscar = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1F2937', // bg-gray-950
+        backgroundColor: '#1F2937',
         alignItems: "center"
     },
     containerRow: {
@@ -142,7 +145,6 @@ const styles = StyleSheet.create({
         color: '#0d47a1',
         marginBottom: 10,
     },
-
     modalMessage: {
         fontSize: 16,
         color: '#333333',

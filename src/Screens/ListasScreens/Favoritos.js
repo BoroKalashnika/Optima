@@ -1,4 +1,5 @@
 import { FlatList, View, StyleSheet, Text, Pressable } from 'react-native';
+import { Divider } from 'react-native-paper';
 import Card from '../../Components/card/Card';
 import HeaderRutina from '../../Components/headerRutina/HeaderRutina';
 import getData from '../../Utils/services/getData';
@@ -36,9 +37,13 @@ const Favoritos = (props) => {
 
     return (
         <View style={styles.container}>
-            <HeaderRutina tipo={'ajustes'} titulo={'Your Favorites'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")}/>
+            <HeaderRutina tipo={'ajustes'} titulo={'Your Favorites'} onAjustes={() => props.navigation.navigate("Ajustes")} onHome={() => props.navigation.navigate("Home")} />
             <View style={{ flex: 7, marginBottom: 20, width: '85%' }}>
-                <Text style={styles.textRutinas}> ───── Routines ─────</Text>
+                <View style={styles.deviderContainer}>
+                    <Divider style={styles.devider} />
+                    <Text style={styles.textRutinas}>Routines</Text>
+                    <Divider style={styles.devider} />
+                </View>
                 {rutinas && rutinas.length > 0 ? <FlatList
                     data={rutinas}
                     keyExtractor={(item) => item.id}
@@ -73,6 +78,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#1F2937',
         alignItems: "center"
     },
+    deviderContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    devider: {
+        flex: 1,
+        height: 2,
+        backgroundColor: 'white'
+    },
+    textRutinas: {
+        marginHorizontal: 10,
+        fontSize: 25,
+        color: 'white'
+    },
     containerRow: {
         flex: 1,
         flexDirection: 'row',
@@ -89,16 +109,6 @@ const styles = StyleSheet.create({
         fontSize: 30,
         textAlign: 'center',
         color: 'white',
-    },
-    textRutinas: {
-        fontSize: 25,
-        width: "100%",
-        color: 'white',
-        padding: 4,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20,
-        textAlign: "center"
     },
     bottom: {
         backgroundColor: '#607cff',
