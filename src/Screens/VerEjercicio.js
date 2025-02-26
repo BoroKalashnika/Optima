@@ -2,6 +2,7 @@ import {
     View,
     Text,
     StyleSheet,
+    ScrollView
 } from 'react-native';
 import { useState, useEffect, useContext } from 'react';
 import getData from '../Utils/services/getData';
@@ -48,11 +49,12 @@ const VerEjercicio = (props) => {
                     style={styles.video}
                     source={{ uri: video }}
                     useNativeControls
-                // shouldPlay
                 />
             </View>
             <View style={styles.containerDescripcion}>
-                <Text style={styles.textLogin}>{descripcion}</Text>
+                <ScrollView>
+                    <Text style={styles.textLogin}>{descripcion}</Text>
+                </ScrollView>
             </View>
             <View style={styles.containerRow}>
                 <Text style={styles.textLogin}>{grupoMuscular}</Text>

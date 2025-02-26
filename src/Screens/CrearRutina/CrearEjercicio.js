@@ -236,7 +236,7 @@ const CrearEjercicio = (props) => {
                     placeholderTextColor="#9CA3AF"
                     value={descripcion}
                     onChangeText={setDescripcion}
-                    maxLength={70}
+                    maxLength={170}
                 />
                 <View style={styles.subContainer}>
                     <Pressable
