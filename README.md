@@ -50,7 +50,7 @@ La fórmula del rendimiento
 🔗 Enlaces Importantes
 
 ### 📥 Descarga la APK  
-🔗 [OPTIMA APK](https://drive.google.com/file/d/1fs-e6kHABBZeVTqrMq8gowcSNwR3FT0l/view?usp=sharing)  
+🔗 [OPTIMA APK](https://drive.google.com/file/d/1fs-e6kHABBZeVTqrMq8gowcSNwR3FT0l/view?usp=drive_link)  
 
 ### 🏗️ Gestión del Proyecto  
 🔗 [Trello](https://trello.com/invite/b/676fe0816a1f5d52a61fe287/ATTI2ee607f0e291129e80bbaa546a4af924EDFA6A09/optima)  
