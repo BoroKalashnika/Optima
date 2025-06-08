@@ -1,79 +1,99 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# <div align="center">💪‎‎‎‎  ‎   OPTIMA‎ ‎ ‎‎  👨‍💻</div>
+<div align="center">
+<strong>OPTIMA</strong> es una innovadora aplicación tipo <strong><em>red social</em></strong> diseñada para los amantes del deporte y el fitness. Su principal objetivo es ofrecer un espacio donde los usuarios puedan <strong><em>compartir sus rutinas de ejercicio, valorarlas, darles "me gusta" y filtrarlas según sus necesidades y objetivos específicos.</em></strong>
+<br>
+<br>
+<img src="https://github.com/user-attachments/assets/1566d055-e949-4c11-a402-ef72d4e9edac" alt="Foto Logo width="200"> 
+<br>
+<br>
+Lo que realmente diferencia a <strong>OPTIMA</strong> de otras plataformas similares es la incorporación de herramientas avanzadas de cálculo, como el <strong><em>Índice de Masa Corporal (IMC) y el cálculo de macronutrientes (Macros).</em></strong> Estas funciones permiten a los usuarios obtener información personalizada sobre su estado físico y alimentación, ayudándolos a planificar su entrenamiento y nutrición de manera más eficiente.
+<br>
+<br>
+<br>
+Otra característica innovadora es la posibilidad de subir <strong><em>videos explicativos</em></strong> junto con las rutinas de ejercicio. Esto facilita el aprendizaje y la correcta ejecución de cada movimiento, reduciendo el riesgo de lesiones y mejorando la experiencia del usuario. A diferencia de otras plataformas que solo permiten subir imágenes o texto, <strong>OPTIMA</strong> apuesta por un enfoque más dinámico e interactivo.
+<br>
+<br>
+<br>
+La aplicación está diseñada para un público que ya está en contacto con el <strong><em>mundo del deporte</em></strong>, desde principiantes hasta atletas avanzados, entrenadores personales o simplemente personas que buscan mejorar su condición física. Dentro de <strong>OPTIMA</strong>, los usuarios podrán encontrar una amplia variedad de rutinas adaptadas a distintos objetivos, como pérdida de peso, ganancia muscular, resistencia o tonificación.
+<br>
+<br>
+<img src="https://github.com/user-attachments/assets/bffc7971-5671-431b-9454-7717115335cb" alt="Foto Decoración width="180"> 
+<br>
+<br>
+En resumen, <strong>OPTIMA</strong> no es solo una aplicación de entrenamiento, sino una comunidad donde los entusiastas del fitness pueden compartir conocimientos, motivarse mutuamente y acceder a información clave para optimizar su rendimiento. Con su enfoque en la personalización, la interacción y la educación, <strong>OPTIMA</strong> se posiciona como una herramienta imprescindible para cualquier persona que quiera mejorar su condición física de manera efectiva y estructurada.
 
-# Getting Started
+<h3>
+  <hr>
+OPTIMA
+  <br>
+La fórmula del rendimiento
+  <hr>
+</h3>
+</div>
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+# <div align="center">💻‎‎‎‎  ‎      LINKS ‎ ‎‎  📲</div>
+> [!CAUTION]
+> Cuando generamos el APK, la aplicación está configurada para enviar y recibir peticiones HTTP. El inconveniente surge al registrar un usuario, ya que se le envía un correo con un enlace de verificación. Al hacer clic en este enlace, el usuario accede a una pequeña página HTML donde se le informa que ha sido verificado.
+<br><br>No obstante, como este correo se envía mediante HTTP, los servicios de correo electrónico lo bloquean al considerarlo un mensaje malicioso, mostrando el contenido en texto plano. Para resolver esto, hemos implementado el uso de Ngrok, un servicio confiable, que nos permite enviar la petición GET de verificación de cuenta, asegurando así que el enlace en el correo no sea bloqueado.
 
-## Step 1: Start the Metro Server
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+> [!IMPORTANT]
+> Estamos en proceso de mejorar la interfaz para el día 25, cuando realizaremos la exposición ante el jurado que evaluará el proyecto integrado.
+> <strong>LA BASE DE DATOS ESTA VACIA SOLO TIENE 3 USUARIOS REGISTRADOS</strong>
 
-To start Metro, run the following command from the _root_ of your React Native project:
+>  [!TIP]
+> Por si acaso ocurriese el error de verificación, hemos creado una cuenta para que podais utilizarla que ya esta verificada de forma manual en la Base de Datos.<br><br>
+> 📩📱 Correo: profesoresflorida@gmail.com<br>
+> 📩 Contraseña <strong>Email</strong>: Hola-1234 <br><br><strong><em>La contraseña del email os la escribimos para que podais iniciar sesión en la cuenta de correo electrónico y comprobar el apartado de restablecer contraseña que si que funciona correctamente, enviando un correo con un código de un solo uso para que se pueda comenzar el proceso de restablecimiento de la password.</em></strong><br><br> 📱Contraseña <strong>OPTIMA</strong>: Hola1234
 
-```bash
-# using npm
-npm start
+<h3>
+🔗 Enlaces Importantes
 
-# OR using Yarn
-yarn start
-```
+### 📥 Descarga la APK  
+🔗 [OPTIMA APK](https://drive.google.com/file/d/1fs-e6kHABBZeVTqrMq8gowcSNwR3FT0l/view?usp=drive_link)  
 
-## Step 2: Start your Application
+### 🏗️ Gestión del Proyecto  
+🔗 [Trello](https://trello.com/invite/b/676fe0816a1f5d52a61fe287/ATTI2ee607f0e291129e80bbaa546a4af924EDFA6A09/optima)  
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+### 🎥 Vídeo Demo
+🔗 [Vídeo](https://drive.google.com/file/d/1xS3FXRual7jRdTGruk4WFAPz9t6VWBC5/view?usp=sharing)  
+</h3>
 
-### For Android
+# <div align="center">📋‎‎‎‎ ‎   DOCUMENTACIÓN ‎ ‎‎ 📝</div>
+<div align="center">
+En proceso de realización se entregará a mano el día 25 al jurado que evaluará el proyecto integrado durante la exposición.
+<br>
+<br>
+El video Elevator Pitch también se entregará el día 25.
+</div>
 
-```bash
-# using npm
-npm run android
+# <div align="center">🏋️‍♀️‎‎‎‎ ‎   Optima Group ‎ ‎‎ 🏋️‍♂️</div>
+<div align="center">
 
-# OR using Yarn
-yarn android
-```
+**- Javier Armero -**  
+*Frontend*  
+<img src="https://avatars.githubusercontent.com/u/150703636?v=4" alt="Foto perfil Javichuu" width="150" style="border: 3px solid #000; border-radius: 10px;">  
+📩: [jaarlo@alumnatflorida.es](mailto:jaarlo@alumnatflorida.es)  
 
-### For iOS
+---
 
-```bash
-# using npm
-npm run ios
+**- Rubén Martínez -**  
+*Frontend / Scrum Manager*  
+<img src="https://avatars.githubusercontent.com/u/122776183?v=4" alt="Foto perfil Rubén" width="150" style="border: 3px solid #000; border-radius: 10px;">  
+📩: [rumama02@alumnatflorida.es](mailto:rumama02@alumnatflorida.es)  
 
-# OR using Yarn
-yarn ios
-```
+---
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+**- Boromir Stanislavov -**  
+*Backend / Project Manager*  
+<img src="https://avatars.githubusercontent.com/u/122878993?v=4" alt="Foto perfil Boromir" width="150" style="border: 3px solid #000; border-radius: 10px;">  
+📩: [bostbo@alumnatflorida.es](mailto:bostbo@alumnatflorida.es)  
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+---
 
-## Step 3: Modifying your App
+**- Juan Manuel Vila -**  
+*FullStack*  
+<img src="https://avatars.githubusercontent.com/u/181088733?v=4" alt="Foto perfil Juanma" width="150" style="border: 3px solid #000; border-radius: 10px;">  
+📩: [juvigo@alumnatflorida.es](mailto:juvigo@alumnatflorida.es)  
 
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+</div>
